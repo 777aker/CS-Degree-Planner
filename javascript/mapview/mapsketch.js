@@ -8,8 +8,16 @@ function setup() {
   frameRate(30);
   // set up the edit menu
   editMenuSetUp();
+  // set up the add course and add node forms
+  formSetUp();
 }
 
+// set up the add course form and add node form
+function formSetUp() {
+  
+}
+
+// set up the buttons for the edit menu
 function editMenuSetUp() {
   // create add course button
   button = createButton('Add Course');

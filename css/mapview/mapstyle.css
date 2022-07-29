@@ -26,7 +26,6 @@
 #dropdown-content {
   display: none;
   flex-direction: column;
-
 }
 
 /* style for the buttons within the edit menu */
@@ -37,4 +36,21 @@
 /* when hovering over an edit button do some stuff */
 .editbuttons:hover {
 
+}
+
+/* add course container */
+.add-course-div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* add node container */
+.add-node-div {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
