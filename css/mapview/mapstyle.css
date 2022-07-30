@@ -41,9 +41,27 @@
 /* add course container */
 .add-course-div {
   position: absolute;
+  display: none;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* form for adding a course */
+.add-course-form {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+}
+
+.add-course-form>input {
+  margin-bottom: 10px;
+}
+
+/* prereq group divs */
+.prereqGroupDiv {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 /* add node container */
