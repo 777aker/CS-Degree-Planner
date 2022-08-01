@@ -1,4 +1,4 @@
-// p5js setup
+// p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
   createCanvas(windowWidth-20, windowHeight-20);
@@ -10,8 +10,10 @@ function setup() {
 
 // set up the buttons for the edit menu
 function editMenuSetUp() {
+  // uses p5js to make buttons because much easier than actual html nonsense
   // create add course button
   button = createButton('Add Course');
+  // function button calls when pressed
   button.mousePressed(addCourse);
   button.class("editbuttons");
   button.id("addcoursebtn");
@@ -40,6 +42,17 @@ function editMenuSetUp() {
   button.class("editbuttons");
   button.id("editbtn");
   button.parent("#dropdown-content");
+}
+
+// this function makes a button so I don't have to
+// some of the names are special because I accidently used keywords
+// name of button, function button calls when pressed, class, id, parent
+function makeAButton(name, fn, btnclass, btnid, parent) {
+  let button = createButton(name);
+  button.mousePressed(fn);
+  button.class(btnclass);
+  button.id(btnid);
+  button.parent(parent);
 }
 
 // whether or not we are typing a form
@@ -234,6 +247,9 @@ function addNode() {
 let mode = "";
 // function called when user presses draw path button
 function drawPath() {
+  mousemovedbtn = false;
+  if(mode !== "draw")
+    linelist.push([]);
   modeChanger("draw", "rgb(0, 200, 0)");
 }
 
@@ -256,10 +272,15 @@ function modeChanger(fmode, color) {
   });
   if(mode === fmode) {
     mode = "";
-    return;
+  } else {
+    mode = fmode;
+    document.querySelector("#" + mode + "btn").style.color = color;
   }
-  mode = fmode;
-  document.querySelector("#" + mode + "btn").style.color = color;
+  if(linelist.length > 0 && mode !== "draw") {
+    if(linelist[linelist.length - 1].length < 8) {
+      linelist.pop();
+    }
+  }
 }
 
 // movement speed
@@ -282,6 +303,43 @@ function draw() {
     if(keyIsDown(68) || keyIsDown(RIGHT_ARROW))
       xy[0] -= movespeed;
   }
+  // draw mode time, do some nonsense
+  // I'm not sure what this will entail yet so gonna put it in another function
+  if(mode === "draw")
+    drawmode();
+  // draw the lines
+  // set strokeWeight back to normal
+  strokeWeight(2);
+  stroke(0);
+  noFill();
+  // I love anonymous functions apparently
+  linelist.forEach((line, index, lines) => {
+    beginShape();
+    let mousehovering = false;
+    if(mode === "delete") {
+      strokeWeight(5);
+      stroke(200, 0, 0);
+      for(let i = 0; i < line.length - 1; i += 2) {
+        point(line[i], line[i + 1]);
+        if(dist(mouseX, mouseY, line[i], line[i + 1]) < 8) {
+          mousehovering = true;
+          if(mouseIsPressed)
+            lines.splice(index, 1);
+        }
+      }
+      strokeWeight(2);
+    }
+    for(let i = 0; i < line.length - 1; i += 2) {
+      if(mousehovering)
+        stroke(200, 0, 0);
+      else
+        stroke(0);
+      curveVertex(line[i], line[i + 1]);
+    }
+    if(mode === "draw" && index === lines.length - 1)
+      curveVertex(mouseX, mouseY);
+    endShape();
+  });
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
   // rather than do styling each loop though, just do once out here
@@ -290,6 +348,8 @@ function draw() {
   textFont('Helvetica');
   textStyle(NORMAL);
   courseList.forEach((course, index, arr) => {
+    strokeWeight(1);
+    stroke(0);
     // move the courses based on which keys are held
     course.x += xy[0];
     course.y += xy[1];
@@ -330,10 +390,37 @@ function draw() {
       default:
         fill(0, 0, 0);
     }
+    noStroke();
     // draw course code, credit hours, and name to the screen
     text(course.code + "-" + course.credits, course.x, course.y);
     text(course.name, course.x, course.y+15);
   });
+}
+
+// what to do in draw mode
+function drawmode() {
+  // draw a point at the cursor
+  strokeWeight(5);
+  stroke(0);
+  for(let i = 0; i < linelist[linelist.length - 1].length - 1; i += 2) {
+    point(linelist[linelist.length - 1][i], linelist[linelist.length - 1][i + 1]);
+  }
+  point(mouseX, mouseY);
+}
+
+let mousemovedbtn = false;
+// this is the only fix I can thing of for now
+function mouseMoved() {
+  mousemovedbtn = true;
+}
+
+// when mouse is pressed do some stuff
+function mousePressed() {
+  // there's a bug here, not sure how to fix it yet though
+  if(mode === "draw" && mousemovedbtn) {
+    linelist[linelist.length - 1].push(mouseX);
+    linelist[linelist.length - 1].push(mouseY);
+  }
 }
 
 /*
@@ -354,6 +441,18 @@ function mouseReleased() {
   draggingcourse = -1;
 }
 
+// special key pressed
+function keyPressed() {
+  // this stupid collapse function thingy doesn't show up for this one
+  // oh, I figured out how to fix it though, hover over the line number then
+  // it'll fix all the stupid little arrows so you can collapse functions
+  if(keyCode === ENTER && mode === "draw") {
+    if(linelist[linelist.length - 1].length < 8)
+      linelist.pop();
+    linelist.push([]);
+  }
+}
+
 // if the window is resized this function is called
 function windowResized() {
   resizeCanvas(windowWidth-20, windowHeight-20);
@@ -370,5 +469,8 @@ function keyTyped() {
   if(key === 'f' || key === 'F') {
     let fs = fullscreen();
     fullscreen(!fs);
+  }
+  if(key === 'l') {
+    print(linelist);
   }
 }
