@@ -6,6 +6,14 @@ function setup() {
   frameRate(30);
   // set up the edit menu
   editMenuSetUp();
+  // set up save menu
+  // because I literally cannot handle this anymore
+  saveMenuSetUp();
+}
+
+// set up a save menu because testing is so annoying when you have to remake everything
+function saveMenuSetUp() {
+  
 }
 
 // set up the buttons for the edit menu
@@ -181,7 +189,7 @@ let courseList = [];
 // I have to do. Like, a lot of courses have to see other courses, and if I don't make this map
 // then you have to like search through all the courses looking for one with a code you want
 // initialize it here
-// TODO ^ ---------------------------------------------------------------------------------------------------------------------------------------------
+const courseMap = new Map();
 /*
 course looks like
 course = {
@@ -190,12 +198,13 @@ course = {
   name: coursename,
   prerequisites: prereqs,
   x: number,
-  y: number
+  y: number.
+  lines: list of prereqs
 };
 */
 // we also need a seperate list of lines
 // global variable of lines to draw
-let linelist = [];
+let lineList = [];
 
 // set up the submit button for add course form
 const submitcoursebtn = document.querySelector("#submitcourse");
@@ -243,12 +252,24 @@ function submitCourse() {
     name: coursename,
     prerequisites: prereqs,
     x: windowWidth / 2,
-    y: windowHeight / 2
+    y: windowHeight / 2,
+    // you might be thinking this is insane, well, at first we want to connect all
+    // prereqs, but if someone decides they want to delete one and draw it themself
+    // we don't want to remove the prereq but we do want to remove the line
+    lines: prereqs
   };
-  courseList.push(course);
-  // TODO ------------------------------------------------------------------------------------------------------------------------
-  // this is where you should add a course code as a key to the course map
-
+  // if the courseMap already has this course code then replace it with the new one
+  if(courseMap.has(coursecode)) {
+    // also, set course position to where it was
+    course.x = courseList[courseMap.get(coursecode)].x;
+    course.y = courseList[courseMap.get(coursecode)].y;
+    courseList[courseMap.get(coursecode)] = course;
+  } else {
+    // if the course map doesn't have it then the course doesn't exist push
+    // it to the map and save where it is at
+    courseMap.set(coursecode, courseList.length);
+    courseList.push(course);
+  }
   // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
   addCourseDiv.style.display = "none";
@@ -287,7 +308,7 @@ function drawPath() {
   mousemovedbtn = false;
   // if we entered draw mode make a new line for us to draw on
   if(mode !== "draw")
-    linelist.push([]);
+    lineList.push([]);
   // mode changer helper function
   modeChanger("draw", "rgb(0, 200, 0)");
 }
@@ -320,9 +341,9 @@ function modeChanger(fmode, color) {
   }
   // if we got out of draw mode and the last line they were drawing isn't long enough
   // to actually be a line remove it
-  if(linelist.length > 0 && mode !== "draw") {
-    if(linelist[linelist.length - 1].length < 8) {
-      linelist.pop();
+  if(lineList.length > 0 && mode !== "draw") {
+    if(lineList[lineList.length - 1].length < 8) {
+      lineList.pop();
     }
   }
 }
@@ -362,7 +383,7 @@ function draw() {
   noFill();
   // I love anonymous functions apparently (I use them a lot)
   // for every line that exists this is going to draw them
-  linelist.forEach((line, index, lines) => {
+  lineList.forEach((line, index, lines) => {
     beginShape();
     let mousehovering = false;
     if(mode === "delete") {
@@ -413,6 +434,33 @@ function draw() {
   textAlign(CENTER, CENTER);
   textFont('Helvetica');
   textStyle(NORMAL);
+  // so sadly first before we do that loop, we have to draw a lot of lines
+  // so they show up under the courses. I tried to avoid this to the best of my ability
+  // you win some you lose some
+  // at least now we have a predraw loop
+  strokeWeight(2);
+  stroke(0);
+  courseList.forEach(course => {
+    course.lines.forEach(group => {
+      // yep, it's even a triple for loop....tragic
+      // until further notice, I hate this
+      group.forEach((value, index, array) => {
+        if(courseMap.has(value)) {
+          let concrs = courseList[courseMap.get(value)];
+          // let's go ahead and do some line testing while we are here
+          if(mode === "delete") {
+            if(lineTest(5, concrs.x, concrs.y, concrs.x, concrs.y, mouseX, mouseY)) {
+              stroke(255, 0, 0);
+              if(mouseIsPressed) {
+                array.splice(index, 1);
+              }
+            }
+          }
+          line(course.x, course.y, concrs.x, concrs.y);
+        }
+      });
+    });
+  });
   // loop that goes through and does everything we want for each course
   courseList.forEach((course, index, arr) => {
     // stroke stuff
@@ -421,6 +469,23 @@ function draw() {
     // move the courses based on which keys are held
     course.x += xy[0];
     course.y += xy[1];
+    //  draw lines connecting courses
+    // triple for loop baby
+    // cause this is a double and we are already in one
+    // uhg, nevermind, this is sad
+    // just leave it for now in case we ever figure it out
+    /*
+    course.lines.forEach(group => {
+      group.forEach(value => {
+        // this was hopefully going to be simple
+        // unfortunately, there isn't another good way to do this
+        // this method draws over other courses and blend mode can't fix it
+        if(courseMap.has(value))
+          line(course.x, course.y, courseList[courseMap.get(value)].x, courseList[courseMap.get(value)].y);
+        // let me think for a bit about what kind of fancy algorithm I need for this
+      });
+    });
+    */
     // draw box around courses
     // boxsize is a variable that figures out how big our box around the course needs to be
     // based on how much text is displayed in the course
@@ -451,8 +516,17 @@ function draw() {
         fill(200, 0, 0);
         // if you click the course delete it
         // deleting it in this case is just removing it from our master list of courses
-        if(mouseIsPressed && mouseHovering)
+        if(mouseIsPressed && mouseHovering) {
+          // wait more complicated now obviously, because code getting more complicated
+          // every course that comes after this one now moves positions backwards one
+          courseMap.forEach(function(value, key) {
+            if(value > index) {
+              courseMap.set(key, value - 1);
+            }
+          });
+          courseMap.delete(courseList[index].code);
           arr.splice(index, 1);
+        }
         break;
       case "edit":
         fill(0, 0, 200);
@@ -485,13 +559,29 @@ function draw() {
   });
 }
 
+// helper function that tells you if you are close to a line segment or not
+// distance - distance from line this will return true at
+// x1, y1, x2, y2 - your line segment
+// px, py - the point you are testing
+function lineTest(distance, x1, y1, x2, y2, px, py) {
+  let topleft = [min(x1, x2), min(y1, y2)];
+  let bottomright = [max(x1, x2), max(y1, y2)];
+  if(px > topleft[0] - distance && px < bottomright[0] + distance && py > topleft[1] - distance && py < bottomright[1] + distance) {
+    let dis = abs((x2-x1)(y1-py)-(x1-px)(y2-y1));
+    dis /= dist(x1, y1, x2, y2);
+    if(dis < distance)
+      return true
+  }
+  return false;
+}
+
 // what to do in draw mode
 function drawmode() {
   // draw a point at the cursor
   strokeWeight(5);
   stroke(0);
-  for(let i = 0; i < linelist[linelist.length - 1].length - 1; i += 2) {
-    point(linelist[linelist.length - 1][i], linelist[linelist.length - 1][i + 1]);
+  for(let i = 0; i < lineList[lineList.length - 1].length - 1; i += 2) {
+    point(lineList[lineList.length - 1][i], lineList[lineList.length - 1][i + 1]);
   }
   point(mouseX, mouseY);
 }
@@ -512,8 +602,8 @@ function mousePressed() {
   // I fixed it. see mousemovedbtn variable
   // in drawing mode add a point to our list of lines if you click the mouse
   if(mode === "draw" && mousemovedbtn) {
-    linelist[linelist.length - 1].push(mouseX);
-    linelist[linelist.length - 1].push(mouseY);
+    lineList[lineList.length - 1].push(mouseX);
+    lineList[lineList.length - 1].push(mouseY);
   }
 }
 
@@ -544,9 +634,9 @@ function keyPressed() {
   // if you press enter in drawing mode finish the line and start a new one
   if(keyCode === ENTER && mode === "draw") {
     // if the line was too short jk, just pop it and start a new one
-    if(linelist[linelist.length - 1].length < 8)
-      linelist.pop();
-    linelist.push([]);
+    if(lineList[lineList.length - 1].length < 8)
+      lineList.pop();
+    lineList.push([]);
   }
 }
 
@@ -573,6 +663,11 @@ function keyTyped() {
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
   if(key === 'l') {
-    print(linelist);
+    print(lineList);
+  }
+  // I also wanna see the courselist and courseMap for debuggingc
+  if(key === 'c') {
+    print(courseList);
+    print(courseMap);
   }
 }
