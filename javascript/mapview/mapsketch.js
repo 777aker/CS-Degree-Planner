@@ -11,37 +11,18 @@ function setup() {
 // set up the buttons for the edit menu
 function editMenuSetUp() {
   // uses p5js to make buttons because much easier than actual html nonsense
-  // create add course button
-  button = createButton('Add Course');
-  // function button calls when pressed
-  button.mousePressed(addCourse);
-  button.class("editbuttons");
-  button.id("addcoursebtn");
-  button.parent("#dropdown-content");
+  // create add course button (made a helper function for this)
+  makeAButton('Add Course', addCourse, "editbuttons", "addcoursebtn", "#dropdown-content");
   // create add node button
-  button = createButton('Add Node');
-  button.mousePressed(addNode);
-  button.class("editbuttons");
-  button.id("addnodebtn");
-  button.parent("#dropdown-content");
+  // idk what to tell you about the first being '' and the others being ""
+  // ...it's a....convention thing....yea
+  makeAButton('Add Node', addNode, "editbuttons", "addnodebtn", "#dropdown-content");
   // create draw path button
-  button = createButton('Draw Path');
-  button.mousePressed(drawPath);
-  button.class("editbuttons");
-  button.id("drawbtn");
-  button.parent("#dropdown-content");
+  makeAButton('Draw Path', drawPath, "editbuttons", "drawbtn", "#dropdown-content");
   // create delete button
-  button = createButton('Delete Mode');
-  button.mousePressed(deleteMode);
-  button.class("editbuttons");
-  button.id("deletebtn");
-  button.parent("#dropdown-content");
+  makeAButton('Delete Mode', deleteMode, "editbuttons", "deletebtn", "#dropdown-content");
   // create move button
-  button = createButton('Edit Positions');
-  button.mousePressed(editPositions);
-  button.class("editbuttons");
-  button.id("editbtn");
-  button.parent("#dropdown-content");
+  makeAButton('Edit Positions', editPositions, "editbuttons", "editbtn", "#dropdown-content");
 }
 
 // this function makes a button so I don't have to
@@ -55,19 +36,20 @@ function makeAButton(name, fn, btnclass, btnid, parent) {
   button.parent(parent);
 }
 
-// whether or not we are typing a form
+// whether or not we are typing a form (so that we don't move the screen and stuff while typing / do special key presses)
 let typing = false;
-// get the course form and div containing it
+// get the course form and div containing it and save as global variables
 const addCourseDiv = document.querySelector('.add-course-div');
 const addCourseForm = document.querySelector('.add-course-form');
-// function called when user presses add course button
+// function called when user presses add course button in the edit menu
 function addCourse() {
-  // set typing to true
+  // set typing to true (so hitting keys doesn't trigger events)
   typing = true;
   // clear the form
   addCourseForm.innerHTML = '';
   // create the labels and inputs for the form
   // first the course code input field
+  // I was smart and made a form helper function
   createFormTextField(addCourseForm, "Course Code:", "coursecode", "Enter Course Code", false);
   // credit hours input field
   createFormTextField(addCourseForm, "Credit Hours:", "ch", "Enter Credit Hours", false);
@@ -76,28 +58,39 @@ function addCourse() {
   // now this is more complicated because prereqs can have
   // any number so need to set up some buttons that let you
   // expand the number of prereqs
+  // ^ it's gross to read that because it's on multiple lines but I used // instead of /**/
+  // I'm leaving it though hehehe
+  // this is the button to add a group of prerequisites that fulfill the same requirement
+  // if you're confused about this next part function submitCourse explains what's happening here a little better
   let tempbutton = document.createElement("input");
   tempbutton.setAttribute("id", "addprereqgroup");
   tempbutton.setAttribute("type", "button");
   tempbutton.setAttribute("value", "Add Prerequisite Group");
   addCourseForm.appendChild(tempbutton);
   tempbutton.addEventListener('click', addPrereqGroup);
-  // remove a prereq group
+  // remove a prereq group (does opposite of previous button)
   tempbutton = document.createElement("input");
   tempbutton.setAttribute("id", "removeprereqgroup");
   tempbutton.setAttribute("type", "button");
   tempbutton.setAttribute("value", "Remove Prerequisite Group");
   addCourseForm.appendChild(tempbutton);
   tempbutton.addEventListener('click', removePrereqGroup);
-  // make it visible
+  // make it visible (it = the whole form)
   addCourseDiv.style.display = 'block';
 }
 
 // remove a prerequisite group
+// called when add course form remove prerequisite button is pressed
 function removePrereqGroup() {
+  // get the last prerequisite group made and remove that one
+  // but we have to do a lot of checks in case some idiot presses remove
+  // when there's nothing to remove :/
   let lastgroup = document.querySelectorAll(".prereqGroupDiv");
   if(lastgroup.length > 0)
     lastgroup[lastgroup.length - 1].remove();
+  // oh, also remove all the buttons for that group bc it'd be weird and awkward
+  // if the buttons stayed but you couldn't do anything with them
+  // (this was for some reason surprisingly difficult to implement right)
   let lastbtn = document.querySelectorAll(".addPrereqBtn");
   if(lastbtn.length > 0)
     lastbtn[lastbtn.length - 1].remove();
@@ -106,19 +99,22 @@ function removePrereqGroup() {
     lastbtn[lastbtn.length - 1].remove();
 }
 
-// add prereq group button action
+// add prereq group button action in add course form
+// ^ bad wording what does that mean?
+// I'll tell you, it means in the add course form when someone presses the
+// add a prerequisite group button do the following
 function addPrereqGroup() {
-  // need to put all prereqs in a div so we can get to them later
+  // need to put all prereqs in a div so we can get to them easily later
   let groupdiv = document.createElement("div");
   groupdiv.setAttribute("class", "prereqGroupDiv");
   addCourseForm.appendChild(groupdiv);
-  // prerequisite text boxes under div
-  let prereqbox = document.createElement("input");
-  prereqbox.setAttribute("type", "text");
-  prereqbox.setAttribute("value", "Enter Prerequisite Code Only");
-  prereqbox.setAttribute("onfocus", "this.value=''");
-  groupdiv.appendChild(prereqbox);
-  // add prerequisite button outside of div
+  // create prerequisite text boxes under div
+  // spoiler, further along I get annoyed with typing 5 lines for a stupid text box
+  // realized I had a helper just need to change a few things
+  // soon I might make a button helper too, but unfortunately that's a little more
+  // complicated than I want it to be because I use a lot of anonymous functions for buttons
+  createFormTextField(groupdiv, "", "", "Enter Prerequisite Code Only");
+  // add prerequisite button outside of div (for adding more prerequisites)
   let prereqbtn = document.createElement("input");
   prereqbtn.setAttribute("type", "button");
   prereqbtn.setAttribute("class", "addPrereqBtn");
@@ -126,19 +122,19 @@ function addPrereqGroup() {
   addCourseForm.appendChild(prereqbtn);
   // whenever add prereq button clicked create more prereq fields in that div
   prereqbtn.addEventListener('click', function(){
-    let prereqbox = document.createElement("input");
-    prereqbox.setAttribute("type", "text");
-    prereqbox.setAttribute("value", "Enter Prerequisite Code Only");
-    prereqbox.setAttribute("onfocus", "this.value=''");
-    groupdiv.appendChild(prereqbox);
+    // why is it 5 lines to make a text box, should I fix that?...nah I don't want to rn
+    createFormTextField(groupdiv, "", "", "Enter Prerequisite Code Only");
   });
-  // remove prerequisite button below add
+  // remove prerequisite button below add so you can remove a prereq if you made too many
+  // (I kept doing that so I added this so I could undo my mistakes)
   prereqbtn = document.createElement("input");
   prereqbtn.setAttribute("type", "button");
   prereqbtn.setAttribute("class", "removePrereqBtn");
   prereqbtn.setAttribute("value", "Remove Prerequisite");
   addCourseForm.appendChild(prereqbtn);
-  // whenever remove is clicked do this
+  // whenever remove is clicked remove the last prerequisite of the group
+  // even works if some jerk decides to press the button a million times
+  // and there are no prerequisites left
   prereqbtn.addEventListener('click', function(){
     if(groupdiv.lastChild != null)
       groupdiv.lastChild.remove();
@@ -146,19 +142,31 @@ function addPrereqGroup() {
 }
 
 // helper function for creating form text fields
+// form - which form to append it to / element (doesn't have to be a form)
+// label - label for the text box
+// id - id for the text box
+// value - value in the text box
+// br - true or false, add breaks between text boxes or no
 function createFormTextField(form, label, id, value, br) {
   // create the label element using passed letiables
-  let templabel = document.createElement("label");
-  templabel.setAttribute("for", id);
-  templabel.innerHTML = label;
-  form.appendChild(templabel);
-  if(br)
-    form.appendChild(document.createElement("br"));
+  // letiables??? I don't even know what that word is supposed to be
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
   // create the input element using passed letiables
+  // I did it again, what the freak is a letiable?
+  // is there even such thing as a letiable or does it have to be letiables
   let tempinput = document.createElement("input");
   tempinput.setAttribute("type", "text");
-  tempinput.setAttribute("id", id);
-  tempinput.setAttribute("name", id);
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
   tempinput.setAttribute("value", value);
   tempinput.setAttribute("onfocus", "this.value=''");
   form.appendChild(tempinput);
@@ -166,11 +174,14 @@ function createFormTextField(form, label, id, value, br) {
     form.appendChild(document.createElement("br"));
 }
 
-// list of courses
+// global variable list of courses
 let courseList = [];
-// we also need a seperate list of lines
-// that connect everything
-let linelist = [];
+// I'm also thinking of making a map that says code is key gives you index in course list
+// would make a lot of things more efficient because idk how to do some weird reaching nonsense
+// I have to do. Like, a lot of courses have to see other courses, and if I don't make this map
+// then you have to like search through all the courses looking for one with a code you want
+// initialize it here
+// TODO ^ ---------------------------------------------------------------------------------------------------------------------------------------------
 /*
 course looks like
 course = {
@@ -182,6 +193,9 @@ course = {
   y: number
 };
 */
+// we also need a seperate list of lines
+// global variable of lines to draw
+let linelist = [];
 
 // set up the submit button for add course form
 const submitcoursebtn = document.querySelector("#submitcourse");
@@ -196,12 +210,16 @@ function submitCourse() {
   const prereqdivs = addCourseForm.querySelectorAll(".prereqGroupDiv");
   // list storing all the prereqs
   let prereqs = [];
+  // some iteration variables
+  // doing double for loop so putting them outside of it
   let i = 0;
   let j = 0;
   // loop through the groups of prereqs
   for(i = 0; i < prereqdivs.length; i++) {
-    // loop through the div input fields to get each prereq
+    // loop through the div input fields to get each individual prereq
     const divlist = prereqdivs[i].children;
+    // also, make a list because this group of prerequisites all fulfill
+    // the same requirement
     let prereq = [];
     // put them all in the same list
     for(j = 0; j < divlist.length; j++) {
@@ -210,6 +228,14 @@ function submitCourse() {
     // add that list to our list of lists of prereqs
     prereqs.push(prereq);
   }
+  // ok ^ that loop is a little confusing so let me reexplain
+  // a course can have any number of prerequisites, and some prerequisites fulfill the same requirement
+  // so to solve this in the form a group of prerequisites fulfill the same requirement, ie first loop
+  // then the second loop is each prerequisite that fulfills that requirement, and hince why
+  // we have a list of lists. the big list is basically requirements, and that requirement element in that
+  // list holds a list of every course that will fulfill that requirement. Make sense? idk bc I can't
+  // actually talk to anyone reading these comments
+
   // now we should actually add all this to the variable that stores all the courses
   const course = {
     code: coursecode,
@@ -220,7 +246,10 @@ function submitCourse() {
     y: windowHeight / 2
   };
   courseList.push(course);
-  // clear and hide the form
+  // TODO ------------------------------------------------------------------------------------------------------------------------
+  // this is where you should add a course code as a key to the course map
+
+  // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
   addCourseDiv.style.display = "none";
   typing = false;
@@ -239,17 +268,27 @@ function cancelCourse() {
 }
 
 // function called when user presses add node button
+// basically will do the same thing as add course button
+// but this doesn't have to be a course this could just be a little
+// box you want to make for your convenience / understanding
 function addNode() {
 
 }
 
-// drawing path mode
+// this is the global mode variable
+// tells us what mode we are in: draw, delete, edit, ""
 let mode = "";
+
 // function called when user presses draw path button
 function drawPath() {
+  // have to have this moved mouse button nonsense because if you don't then
+  // it draws a path when the user enter draw path mode because they click to enter it
+  // so set moved mouse to false and wait until they move it before you start draw mode
   mousemovedbtn = false;
+  // if we entered draw mode make a new line for us to draw on
   if(mode !== "draw")
     linelist.push([]);
+  // mode changer helper function
   modeChanger("draw", "rgb(0, 200, 0)");
 }
 
@@ -266,16 +305,21 @@ function editPositions() {
 // changing the modes looks very similar for everying so here is a helper
 // especially so we don't miss anything
 function modeChanger(fmode, color) {
+  // set each of the edit buttons to black
   let buttons = document.querySelectorAll(".editbuttons");
   buttons.forEach(button => {
     button.style.color = "rgb(0, 0, 0)";
   });
+  // if we are in the mode of the button we just pressed then clear mode
   if(mode === fmode) {
     mode = "";
   } else {
     mode = fmode;
+    // make the button the color passed so we can actually tell what mode we are in
     document.querySelector("#" + mode + "btn").style.color = color;
   }
+  // if we got out of draw mode and the last line they were drawing isn't long enough
+  // to actually be a line remove it
   if(linelist.length > 0 && mode !== "draw") {
     if(linelist[linelist.length - 1].length < 8) {
       linelist.pop();
@@ -283,15 +327,16 @@ function modeChanger(fmode, color) {
   }
 }
 
-// movement speed
+// movement speed (like moving the camera / all the courses and stuff)
 let movespeed = 5;
-// mouse dragging an element
+// is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
 // p5js drawing code called every frame
+// where most of the real meat happens
 function draw() {
   // set background color
   background(220);
-  // if the user is holding a key down move the courses around
+  // if the user is holding a key down move everything around
   let xy = [0, 0];
   if(!typing) {
     if(keyIsDown(87) || keyIsDown(UP_ARROW))
@@ -305,23 +350,33 @@ function draw() {
   }
   // draw mode time, do some nonsense
   // I'm not sure what this will entail yet so gonna put it in another function
+  // pass xy also so we can move some stuff around
   if(mode === "draw")
     drawmode();
   // draw the lines
-  // set strokeWeight back to normal
+  // set strokeWeight
   strokeWeight(2);
   stroke(0);
+  // remove fill so lines don't do this weird nonsense effect where they
+  // fill in the area you were drawing
   noFill();
-  // I love anonymous functions apparently
+  // I love anonymous functions apparently (I use them a lot)
+  // for every line that exists this is going to draw them
   linelist.forEach((line, index, lines) => {
     beginShape();
     let mousehovering = false;
     if(mode === "delete") {
       strokeWeight(5);
       stroke(200, 0, 0);
+      // so clicking on a point removes the whole line
+      // I did it this way for now at least because any other way
+      // is way more work and complicated and math and innefecient
+      // than I want it to be
       for(let i = 0; i < line.length - 1; i += 2) {
+        // draw some points so they can see what they are trying to delete
         point(line[i], line[i + 1]);
         if(dist(mouseX, mouseY, line[i], line[i + 1]) < 8) {
+          // mouse hovering is used later
           mousehovering = true;
           if(mouseIsPressed)
             lines.splice(index, 1);
@@ -329,13 +384,24 @@ function draw() {
       }
       strokeWeight(2);
     }
+    // you might have noticed we loop through the lines twice
+    // this is because first we need to check if we are hovering over the line
+    // because if we are we need to go through and draw the line in a different color
+    // so users know what they are deleting
     for(let i = 0; i < line.length - 1; i += 2) {
+      // highlight line if you are hovering over it
       if(mousehovering)
         stroke(200, 0, 0);
       else
         stroke(0);
+      // if they are moving around the screen change line position
+      line[i] += xy[0];
+      line[i+1] += xy[1];
       curveVertex(line[i], line[i + 1]);
     }
+    // if we are in draw mode so they can see what they are about to do treat
+    // their mouse position as a point, ie when they click and actually make
+    // a point they know what it will look like before they click
     if(mode === "draw" && index === lines.length - 1)
       curveVertex(mouseX, mouseY);
     endShape();
@@ -347,14 +413,19 @@ function draw() {
   textAlign(CENTER, CENTER);
   textFont('Helvetica');
   textStyle(NORMAL);
+  // loop that goes through and does everything we want for each course
   courseList.forEach((course, index, arr) => {
+    // stroke stuff
     strokeWeight(1);
     stroke(0);
     // move the courses based on which keys are held
     course.x += xy[0];
     course.y += xy[1];
     // draw box around courses
+    // boxsize is a variable that figures out how big our box around the course needs to be
+    // based on how much text is displayed in the course
     boxsize = course.name.length > course.code.length + course.credits.length ? course.name.length : course.code.length + course.credits.length;
+    // so turns out font is hard, change the boxsize a little based on how many characters there are
     if(boxsize < 12)
       boxsize *= 5;
     else if(boxsize > 40)
@@ -362,26 +433,42 @@ function draw() {
     else
       boxsize *= 4;
     // if hovering over the box change fill
+    // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
     let mouseHovering = draggingcourse === index;
+    // intersecting course check
     if(mouseHovering || (mouseX > course.x - boxsize && mouseX < course.x + boxsize && mouseY > course.y - 15 && mouseY < course.y + 30))
       mouseHovering = true;
     if(mouseHovering)
       fill(200, 200, 200);
     else
       fill(255, 255, 255);
+    // draw the rectangle around our course
     rect(course.x - boxsize, course.y - 15, boxsize*2, 45);
     // in different modes do some different things
     switch(mode) {
       case "delete":
+        // make the text fill different
         fill(200, 0, 0);
+        // if you click the course delete it
+        // deleting it in this case is just removing it from our master list of courses
         if(mouseIsPressed && mouseHovering)
           arr.splice(index, 1);
         break;
       case "edit":
         fill(0, 0, 200);
+        // if we haven't been dragging a course then make this course the one we drag
+        // this actually fixes a plethora of bugs
+        // 1: moving more than one course at a time
+        // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
+        // 3: flashing fill
         if(draggingcourse === -1 && mouseIsPressed && mouseHovering) {
           draggingcourse = index;
         }
+        // if this is the course we are dragging move it to mouse position
+        // you might have noticed that when dragging the course the box lags behind the text
+        // that's because we basically have to put this here and our box we have to draw before
+        // we actually move the course
+        // this is just the most efficient and it's actually a cool effect so it's staying
         if(draggingcourse === index) {
           course.x = mouseX;
           course.y = mouseY;
@@ -390,6 +477,7 @@ function draw() {
       default:
         fill(0, 0, 0);
     }
+    // we were doing a lot of drawing so just remove the stroke don't want it on the text
     noStroke();
     // draw course code, credit hours, and name to the screen
     text(course.code + "-" + course.credits, course.x, course.y);
@@ -408,8 +496,12 @@ function drawmode() {
   point(mouseX, mouseY);
 }
 
-let mousemovedbtn = false;
 // this is the only fix I can thing of for now
+// it's like a weird drawing mode bug that happens because you click
+// the drawing mode button to enter drawing mode so it counts that click
+// in drawing mode as a point, so just say if they haven't moved the mouse since
+// entering drawing mode just don't do anything
+let mousemovedbtn = false;
 function mouseMoved() {
   mousemovedbtn = true;
 }
@@ -417,6 +509,8 @@ function mouseMoved() {
 // when mouse is pressed do some stuff
 function mousePressed() {
   // there's a bug here, not sure how to fix it yet though
+  // I fixed it. see mousemovedbtn variable
+  // in drawing mode add a point to our list of lines if you click the mouse
   if(mode === "draw" && mousemovedbtn) {
     linelist[linelist.length - 1].push(mouseX);
     linelist[linelist.length - 1].push(mouseY);
@@ -446,7 +540,10 @@ function keyPressed() {
   // this stupid collapse function thingy doesn't show up for this one
   // oh, I figured out how to fix it though, hover over the line number then
   // it'll fix all the stupid little arrows so you can collapse functions
+
+  // if you press enter in drawing mode finish the line and start a new one
   if(keyCode === ENTER && mode === "draw") {
+    // if the line was too short jk, just pop it and start a new one
     if(linelist[linelist.length - 1].length < 8)
       linelist.pop();
     linelist.push([]);
@@ -455,6 +552,7 @@ function keyPressed() {
 
 // if the window is resized this function is called
 function windowResized() {
+  // resize the canvas to fit the screen
   resizeCanvas(windowWidth-20, windowHeight-20);
   // set background color
   background(220);
@@ -463,13 +561,17 @@ function windowResized() {
 //  key typed event not for special keys use keyPressed for those
 function keyTyped() {
   // shouldn't be used because will fill out course forms
+  // nevermind I fixed that with the typing variable
   // so if typing return
   if(typing)
     return;
+  // make the software go fullscreen because that's nice
   if(key === 'f' || key === 'F') {
     let fs = fullscreen();
     fullscreen(!fs);
   }
+  // I needed a way in drawing mode to see what was going on when debugging
+  // (ironic for a drawing mode)
   if(key === 'l') {
     print(linelist);
   }
