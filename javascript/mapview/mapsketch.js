@@ -6,14 +6,6 @@ function setup() {
   frameRate(30);
   // set up the edit menu
   editMenuSetUp();
-  // set up save menu
-  // because I literally cannot handle this anymore
-  saveMenuSetUp();
-}
-
-// set up a save menu because testing is so annoying when you have to remake everything
-function saveMenuSetUp() {
-  
 }
 
 // set up the buttons for the edit menu
@@ -348,6 +340,51 @@ function modeChanger(fmode, color) {
   }
 }
 
+// I can't handle having to make an entire set of nodes for testing anymore
+// so I'm making a save feature
+// set it up
+const saveform = document.querySelector(".fileform");
+saveform.addEventListener('mouseover', function() {
+  typing = true;
+});
+saveform.addEventListener('mouseleave', function() {
+  typing = false;
+});
+const savebutton = document.querySelector("#savebtn");
+savebutton.addEventListener('click', saveFile);
+const loadbutton = document.querySelector("#loadbtn");
+loadbutton.addEventListener('click', loadFile);
+const savetext = document.querySelector("#savetxt");
+const loadtext = document.querySelector("#loadtxt");
+
+// this takes the courselist and linelist we have for everything and saves
+// them to a json file
+function saveFile() {
+  //print(savetext.value);
+  let json = {};
+  json.courses = courseList;
+  json.coursemap = Object.fromEntries(courseMap);
+  json.lines = lineList;
+  saveJSON(json, savetext.value);
+}
+
+// this loads a courselist and linelist from a json file
+function loadFile() {
+  //print(loadtext.value);
+  loadJSON("/jsons/" + loadtext.value + ".json", processJSON);
+}
+
+// process json file loaded
+function processJSON(json) {
+  courseList = json.courses;
+  const remap = new Map(Object.entries(json.coursemap));
+  courseMap.clear();
+  remap.forEach(function(value, key) {
+    courseMap.set(key, value);
+  });
+  lineList = json.lines;
+}
+
 // movement speed (like moving the camera / all the courses and stuff)
 let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
@@ -449,11 +486,13 @@ function draw() {
           let concrs = courseList[courseMap.get(value)];
           // let's go ahead and do some line testing while we are here
           if(mode === "delete") {
-            if(lineTest(5, concrs.x, concrs.y, concrs.x, concrs.y, mouseX, mouseY)) {
+            if(lineTest(5, course.x, course.y, concrs.x, concrs.y, mouseX, mouseY)) {
               stroke(255, 0, 0);
               if(mouseIsPressed) {
                 array.splice(index, 1);
               }
+            } else {
+              stroke(0);
             }
           }
           line(course.x, course.y, concrs.x, concrs.y);
@@ -567,7 +606,7 @@ function lineTest(distance, x1, y1, x2, y2, px, py) {
   let topleft = [min(x1, x2), min(y1, y2)];
   let bottomright = [max(x1, x2), max(y1, y2)];
   if(px > topleft[0] - distance && px < bottomright[0] + distance && py > topleft[1] - distance && py < bottomright[1] + distance) {
-    let dis = abs((x2-x1)(y1-py)-(x1-px)(y2-y1));
+    let dis = abs((x2-x1)*(y1-py)-(x1-px)*(y2-y1));
     dis /= dist(x1, y1, x2, y2);
     if(dis < distance)
       return true
@@ -655,6 +694,7 @@ function keyTyped() {
   // so if typing return
   if(typing)
     return;
+
   // make the software go fullscreen because that's nice
   if(key === 'f' || key === 'F') {
     let fs = fullscreen();

@@ -1,0 +1,208 @@
+{
+  "courses": [
+    {
+      "code": "CSCI 1000",
+      "credits": "1",
+      "name": "Computer Science as a Field of Work and Study",
+      "prerequisites": [],
+      "x": 291,
+      "y": 105,
+      "lines": []
+    },
+    {
+      "code": "APPM 1235",
+      "credits": "4",
+      "name": "Pre-Calculus for Engineers",
+      "prerequisites": [],
+      "x": 331,
+      "y": 386,
+      "lines": []
+    },
+    {
+      "code": "MATH 1150",
+      "credits": "4",
+      "name": "Pre-Calculus Mathematics",
+      "prerequisites": [],
+      "x": 348,
+      "y": 615,
+      "lines": []
+    },
+    {
+      "code": "APPM 1350",
+      "credits": "4",
+      "name": "Calculus 1 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1150"
+        ]
+      ],
+      "x": 779,
+      "y": 464,
+      "lines": [
+        [
+          "APPM 1235",
+          "MATH 1150"
+        ]
+      ]
+    },
+    {
+      "code": "MATH 1300",
+      "credits": "5",
+      "name": "Calculus 1",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1150"
+        ]
+      ],
+      "x": 987,
+      "y": 648,
+      "lines": [
+        [
+          "APPM 1235",
+          "MATH 1150"
+        ]
+      ]
+    },
+    {
+      "code": "CSCI 1300",
+      "credits": "4",
+      "name": "Computer Science 1: Starting Computing",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1150",
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": 782,
+      "y": 208,
+      "lines": [
+        [
+          "APPM 1235",
+          "MATH 1150",
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ]
+    },
+    {
+      "code": "CSCI 2270",
+      "credits": "4",
+      "name": "Computer Science 2: Data Structures",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": 1260,
+      "y": 250,
+      "lines": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ]
+    }
+  ],
+  "coursemap": {
+    "CSCI 1000": 0,
+    "APPM 1235": 1,
+    "MATH 1150": 2,
+    "APPM 1350": 3,
+    "MATH 1300": 4,
+    "CSCI 1300": 5,
+    "CSCI 2270": 6
+  },
+  "lines": [
+    [
+      417,
+      754,
+      460,
+      826,
+      551,
+      876,
+      696,
+      874,
+      814,
+      813,
+      852,
+      734
+    ],
+    [
+      1352,
+      376,
+      1439,
+      416,
+      1464,
+      544,
+      1315,
+      665,
+      1161,
+      682,
+      1270,
+      525,
+      1366,
+      555,
+      1471,
+      390,
+      1451,
+      322,
+      1531,
+      336,
+      1503,
+      582,
+      1373,
+      642,
+      1387,
+      481,
+      1488,
+      427,
+      1532,
+      506,
+      1371,
+      661,
+      1279,
+      561,
+      1384,
+      458,
+      1458,
+      561,
+      1418,
+      673,
+      1227,
+      657
+    ],
+    [
+      228,
+      113,
+      305,
+      123,
+      314,
+      55,
+      450,
+      -1,
+      539,
+      65,
+      527,
+      186,
+      421,
+      222,
+      278,
+      200,
+      261,
+      112,
+      227,
+      110
+    ]
+  ]
+}

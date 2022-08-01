@@ -1,0 +1,270 @@
+{
+  "courses": [
+    {
+      "code": "CSCI 1000",
+      "credits": "1",
+      "name": "Computer Science as a Field of Work and Study",
+      "prerequisites": [],
+      "x": 166,
+      "y": -80,
+      "lines": []
+    },
+    {
+      "code": "APPM 1235",
+      "credits": "4",
+      "name": "Pre-Calculus for Engineers",
+      "prerequisites": [],
+      "x": 174,
+      "y": 175,
+      "lines": []
+    },
+    {
+      "code": "MATH 1150",
+      "credits": "4",
+      "name": "Pre-Calculus Mathematics",
+      "prerequisites": [],
+      "x": 180,
+      "y": 330,
+      "lines": []
+    },
+    {
+      "code": "APPM 1350",
+      "credits": "4",
+      "name": "Calculus 1 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1150"
+        ]
+      ],
+      "x": 530,
+      "y": 450,
+      "lines": [
+        []
+      ]
+    },
+    {
+      "code": "MATH 1300",
+      "credits": "5",
+      "name": "Calculus 1",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1150"
+        ]
+      ],
+      "x": 745,
+      "y": 441,
+      "lines": [
+        []
+      ]
+    },
+    {
+      "code": "CSCI 1300",
+      "credits": "4",
+      "name": "Computer Science 1: Starting Computing",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1150",
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": 621,
+      "y": 170,
+      "lines": [
+        []
+      ]
+    },
+    {
+      "code": "CSCI 2270",
+      "credits": "4",
+      "name": "Computer Science 2: Data Structures",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": 1140,
+      "y": 87,
+      "lines": [
+        [
+          "CSCI 1300"
+        ],
+        []
+      ]
+    },
+    {
+      "code": "APPM 1360",
+      "credits": "4",
+      "name": "Calculus 2 for Engineers",
+      "prerequisites": [
+        []
+      ],
+      "x": 522,
+      "y": 590,
+      "lines": [
+        []
+      ]
+    },
+    {
+      "code": "MATH 2300",
+      "credits": "5",
+      "name": "Calculus 2",
+      "prerequisites": [
+        []
+      ],
+      "x": 735,
+      "y": 590,
+      "lines": [
+        []
+      ]
+    },
+    {
+      "code": "CSCI 3104",
+      "credits": "4",
+      "name": "Algorithms",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "CSCI 2270"
+        ],
+        [
+          "MATH 2001",
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170"
+        ]
+      ],
+      "x": 938,
+      "y": 793,
+      "lines": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "CSCI 2270"
+        ],
+        [
+          "MATH 2001",
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170"
+        ]
+      ]
+    }
+  ],
+  "coursemap": {
+    "CSCI 1000": 0,
+    "APPM 1235": 1,
+    "MATH 1150": 2,
+    "APPM 1350": 3,
+    "MATH 1300": 4,
+    "CSCI 1300": 5,
+    "CSCI 2270": 6,
+    "APPM 1360": 7,
+    "MATH 2300": 8,
+    "CSCI 3104": 9
+  },
+  "lines": [
+    [
+      115,
+      185,
+      135,
+      185,
+      422,
+      231,
+      568,
+      183,
+      546,
+      180
+    ],
+    [
+      136,
+      334,
+      184,
+      337,
+      392,
+      230,
+      856,
+      321
+    ],
+    [
+      499,
+      458,
+      568,
+      447,
+      659,
+      317,
+      658,
+      186,
+      658,
+      186,
+      568,
+      190
+    ],
+    [
+      748,
+      449,
+      717,
+      448,
+      655,
+      329,
+      818,
+      188
+    ],
+    [
+      555,
+      460,
+      585,
+      466,
+      644,
+      521,
+      547,
+      643
+    ],
+    [
+      750,
+      448,
+      730,
+      448,
+      644,
+      523,
+      732,
+      607,
+      752,
+      607
+    ],
+    [
+      651,
+      473,
+      645,
+      519,
+      532,
+      593,
+      454,
+      594
+    ],
+    [
+      642,
+      352,
+      663,
+      302,
+      723,
+      252,
+      1041,
+      114,
+      1136,
+      110
+    ]
+  ]
+}
