@@ -16,7 +16,7 @@ function editMenuSetUp() {
   // create add node button
   // idk what to tell you about the first being '' and the others being ""
   // ...it's a....convention thing....yea
-  makeAButton('Add Node', addNode, "editbuttons", "addnodebtn", "#dropdown-content");
+  makeAButton('Add Note', addNode, "editbuttons", "addnodebtn", "#dropdown-content");
   // create draw path button
   makeAButton('Draw Path', drawPath, "editbuttons", "drawbtn", "#dropdown-content");
   // create delete button
