@@ -174,6 +174,29 @@ function createFormTextField(form, label, id, value, br) {
     form.appendChild(document.createElement("br"));
 }
 
+// I also need a text area so copying text field
+function createFormTextArea(form, label, id, value, br) {
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
+  let tempinput = document.createElement("input");
+  tempinput.setAttribute("type", "textarea");
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
+  tempinput.setAttribute("value", value);
+  tempinput.setAttribute("onfocus", "this.value=''");
+  form.appendChild(tempinput);
+  if(br)
+    form.appendChild(document.createElement("br"));
+}
+
 // global variable list of courses
 let courseList = [];
 // I'm also thinking of making a map that says code is key gives you index in course list
@@ -298,7 +321,7 @@ function addNode() {
   addNodeForm.innerHTML = '';
   // create the labels and inputs for the form
   createFormTextField(addNodeForm, "Node Title:", "nodetitle", "Title of the node", true);
-  createFormTextField(addNodeForm, "Node Text:", "nodetext", "Text of the node", true);
+  createFormTextArea(addNodeForm, "Node Text:", "nodetext", "Text of the node", true);
   // make it visible
   addNodeDiv.style.display = 'block';
 }
@@ -477,6 +500,7 @@ function processJSON(json) {
 let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
+let draggingnode = -1;
 // need a global variable of if we are moving the screen this frame
 let xy = [0, 0];
 // p5js drawing code called every frame
@@ -635,7 +659,7 @@ const courseListHandler = (course, index, arr) => {
       // 1: moving more than one course at a time
       // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
       // 3: flashing fill
-      if(draggingcourse === -1 && mouseIsPressed && mouseHovering) {
+      if(draggingcourse === -1 && draggingnode === -1 && mouseIsPressed && mouseHovering) {
         draggingcourse = index;
       }
       // if this is the course we are dragging move it to mouse position
@@ -660,8 +684,44 @@ const courseListHandler = (course, index, arr) => {
 
 // helper function that handles everything for nodes
 const nodeListHandler = (node, index, arr) => {
+  // set some stroke stuff
   strokeWeight(1);
   stroke(0);
+  // move nodes if moving screen
+  node.x += xy[0];
+  node.y += xy[1];
+  // draw box around node
+  let boxsize = {
+    x: node.title.lenght > node.text.length ? node.title.length : node.text.length,
+    y: node.text.split(/\r\n|\r|\n/).length
+  };
+  if(boxsize.x < 12)
+    boxsize.x *= 5;
+  else if(boxsize.x > 40)
+    boxsize.x *= 3.5;
+  else
+    boxsize.x *= 4;
+  boxsize.y = 15 + boxsize.y * 6;
+  // check if dragging this box
+  let mouseHovering = draggingnode === index;
+  // intersecting course check
+  // TODO: notes can be more than one line change boxsize with that in mind
+  if(mouseHovering || (mouseX > node.x - boxsize.x && mouseX < node.x + boxsize.x && mouseY > node.y - boxsize.y & mouseY < node.y + boxsize.y))
+    mouseHovering = true;
+  if(mouseHovering)
+    fill(200, 200, 200);
+  else
+    fill(255, 255, 255);
+  // draw rect around node
+  rect(node.x - boxsize.x, node.y - boxsize.y, boxsize.x*2, boxsize.y*2+15);
+  // TODO: delete and edit
+
+  // don't want stroke on text
+  noStroke();
+  fill(0);
+  // finally draw the text
+  text(node.title, node.x, node.y);
+  text(node.text, node.x, node.y + 15);
 };
 
 // helper function that tells you if you are close to a line segment or not
@@ -720,6 +780,7 @@ course = {
 function mouseReleased() {
   // no longer dragging a course
   draggingcourse = -1;
+  draggingnode = -1;
 }
 
 // special key pressed
