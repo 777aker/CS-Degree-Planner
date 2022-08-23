@@ -184,8 +184,7 @@ function createFormTextArea(form, label, id, value, br) {
     if(br)
       form.appendChild(document.createElement("br"));
   }
-  let tempinput = document.createElement("input");
-  tempinput.setAttribute("type", "textarea");
+  let tempinput = document.createElement("textarea");
   if(id !== "") {
     tempinput.setAttribute("id", id);
     tempinput.setAttribute("name", id);
@@ -384,8 +383,8 @@ function getHash(str) {
 
 // cancel adding a node
 const cancelnodebtn = document.querySelector("#cancelnode");
-cancelnodebtn.addEventListener('click', cancelCourse);
-function cancelCourse() {
+cancelnodebtn.addEventListener('click', cancelNode);
+function cancelNode() {
   addNodeDiv.style.display = 'none';
   addNodeForm.innerHTML = '';
   typing = false;
@@ -481,18 +480,24 @@ function loadFile() {
 
 // process json file loaded
 function processJSON(json) {
-  courseList = json.courses;
-  const remap = new Map(Object.entries(json.coursemap));
-  courseMap.clear();
-  remap.forEach(function(value, key) {
-    courseMap.set(key, value);
-  });
-  nodeList = json.nodes;
-  const remap2 = new Map(Object.entries(json.nodemap));
-  nodeMap.clear();
-  remap2.forEach(function(value, key) {
-    nodeMap.set(key, value);
-  });
+  if(json.courses !== null && json.courses !== undefined)
+    courseList = json.courses;
+  if(json.coursemap !== null && json.coursemap !== undefined) {
+    const remap = new Map(Object.entries(json.coursemap));
+    courseMap.clear();
+    remap.forEach(function(value, key) {
+      courseMap.set(key, value);
+    });
+  }
+  if(json.nodes !== null && json.nodes !== undefined)
+    nodeList = json.nodes;
+  if(json.nodemap !== null && json.nodemap !== undefined) {
+    const remap2 = new Map(Object.entries(json.nodemap));
+    nodeMap.clear();
+    remap2.forEach(function(value, key) {
+      nodeMap.set(key, value);
+    });
+  }
   lineList = json.lines;
 }
 
@@ -530,11 +535,6 @@ function draw() {
   lineList.forEach(lineListHandler);
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
-  // rather than do styling each loop though, just do once out here
-  textSize(14);
-  textAlign(CENTER, CENTER);
-  textFont('Helvetica');
-  textStyle(NORMAL);
   // loop that goes through and does everything we need for nodes
   // mostly same as courses
   nodeList.forEach(nodeListHandler);
@@ -606,6 +606,10 @@ const courseListHandler = (course, index, arr) => {
   // stroke stuff
   strokeWeight(1);
   stroke(0);
+  textSize(14);
+  textFont('Helvetica');
+  textStyle(NORMAL);
+  textAlign(CENTER, CENTER);
   // move the courses based on which keys are held
   course.x += xy[0];
   course.y += xy[1];
@@ -613,14 +617,9 @@ const courseListHandler = (course, index, arr) => {
   // draw box around courses
   // boxsize is a variable that figures out how big our box around the course needs to be
   // based on how much text is displayed in the course
-  boxsize = course.name.length > course.code.length + course.credits.length ? course.name.length : course.code.length + course.credits.length;
-  // so turns out font is hard, change the boxsize a little based on how many characters there are
-  if(boxsize < 12)
-    boxsize *= 5;
-  else if(boxsize > 40)
-    boxsize *= 3.5;
-  else
-    boxsize *= 4;
+  boxsize = textWidth(course.name) > textWidth(course.code + course.credits) + 1 ? textWidth(course.name) : textWidth(course.code + course.credits) + 1;
+  boxsize /= 2;
+  boxsize += 15;
   // if hovering over the box change fill
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
@@ -687,21 +686,46 @@ const nodeListHandler = (node, index, arr) => {
   // set some stroke stuff
   strokeWeight(1);
   stroke(0);
+  textSize(14);
+  textFont('Helvetica');
   // move nodes if moving screen
   node.x += xy[0];
   node.y += xy[1];
-  // draw box around node
-  let boxsize = {
-    x: node.title.lenght > node.text.length ? node.title.length : node.text.length,
-    y: node.text.split(/\r\n|\r|\n/).length
-  };
-  if(boxsize.x < 12)
-    boxsize.x *= 5;
-  else if(boxsize.x > 40)
-    boxsize.x *= 3.5;
-  else
-    boxsize.x *= 4;
-  boxsize.y = 15 + boxsize.y * 6;
+  let hasTitle = node.title !== null && node.title !== '' && node.title !== 'Title of the node';
+  let hasText = node.text !== null && node.text !== '';
+  let boxsize;
+  if(hasTitle && hasText) {
+    let splittxt = node.text.split(/\r\n|\r|\n/);
+    let gtext = textWidth(splittxt[0]);
+    for(let i = 0; i < splittxt.length; i++) {
+      const wid = textWidth(splittxt[i]);
+      if(wid > gtext)
+        gtext = wid;
+    }
+    // draw box around node
+    boxsize = {
+      x: textWidth(node.title) > gtext ? textWidth(node.title) : gtext / 2 + 5,
+      y: (splittxt.length + 1) * textLeading() / 2
+    };
+  } else if(hasTitle) {
+    boxsize = {
+      x: textWidth(node.title),
+      y: 14
+    }
+  } else {
+    let splittxt = node.text.split(/\r\n|\r|\n/);
+    let gtext = textWidth(splittxt[0]);
+    for(let i = 0; i < splittxt.length; i++) {
+      const wid = textWidth(splittxt[i]);
+      if(wid > gtext)
+        gtext = wid;
+    }
+    boxsize = {
+      x: gtext / 2 + 5,
+      y: splittxt.length * textLeading() / 2
+    }
+  }
+
   // check if dragging this box
   let mouseHovering = draggingnode === index;
   // intersecting course check
@@ -713,15 +737,29 @@ const nodeListHandler = (node, index, arr) => {
   else
     fill(255, 255, 255);
   // draw rect around node
-  rect(node.x - boxsize.x, node.y - boxsize.y, boxsize.x*2, boxsize.y*2+15);
+  rect(node.x - boxsize.x, node.y - boxsize.y, boxsize.x*2, boxsize.y*2);
   // TODO: delete and edit
 
   // don't want stroke on text
   noStroke();
   fill(0);
   // finally draw the text
-  text(node.title, node.x, node.y);
-  text(node.text, node.x, node.y + 15);
+  if(hasTitle && hasText) {
+    textStyle(BOLD);
+    textAlign(CENTER, TOP);
+    text(node.title, node.x, node.y - boxsize.y);
+    textStyle(NORMAL);
+    textAlign(LEFT, TOP);
+    text(node.text, node.x - boxsize.x + 2.5, node.y - boxsize.y + textLeading());
+  } else if(hasTitle) {
+    textStyle(BOLD);
+    textAlign(CENTER, CENTER);
+    text(node.title, node.x, node.y);
+  } else {
+    textStyle(NORMAL);
+    textAlign(LEFT, CENTER);
+    text(node.text, node.x - boxsize.x + 2.5, node.y);
+  }
 };
 
 // helper function that tells you if you are close to a line segment or not
