@@ -191,7 +191,7 @@ course = {
   prerequisites: prereqs,
   x: number,
   y: number.
-  lines: list of prereqs
+  lines: list of prereqs (removed)
 };
 */
 // we also need a seperate list of lines
@@ -245,11 +245,16 @@ function submitCourse() {
     prerequisites: prereqs,
     x: windowWidth / 2,
     y: windowHeight / 2,
-    // you might be thinking this is insane, well, at first we want to connect all
-    // prereqs, but if someone decides they want to delete one and draw it themself
-    // we don't want to remove the prereq but we do want to remove the line
-    lines: prereqs
   };
+  // and also add a line connecting it to our linelist
+  // but we have to do some special formatting so linelist can draw them easily
+  prereqs.forEach(prereqgroup => {
+    // since all of these are in the same prereq group we could probably do something fancy here
+    // TODO this is a good spot to fix how prereqs with the same requirement are added
+    prereqgroup.forEach(prereq => {
+      lineList.push([coursecode, coursecode, prereq, prereq]);
+    });
+  });
   // if the courseMap already has this course code then replace it with the new one
   if(courseMap.has(coursecode)) {
     // also, set course position to where it was
@@ -389,13 +394,15 @@ function processJSON(json) {
 let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
+// need a global variable of if we are moving the screen this frame
+let xy = [0, 0];
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
   // set background color
   background(220);
   // if the user is holding a key down move everything around
-  let xy = [0, 0];
+  xy = [0, 0];
   if(!typing) {
     if(keyIsDown(87) || keyIsDown(UP_ARROW))
       xy[1] += movespeed;
@@ -409,61 +416,11 @@ function draw() {
   // draw mode time, do some nonsense
   // I'm not sure what this will entail yet so gonna put it in another function
   // pass xy also so we can move some stuff around
-  if(mode === "draw")
-    drawmode();
+
   // draw the lines
-  // set strokeWeight
-  strokeWeight(2);
-  stroke(0);
-  // remove fill so lines don't do this weird nonsense effect where they
-  // fill in the area you were drawing
-  noFill();
   // I love anonymous functions apparently (I use them a lot)
   // for every line that exists this is going to draw them
-  lineList.forEach((line, index, lines) => {
-    beginShape();
-    let mousehovering = false;
-    if(mode === "delete") {
-      strokeWeight(5);
-      stroke(200, 0, 0);
-      // so clicking on a point removes the whole line
-      // I did it this way for now at least because any other way
-      // is way more work and complicated and math and innefecient
-      // than I want it to be
-      for(let i = 0; i < line.length - 1; i += 2) {
-        // draw some points so they can see what they are trying to delete
-        point(line[i], line[i + 1]);
-        if(dist(mouseX, mouseY, line[i], line[i + 1]) < 8) {
-          // mouse hovering is used later
-          mousehovering = true;
-          if(mouseIsPressed)
-            lines.splice(index, 1);
-        }
-      }
-      strokeWeight(2);
-    }
-    // you might have noticed we loop through the lines twice
-    // this is because first we need to check if we are hovering over the line
-    // because if we are we need to go through and draw the line in a different color
-    // so users know what they are deleting
-    for(let i = 0; i < line.length - 1; i += 2) {
-      // highlight line if you are hovering over it
-      if(mousehovering)
-        stroke(200, 0, 0);
-      else
-        stroke(0);
-      // if they are moving around the screen change line position
-      line[i] += xy[0];
-      line[i+1] += xy[1];
-      curveVertex(line[i], line[i + 1]);
-    }
-    // if we are in draw mode so they can see what they are about to do treat
-    // their mouse position as a point, ie when they click and actually make
-    // a point they know what it will look like before they click
-    if(mode === "draw" && index === lines.length - 1)
-      curveVertex(mouseX, mouseY);
-    endShape();
-  });
+  lineList.forEach(lineListHandler);
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
   // rather than do styling each loop though, just do once out here
@@ -477,30 +434,9 @@ function draw() {
   // at least now we have a predraw loop
   strokeWeight(2);
   stroke(0);
-  courseList.forEach(course => {
-    course.lines.forEach(group => {
-      // yep, it's even a triple for loop....tragic
-      // until further notice, I hate this
-      group.forEach((value, index, array) => {
-        if(courseMap.has(value)) {
-          let concrs = courseList[courseMap.get(value)];
-          // let's go ahead and do some line testing while we are here
-          if(mode === "delete") {
-            if(lineTest(5, course.x, course.y, concrs.x, concrs.y, mouseX, mouseY)) {
-              stroke(255, 0, 0);
-              if(mouseIsPressed) {
-                array.splice(index, 1);
-              }
-            } else {
-              stroke(0);
-            }
-          }
-          line(course.x, course.y, concrs.x, concrs.y);
-        }
-      });
-    });
-  });
   // loop that goes through and does everything we want for each course
+  courseList.forEach(courseListHandler);
+  /*
   courseList.forEach((course, index, arr) => {
     // stroke stuff
     strokeWeight(1);
@@ -513,18 +449,8 @@ function draw() {
     // cause this is a double and we are already in one
     // uhg, nevermind, this is sad
     // just leave it for now in case we ever figure it out
-    /*
-    course.lines.forEach(group => {
-      group.forEach(value => {
-        // this was hopefully going to be simple
-        // unfortunately, there isn't another good way to do this
-        // this method draws over other courses and blend mode can't fix it
-        if(courseMap.has(value))
-          line(course.x, course.y, courseList[courseMap.get(value)].x, courseList[courseMap.get(value)].y);
-        // let me think for a bit about what kind of fancy algorithm I need for this
-      });
-    });
-    */
+
+
     // draw box around courses
     // boxsize is a variable that figures out how big our box around the course needs to be
     // based on how much text is displayed in the course
@@ -596,7 +522,154 @@ function draw() {
     text(course.code + "-" + course.credits, course.x, course.y);
     text(course.name, course.x, course.y+15);
   });
+  */
 }
+
+// helper function that handles the linelist in draw
+const lineListHandler = (line, index, lines) => {
+  // set strokeWeight
+  strokeWeight(2);
+  stroke(0);
+  // remove fill so lines don't do this weird nonsense effect where they
+  // fill in the area you were drawing
+  noFill();
+  beginShape();
+  let mousehovering = false;
+  if(mode === "delete") {
+    strokeWeight(5);
+    stroke(200, 0, 0);
+    // so clicking on a point removes the whole line
+    // I did it this way for now at least because any other way
+    // is way more work and complicated and math and innefecient
+    // than I want it to be
+    for(let i = 0; i < line.length - 1; i += 2) {
+      // draw some points so they can see what they are trying to delete
+      point(line[i], line[i + 1]);
+      if(dist(mouseX, mouseY, line[i], line[i + 1]) < 8) {
+        // mouse hovering is used later
+        mousehovering = true;
+        if(mouseIsPressed)
+          lines.splice(index, 1);
+      }
+    }
+    strokeWeight(2);
+  }
+  // you might have noticed we loop through the lines twice
+  // this is because first we need to check if we are hovering over the line
+  // because if we are we need to go through and draw the line in a different color
+  // so users know what they are deleting
+  for(let i = 0; i < line.length - 1; i += 2) {
+    // highlight line if you are hovering over it
+    if(mousehovering)
+      stroke(200, 0, 0);
+    else
+      stroke(0);
+    // if they are moving around the screen change line position
+    line[i] += xy[0];
+    line[i+1] += xy[1];
+    if(mode === "draw" && index === lines.length - 1) {
+      strokeWeight(5);
+      point(line[i], line[i + 1]);
+      strokeWeight(2);
+    }
+    curveVertex(line[i], line[i + 1]);
+  }
+  // if we are in draw mode so they can see what they are about to do treat
+  // their mouse position as a point, ie when they click and actually make
+  // a point they know what it will look like before they click
+  if(mode === "draw" && index === lines.length - 1)
+    curveVertex(mouseX, mouseY);
+  endShape();
+};
+
+// helper function that handles the first courselist draw
+// actually wait, with the new method we no longer need two draw calls to courselist
+// incredible
+const courseListHandler =(course, index, arr) => {
+  // stroke stuff
+  strokeWeight(1);
+  stroke(0);
+  // move the courses based on which keys are held
+  course.x += xy[0];
+  course.y += xy[1];
+  //  draw lines connecting courses
+  // triple for loop baby
+  // cause this is a double and we are already in one
+  // uhg, nevermind, this is sad
+  // just leave it for now in case we ever figure it out
+
+
+  // draw box around courses
+  // boxsize is a variable that figures out how big our box around the course needs to be
+  // based on how much text is displayed in the course
+  boxsize = course.name.length > course.code.length + course.credits.length ? course.name.length : course.code.length + course.credits.length;
+  // so turns out font is hard, change the boxsize a little based on how many characters there are
+  if(boxsize < 12)
+    boxsize *= 5;
+  else if(boxsize > 40)
+    boxsize *= 3.5;
+  else
+    boxsize *= 4;
+  // if hovering over the box change fill
+  // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
+  let mouseHovering = draggingcourse === index;
+  // intersecting course check
+  if(mouseHovering || (mouseX > course.x - boxsize && mouseX < course.x + boxsize && mouseY > course.y - 15 && mouseY < course.y + 30))
+    mouseHovering = true;
+  if(mouseHovering)
+    fill(200, 200, 200);
+  else
+    fill(255, 255, 255);
+  // draw the rectangle around our course
+  rect(course.x - boxsize, course.y - 15, boxsize*2, 45);
+  // in different modes do some different things
+  switch(mode) {
+    case "delete":
+      // make the text fill different
+      fill(200, 0, 0);
+      // if you click the course delete it
+      // deleting it in this case is just removing it from our master list of courses
+      if(mouseIsPressed && mouseHovering) {
+        // wait more complicated now obviously, because code getting more complicated
+        // every course that comes after this one now moves positions backwards one
+        courseMap.forEach(function(value, key) {
+          if(value > index) {
+            courseMap.set(key, value - 1);
+          }
+        });
+        courseMap.delete(courseList[index].code);
+        arr.splice(index, 1);
+      }
+      break;
+    case "edit":
+      fill(0, 0, 200);
+      // if we haven't been dragging a course then make this course the one we drag
+      // this actually fixes a plethora of bugs
+      // 1: moving more than one course at a time
+      // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
+      // 3: flashing fill
+      if(draggingcourse === -1 && mouseIsPressed && mouseHovering) {
+        draggingcourse = index;
+      }
+      // if this is the course we are dragging move it to mouse position
+      // you might have noticed that when dragging the course the box lags behind the text
+      // that's because we basically have to put this here and our box we have to draw before
+      // we actually move the course
+      // this is just the most efficient and it's actually a cool effect so it's staying
+      if(draggingcourse === index) {
+        course.x = mouseX;
+        course.y = mouseY;
+      }
+      break;
+    default:
+      fill(0, 0, 0);
+  }
+  // we were doing a lot of drawing so just remove the stroke don't want it on the text
+  noStroke();
+  // draw course code, credit hours, and name to the screen
+  text(course.code + "-" + course.credits, course.x, course.y);
+  text(course.name, course.x, course.y+15);
+};
 
 // helper function that tells you if you are close to a line segment or not
 // distance - distance from line this will return true at
@@ -614,17 +687,6 @@ function lineTest(distance, x1, y1, x2, y2, px, py) {
   return false;
 }
 
-// what to do in draw mode
-function drawmode() {
-  // draw a point at the cursor
-  strokeWeight(5);
-  stroke(0);
-  for(let i = 0; i < lineList[lineList.length - 1].length - 1; i += 2) {
-    point(lineList[lineList.length - 1][i], lineList[lineList.length - 1][i + 1]);
-  }
-  point(mouseX, mouseY);
-}
-
 // this is the only fix I can thing of for now
 // it's like a weird drawing mode bug that happens because you click
 // the drawing mode button to enter drawing mode so it counts that click
@@ -637,10 +699,13 @@ function mouseMoved() {
 
 // when mouse is pressed do some stuff
 function mousePressed() {
+  // TODO
+  // no longer check here for linelist check in courseList since want to know if intersecting
+  // so delete this
   // there's a bug here, not sure how to fix it yet though
   // I fixed it. see mousemovedbtn variable
   // in drawing mode add a point to our list of lines if you click the mouse
-  if(mode === "draw" && mousemovedbtn) {
+  if(mode === "draw" && mousemovedbtn && !typing) {
     lineList[lineList.length - 1].push(mouseX);
     lineList[lineList.length - 1].push(mouseY);
   }
