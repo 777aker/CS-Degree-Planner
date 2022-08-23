@@ -729,7 +729,6 @@ const nodeListHandler = (node, index, arr) => {
   // check if dragging this box
   let mouseHovering = draggingnode === index;
   // intersecting course check
-  // TODO: notes can be more than one line change boxsize with that in mind
   if(mouseHovering || (mouseX > node.x - boxsize.x && mouseX < node.x + boxsize.x && mouseY > node.y - boxsize.y & mouseY < node.y + boxsize.y))
     mouseHovering = true;
   if(mouseHovering)
@@ -737,12 +736,33 @@ const nodeListHandler = (node, index, arr) => {
   else
     fill(255, 255, 255);
   // draw rect around node
-  rect(node.x - boxsize.x, node.y - boxsize.y, boxsize.x*2, boxsize.y*2);
+  rect(node.x - boxsize.x, node.y - boxsize.y, boxsize.x*2, boxsize.y*2 + 2.5);
   // TODO: delete and edit
-
+  switch(mode) {
+    case "delete":
+      // make the text fill different
+      fill(200, 0, 0);
+      // if you click it delete it
+      if(mouseIsPressed && mouseHovering) {
+        nodeMap.delete(nodeList[index].code);
+        arr.splice(index, 1);
+      }
+      break;
+    case "edit":
+      fill(0, 0, 200);
+      if(draggingnode === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
+        draggingnode = index;
+      }
+      if(draggingnode === index) {
+        node.x = mouseX;
+        node.y = mouseY;
+      }
+      break;
+    default:
+      fill(0);
+  }
   // don't want stroke on text
   noStroke();
-  fill(0);
   // finally draw the text
   if(hasTitle && hasText) {
     textStyle(BOLD);
