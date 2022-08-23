@@ -97,4 +97,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+}
+
+/* add node form */
+.add-node-form {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
 }

@@ -244,7 +244,7 @@ function submitCourse() {
     name: coursename,
     prerequisites: prereqs,
     x: windowWidth / 2,
-    y: windowHeight / 2,
+    y: windowHeight / 2
   };
   // and also add a line connecting it to our linelist
   // but we have to do some special formatting so linelist can draw them easily
@@ -289,8 +289,83 @@ function cancelCourse() {
 // basically will do the same thing as add course button
 // but this doesn't have to be a course this could just be a little
 // box you want to make for your convenience / understanding
+const addNodeDiv = document.querySelector('.add-node-div');
+const addNodeForm = document.querySelector('.add-node-form');
 function addNode() {
+  // set typing to true so certain events aren't triggered
+  typing = true;
+  // clear the form
+  addNodeForm.innerHTML = '';
+  // create the labels and inputs for the form
+  createFormTextField(addNodeForm, "Node Title:", "nodetitle", "Title of the node", true);
+  createFormTextField(addNodeForm, "Node Text:", "nodetext", "Text of the node", true);
+  // make it visible
+  addNodeDiv.style.display = 'block';
+}
 
+// submit for a new node
+const submitnodebtn = document.querySelector('#submitnode');
+submitnodebtn.addEventListener('click', submitNode);
+// when submit node is pressed do the following
+function submitNode() {
+  // get info from form
+  const title = addNodeForm.querySelector("#nodetitle").value;
+  const text = addNodeForm.querySelector("#nodetext").value;
+  // nodes behind the scenes need unique identifiers for connecting, drawing, and saving
+  // so we are going to make a hash map
+  // TODO: hash function may need some work since most nodes will have same text
+  let hash = getHash(title + text + nodeList.length);
+  while(nodeMap.has(hash)) {
+    hash += 1;
+    hash |= 0;
+  }
+  // add the node
+  const node = {
+    code: hash,
+    title: title,
+    text: text,
+    x: windowWidth / 2,
+    y: windowHeight / 2
+  };
+  nodeMap.set(hash, nodeList.length);
+  nodeList.push(node);
+  addNodeForm.innerHTML = '';
+  addNodeDiv.style.display = 'none';
+  typing = false;
+}
+
+// this stores all of our nodes
+/*
+  node = {
+    code:
+    title:
+    text:
+    x:
+    y:
+  }
+*/
+let nodeList = [];
+// this is our node hashmap for finding nodes
+const nodeMap = new Map();
+
+// need a hash function for the nodes
+function getHash(str) {
+  let hash = 0;
+  for(let i = 0; i < str.length; i++) {
+    let chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return hash;
+}
+
+// cancel adding a node
+const cancelnodebtn = document.querySelector("#cancelnode");
+cancelnodebtn.addEventListener('click', cancelCourse);
+function cancelCourse() {
+  addNodeDiv.style.display = 'none';
+  addNodeForm.innerHTML = '';
+  typing = false;
 }
 
 // this is the global mode variable
@@ -369,6 +444,8 @@ function saveFile() {
   let json = {};
   json.courses = courseList;
   json.coursemap = Object.fromEntries(courseMap);
+  json.nodes = nodeList;
+  json.nodemap = Object.fromEntries(nodeMap);
   json.lines = lineList;
   saveJSON(json, savetext.value);
 }
@@ -386,6 +463,12 @@ function processJSON(json) {
   courseMap.clear();
   remap.forEach(function(value, key) {
     courseMap.set(key, value);
+  });
+  nodeList = json.nodes;
+  const remap2 = new Map(Object.entries(json.nodemap));
+  nodeMap.clear();
+  remap2.forEach(function(value, key) {
+    nodeMap.set(key, value);
   });
   lineList = json.lines;
 }
@@ -428,101 +511,11 @@ function draw() {
   textAlign(CENTER, CENTER);
   textFont('Helvetica');
   textStyle(NORMAL);
-  // so sadly first before we do that loop, we have to draw a lot of lines
-  // so they show up under the courses. I tried to avoid this to the best of my ability
-  // you win some you lose some
-  // at least now we have a predraw loop
-  strokeWeight(2);
-  stroke(0);
+  // loop that goes through and does everything we need for nodes
+  // mostly same as courses
+  nodeList.forEach(nodeListHandler);
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
-  /*
-  courseList.forEach((course, index, arr) => {
-    // stroke stuff
-    strokeWeight(1);
-    stroke(0);
-    // move the courses based on which keys are held
-    course.x += xy[0];
-    course.y += xy[1];
-    //  draw lines connecting courses
-    // triple for loop baby
-    // cause this is a double and we are already in one
-    // uhg, nevermind, this is sad
-    // just leave it for now in case we ever figure it out
-
-
-    // draw box around courses
-    // boxsize is a variable that figures out how big our box around the course needs to be
-    // based on how much text is displayed in the course
-    boxsize = course.name.length > course.code.length + course.credits.length ? course.name.length : course.code.length + course.credits.length;
-    // so turns out font is hard, change the boxsize a little based on how many characters there are
-    if(boxsize < 12)
-      boxsize *= 5;
-    else if(boxsize > 40)
-      boxsize *= 3.5;
-    else
-      boxsize *= 4;
-    // if hovering over the box change fill
-    // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
-    let mouseHovering = draggingcourse === index;
-    // intersecting course check
-    if(mouseHovering || (mouseX > course.x - boxsize && mouseX < course.x + boxsize && mouseY > course.y - 15 && mouseY < course.y + 30))
-      mouseHovering = true;
-    if(mouseHovering)
-      fill(200, 200, 200);
-    else
-      fill(255, 255, 255);
-    // draw the rectangle around our course
-    rect(course.x - boxsize, course.y - 15, boxsize*2, 45);
-    // in different modes do some different things
-    switch(mode) {
-      case "delete":
-        // make the text fill different
-        fill(200, 0, 0);
-        // if you click the course delete it
-        // deleting it in this case is just removing it from our master list of courses
-        if(mouseIsPressed && mouseHovering) {
-          // wait more complicated now obviously, because code getting more complicated
-          // every course that comes after this one now moves positions backwards one
-          courseMap.forEach(function(value, key) {
-            if(value > index) {
-              courseMap.set(key, value - 1);
-            }
-          });
-          courseMap.delete(courseList[index].code);
-          arr.splice(index, 1);
-        }
-        break;
-      case "edit":
-        fill(0, 0, 200);
-        // if we haven't been dragging a course then make this course the one we drag
-        // this actually fixes a plethora of bugs
-        // 1: moving more than one course at a time
-        // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
-        // 3: flashing fill
-        if(draggingcourse === -1 && mouseIsPressed && mouseHovering) {
-          draggingcourse = index;
-        }
-        // if this is the course we are dragging move it to mouse position
-        // you might have noticed that when dragging the course the box lags behind the text
-        // that's because we basically have to put this here and our box we have to draw before
-        // we actually move the course
-        // this is just the most efficient and it's actually a cool effect so it's staying
-        if(draggingcourse === index) {
-          course.x = mouseX;
-          course.y = mouseY;
-        }
-        break;
-      default:
-        fill(0, 0, 0);
-    }
-    // we were doing a lot of drawing so just remove the stroke don't want it on the text
-    noStroke();
-    // draw course code, credit hours, and name to the screen
-    text(course.code + "-" + course.credits, course.x, course.y);
-    text(course.name, course.x, course.y+15);
-  });
-  */
 }
 
 // helper function that handles the linelist in draw
@@ -585,19 +578,13 @@ const lineListHandler = (line, index, lines) => {
 // helper function that handles the first courselist draw
 // actually wait, with the new method we no longer need two draw calls to courselist
 // incredible
-const courseListHandler =(course, index, arr) => {
+const courseListHandler = (course, index, arr) => {
   // stroke stuff
   strokeWeight(1);
   stroke(0);
   // move the courses based on which keys are held
   course.x += xy[0];
   course.y += xy[1];
-  //  draw lines connecting courses
-  // triple for loop baby
-  // cause this is a double and we are already in one
-  // uhg, nevermind, this is sad
-  // just leave it for now in case we ever figure it out
-
 
   // draw box around courses
   // boxsize is a variable that figures out how big our box around the course needs to be
@@ -669,6 +656,12 @@ const courseListHandler =(course, index, arr) => {
   // draw course code, credit hours, and name to the screen
   text(course.code + "-" + course.credits, course.x, course.y);
   text(course.name, course.x, course.y+15);
+};
+
+// helper function that handles everything for nodes
+const nodeListHandler = (node, index, arr) => {
+  strokeWeight(1);
+  stroke(0);
 };
 
 // helper function that tells you if you are close to a line segment or not
@@ -774,5 +767,10 @@ function keyTyped() {
   if(key === 'c') {
     print(courseList);
     print(courseMap);
+  }
+  // and nodes
+  if(key === 'n') {
+    print(nodeList);
+    print(nodeMap);
   }
 }
