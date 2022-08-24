@@ -1,3 +1,10 @@
+// Putting some global variables up here like I should
+let fontsize = 14;
+let boxpadding = {
+  x: 15,
+  y: 10
+}
+
 // p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
@@ -258,7 +265,7 @@ function submitCourse() {
   // we have a list of lists. the big list is basically requirements, and that requirement element in that
   // list holds a list of every course that will fulfill that requirement. Make sense? idk bc I can't
   // actually talk to anyone reading these comments
-
+  textSize(fontsize);
   // now we should actually add all this to the variable that stores all the courses
   const course = {
     code: coursecode,
@@ -266,7 +273,9 @@ function submitCourse() {
     name: coursename,
     prerequisites: prereqs,
     x: windowWidth / 2,
-    y: windowHeight / 2
+    y: windowHeight / 2,
+    height: textLeading() * 2 + boxpadding.y,
+    width: textWidth(coursecode + ch) + 1 > textWidth(coursename) ? textWidth(coursecode + ch) + 1 + boxpadding.x : textWidth(coursename) + boxpadding.x
   };
   // and also add a line connecting it to our linelist
   // but we have to do some special formatting so linelist can draw them easily
@@ -341,13 +350,37 @@ function submitNode() {
     hash += 1;
     hash |= 0;
   }
+  textSize(fontsize);
+  let hasTitle = title !== '' && title !== 'Title of the node';
+  let hasText = text !== '';
+  let width = 0;
+  let height = 0;
+  textStyle(NORMAL);
+  if(hasText) {
+    let splittxt = text.split(/\r\n|\r|\n/);
+    let gtext = textWidth(splittxt[0]);
+    for(let i = 0; i < splittxt.length; i++) {
+      const wid = textWidth(splittxt[i]);
+      if(wid > gtext)
+        gtext = wid;
+    }
+    textStyle(BOLD);
+    width = textWidth(title) * hasTitle > gtext ? textWidth(title) * hasTitle + boxpadding.x : gtext + boxpadding.x;
+    height = (splittxt.length + hasTitle) * textLeading() + boxpadding.y;
+  } else {
+    textStyle(BOLD);
+    width = textWidth(title) + boxpadding.x;
+    height = textLeading() + boxpadding.y;
+  }
   // add the node
   const node = {
     code: hash,
-    title: title,
-    text: text,
+    title: hasTitle ? title : '',
+    text: hasText ? text : '',
     x: windowWidth / 2,
-    y: windowHeight / 2
+    y: windowHeight / 2,
+    width: width,
+    height: height
   };
   nodeMap.set(hash, nodeList.length);
   nodeList.push(node);
@@ -552,7 +585,7 @@ const lineListHandler = (line, index, lines) => {
   noFill();
   beginShape();
   let mousehovering = false;
-  if(mode === "delete") {
+  if(mode === "delete" && !typing) {
     strokeWeight(5);
     stroke(200, 0, 0);
     // so clicking on a point removes the whole line
@@ -614,71 +647,70 @@ const courseListHandler = (course, index, arr) => {
   course.x += xy[0];
   course.y += xy[1];
 
-  // draw box around courses
-  // boxsize is a variable that figures out how big our box around the course needs to be
-  // based on how much text is displayed in the course
-  boxsize = textWidth(course.name) > textWidth(course.code + course.credits) + 1 ? textWidth(course.name) : textWidth(course.code + course.credits) + 1;
-  boxsize /= 2;
-  boxsize += 15;
   // if hovering over the box change fill
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > course.x - boxsize && mouseX < course.x + boxsize && mouseY > course.y - 15 && mouseY < course.y + 30))
+  if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2))
     mouseHovering = true;
   if(mouseHovering)
     fill(200, 200, 200);
   else
     fill(255, 255, 255);
   // draw the rectangle around our course
-  rect(course.x - boxsize, course.y - 15, boxsize*2, 45);
+  rectMode(CENTER);
+  rect(course.x, course.y, course.width, course.height);
   // in different modes do some different things
-  switch(mode) {
-    case "delete":
-      // make the text fill different
-      fill(200, 0, 0);
-      // if you click the course delete it
-      // deleting it in this case is just removing it from our master list of courses
-      if(mouseIsPressed && mouseHovering) {
-        // wait more complicated now obviously, because code getting more complicated
-        // every course that comes after this one now moves positions backwards one
-        courseMap.forEach(function(value, key) {
-          if(value > index) {
-            courseMap.set(key, value - 1);
-          }
-        });
-        courseMap.delete(courseList[index].code);
-        arr.splice(index, 1);
-      }
-      break;
-    case "edit":
-      fill(0, 0, 200);
-      // if we haven't been dragging a course then make this course the one we drag
-      // this actually fixes a plethora of bugs
-      // 1: moving more than one course at a time
-      // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
-      // 3: flashing fill
-      if(draggingcourse === -1 && draggingnode === -1 && mouseIsPressed && mouseHovering) {
-        draggingcourse = index;
-      }
-      // if this is the course we are dragging move it to mouse position
-      // you might have noticed that when dragging the course the box lags behind the text
-      // that's because we basically have to put this here and our box we have to draw before
-      // we actually move the course
-      // this is just the most efficient and it's actually a cool effect so it's staying
-      if(draggingcourse === index) {
-        course.x = mouseX;
-        course.y = mouseY;
-      }
-      break;
-    default:
-      fill(0, 0, 0);
+  if(!typing) {
+    switch(mode) {
+      case "delete":
+        // make the text fill different
+        fill(200, 0, 0);
+        // if you click the course delete it
+        // deleting it in this case is just removing it from our master list of courses
+        if(mouseIsPressed && mouseHovering) {
+          // wait more complicated now obviously, because code getting more complicated
+          // every course that comes after this one now moves positions backwards one
+          courseMap.forEach(function(value, key) {
+            if(value > index) {
+              courseMap.set(key, value - 1);
+            }
+          });
+          courseMap.delete(courseList[index].code);
+          arr.splice(index, 1);
+        }
+        break;
+      case "edit":
+        fill(0, 0, 200);
+        // if we haven't been dragging a course then make this course the one we drag
+        // this actually fixes a plethora of bugs
+        // 1: moving more than one course at a time
+        // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
+        // 3: flashing fill
+        if(draggingcourse === -1 && draggingnode === -1 && mouseIsPressed && mouseHovering) {
+          draggingcourse = index;
+        }
+        // if this is the course we are dragging move it to mouse position
+        // you might have noticed that when dragging the course the box lags behind the text
+        // that's because we basically have to put this here and our box we have to draw before
+        // we actually move the course
+        // this is just the most efficient and it's actually a cool effect so it's staying
+        if(draggingcourse === index) {
+          course.x = mouseX;
+          course.y = mouseY;
+        }
+        break;
+      default:
+        fill(0, 0, 0);
+    }
+  } else {
+    fill(0);
   }
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
   noStroke();
   // draw course code, credit hours, and name to the screen
-  text(course.code + "-" + course.credits, course.x, course.y);
-  text(course.name, course.x, course.y+15);
+  textAlign(CENTER, CENTER);
+  text(course.code + "-" + course.credits + "\n" + course.name, course.x, course.y);
 };
 
 // helper function that handles everything for nodes
@@ -691,94 +723,68 @@ const nodeListHandler = (node, index, arr) => {
   // move nodes if moving screen
   node.x += xy[0];
   node.y += xy[1];
-  let hasTitle = node.title !== null && node.title !== '' && node.title !== 'Title of the node';
-  let hasText = node.text !== null && node.text !== '';
-  let boxsize;
-  if(hasTitle && hasText) {
-    let splittxt = node.text.split(/\r\n|\r|\n/);
-    let gtext = textWidth(splittxt[0]);
-    for(let i = 0; i < splittxt.length; i++) {
-      const wid = textWidth(splittxt[i]);
-      if(wid > gtext)
-        gtext = wid;
-    }
-    // draw box around node
-    boxsize = {
-      x: textWidth(node.title) > gtext ? textWidth(node.title) : gtext / 2 + 5,
-      y: (splittxt.length + 1) * textLeading() / 2
-    };
-  } else if(hasTitle) {
-    boxsize = {
-      x: textWidth(node.title),
-      y: 14
-    }
-  } else {
-    let splittxt = node.text.split(/\r\n|\r|\n/);
-    let gtext = textWidth(splittxt[0]);
-    for(let i = 0; i < splittxt.length; i++) {
-      const wid = textWidth(splittxt[i]);
-      if(wid > gtext)
-        gtext = wid;
-    }
-    boxsize = {
-      x: gtext / 2 + 5,
-      y: splittxt.length * textLeading() / 2
-    }
-  }
 
   // check if dragging this box
   let mouseHovering = draggingnode === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > node.x - boxsize.x && mouseX < node.x + boxsize.x && mouseY > node.y - boxsize.y & mouseY < node.y + boxsize.y))
+  if(mouseHovering || (mouseX > node.x - node.width/2 && mouseX < node.x + node.width/2 && mouseY > node.y - node.height/2 & mouseY < node.y + node.height/2))
     mouseHovering = true;
   if(mouseHovering)
     fill(200, 200, 200);
   else
     fill(255, 255, 255);
   // draw rect around node
-  rect(node.x - boxsize.x, node.y - boxsize.y, boxsize.x*2, boxsize.y*2 + 2.5);
+  rectMode(CENTER);
+  rect(node.x, node.y, node.width, node.height);
   // TODO: delete and edit
-  switch(mode) {
-    case "delete":
-      // make the text fill different
-      fill(200, 0, 0);
-      // if you click it delete it
-      if(mouseIsPressed && mouseHovering) {
-        nodeMap.delete(nodeList[index].code);
-        arr.splice(index, 1);
-      }
-      break;
-    case "edit":
-      fill(0, 0, 200);
-      if(draggingnode === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
-        draggingnode = index;
-      }
-      if(draggingnode === index) {
-        node.x = mouseX;
-        node.y = mouseY;
-      }
-      break;
-    default:
-      fill(0);
+  if(!typing) {
+    switch(mode) {
+      case "delete":
+        // make the text fill different
+        fill(200, 0, 0);
+        // if you click it delete it
+        if(mouseIsPressed && mouseHovering) {
+          nodeMap.delete(nodeList[index].code);
+          arr.splice(index, 1);
+        }
+        break;
+      case "edit":
+        fill(0, 0, 200);
+        if(draggingnode === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
+          draggingnode = index;
+        }
+        if(draggingnode === index) {
+          node.x = mouseX;
+          node.y = mouseY;
+        }
+        break;
+      default:
+        fill(0);
+    }
+  } else {
+    fill(0);
   }
   // don't want stroke on text
   noStroke();
   // finally draw the text
-  if(hasTitle && hasText) {
-    textStyle(BOLD);
-    textAlign(CENTER, TOP);
-    text(node.title, node.x, node.y - boxsize.y);
+  // if it doesn't have a title center text
+  if(node.title === '') {
     textStyle(NORMAL);
-    textAlign(LEFT, TOP);
-    text(node.text, node.x - boxsize.x + 2.5, node.y - boxsize.y + textLeading());
-  } else if(hasTitle) {
+    textAlign(LEFT, CENTER);
+    text(node.text, node.x - node.width/2 + boxpadding.x/2, node.y);
+  // if it does and text is blank then center it
+  } else if(node.text === '') {
     textStyle(BOLD);
     textAlign(CENTER, CENTER);
     text(node.title, node.x, node.y);
+  // both exist so put title at top and text after
   } else {
+    textStyle(BOLD);
+    textAlign(CENTER, TOP);
+    text(node.title, node.x, node.y - node.height/2 + boxpadding.y/2);
     textStyle(NORMAL);
-    textAlign(LEFT, CENTER);
-    text(node.text, node.x - boxsize.x + 2.5, node.y);
+    textAlign(LEFT, TOP);
+    text(node.text, node.x - node.width/2 + boxpadding.x/2, node.y - node.height/2 + boxpadding.y/2 + textLeading());
   }
 };
 
