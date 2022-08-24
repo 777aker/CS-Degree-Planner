@@ -266,6 +266,9 @@ function submitCourse() {
   // list holds a list of every course that will fulfill that requirement. Make sense? idk bc I can't
   // actually talk to anyone reading these comments
   textSize(fontsize);
+  textStyle(BOLD);
+  let bold = textWidth(coursecode + '-' + ch);
+  textStyle(NORMAL);
   // now we should actually add all this to the variable that stores all the courses
   const course = {
     code: coursecode,
@@ -275,7 +278,7 @@ function submitCourse() {
     x: windowWidth / 2,
     y: windowHeight / 2,
     height: textLeading() * 2 + boxpadding.y,
-    width: textWidth(coursecode + ch) + 1 > textWidth(coursename) ? textWidth(coursecode + ch) + 1 + boxpadding.x : textWidth(coursename) + boxpadding.x
+    width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x
   };
   // and also add a line connecting it to our linelist
   // but we have to do some special formatting so linelist can draw them easily
@@ -709,8 +712,11 @@ const courseListHandler = (course, index, arr) => {
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
   noStroke();
   // draw course code, credit hours, and name to the screen
-  textAlign(CENTER, CENTER);
-  text(course.code + "-" + course.credits + "\n" + course.name, course.x, course.y);
+  textAlign(CENTER, TOP);
+  textStyle(BOLD);
+  text(course.code + "-" + course.credits, course.x, course.y - course.height/2 + boxpadding.y/2);
+  textStyle(NORMAL);
+  text(course.name, course.x, course.y - course.height/2 + boxpadding.y/2 + textLeading());
 };
 
 // helper function that handles everything for nodes
