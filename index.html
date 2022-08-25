@@ -20,9 +20,6 @@
               <label for="savetxt">Save As:</label>
               <input type="text" name="savetxt" id="savetxt" value="File Name" onfocus="this.value=''">
               <input type="button" id="savebtn" value="Save">
-              <label for="loadtxt">Load File:</label>
-              <input type="text" name="loadtxt" id="loadtxt" value="File Name" onfocus="this.value=''">
-              <input type="button" id="loadbtn" value="Load">
             </form>
             <!-- to add a template look at template div and js template functions -->
             <button class="templatebtn" id="opentemplates">Open Template Options</button>
@@ -40,6 +37,7 @@
       <div class="template-div">
         <form class="template-form">
           <!-- look at js for how to add a template, easier to do there -->
+          <button type="button" id="canceltemplate" name="canceltemplate">Close Templates</button>
         </form>
       </div>
       <!-- Form for adding a class -->

@@ -13,6 +13,8 @@ function setup() {
   frameRate(30);
   // set up the edit menu
   editMenuSetUp();
+  // set up templates
+  setUpTemplates();
 }
 
 // set up the buttons for the edit menu
@@ -426,8 +428,61 @@ function cancelNode() {
   typing = false;
 }
 
-// form holding the templates we can choose from
+// this is the form with templates
+const templateform = document.querySelector('.template-form');
+// this is the div holding the form that we show and hide
+const templatediv = document.querySelector('.template-div');
+// this button shows templates when pressed
+const showtemplates = document.querySelector("#opentemplates");
+showtemplates.addEventListener('click', function() {
+  typing = true;
+  templatediv.style.display = "block";
+});
 
+// if you want to add a template option add it here after uploading
+// the templates to the jsons folder
+// WARNING: if hosting site changed need to change the prefix on templates
+function setUpTemplates() {
+  // create the cs button
+  // WARNING: url prefix in openTemplate function needs to change if hosting site changes
+  templateButton(templateform, 'Computer Science BS Degree', 'templateloadbtns', 'csbs', 'Computer-Science-BS-template.json');
+}
+
+// template button setup function
+function templateButton(form, name, btnclass, btnid, url) {
+  let button = createButton(name);
+  button.class(btnclass);
+  button.id(btnid);
+  button.parent(form);
+  button.mousePressed(() => {
+    openTemplate(url);
+  });
+  return button;
+}
+
+/*
+function makeAButton(name, fn, btnclass, btnid, parent) {
+  let button = createButton(name);
+  button.mousePressed(fn);
+  button.class(btnclass);
+  button.id(btnid);
+  button.parent(parent);
+}
+*/
+
+function openTemplate(url) {
+  let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/' + url;
+  loadJSON(furl, processJSON);
+  closeTemplates();
+}
+
+function closeTemplates() {
+  typing = false;
+  templatediv.style.display = 'none';
+}
+
+const canceltemplates = document.querySelector('#canceltemplate');
+canceltemplates.addEventListener('click', closeTemplates);
 
 // this is the global mode variable
 // tells us what mode we are in: draw, delete, edit, ""
@@ -493,10 +548,7 @@ saveform.addEventListener('mouseleave', function() {
 });
 const savebutton = document.querySelector("#savebtn");
 savebutton.addEventListener('click', saveFile);
-const loadbutton = document.querySelector("#loadbtn");
-loadbutton.addEventListener('click', loadFile);
 const savetext = document.querySelector("#savetxt");
-const loadtext = document.querySelector("#loadtxt");
 
 // this takes the courselist and linelist we have for everything and saves
 // them to a json file
@@ -509,12 +561,6 @@ function saveFile() {
   json.nodemap = Object.fromEntries(nodeMap);
   json.lines = lineList;
   saveJSON(json, savetext.value);
-}
-
-// this loads a courselist and linelist from a json file
-function loadFile() {
-  //print(loadtext.value);
-  loadJSON("/jsons/" + loadtext.value + ".json", processJSON);
 }
 
 // process json file loaded
