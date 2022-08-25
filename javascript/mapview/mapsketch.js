@@ -4,6 +4,8 @@ let boxpadding = {
   x: 15,
   y: 10
 }
+// whether or not we are typing a form (so that we don't move the screen and stuff while typing / do special key presses)
+let typing = false;
 
 // p5js setup function
 function setup() {
@@ -45,10 +47,20 @@ function makeAButton(name, fn, btnclass, btnid, parent) {
   button.parent(parent);
 }
 
-// whether or not we are typing a form (so that we don't move the screen and stuff while typing / do special key presses)
-let typing = false;
+// quick bug fix
+const editdropdwn = document.querySelector('.edit-dropdown');
+editdropdwn.addEventListener('mouseover', function() {
+  typing = true;
+});
+editdropdwn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+
 // get the course form and div containing it and save as global variables
 const addCourseDiv = document.querySelector('.add-course-div');
+addCourseDiv.addEventListener('mouseover', function() {
+  typing = true;
+});
 const addCourseForm = document.querySelector('.add-course-form');
 // function called when user presses add course button in the edit menu
 function addCourse() {
@@ -200,6 +212,9 @@ function createFormTextArea(form, label, id, value, br) {
   }
   tempinput.setAttribute("value", value);
   tempinput.setAttribute("onfocus", "this.value=''");
+  tempinput.setAttribute("rows", "10");
+  tempinput.setAttribute("cols", "40");
+  tempinput.setAttribute("wrap", "off");
   form.appendChild(tempinput);
   if(br)
     form.appendChild(document.createElement("br"));
@@ -259,6 +274,7 @@ function submitCourse() {
     }
     // add that list to our list of lists of prereqs
     prereqs.push(prereq);
+    typing = false;
   }
   // ok ^ that loop is a little confusing so let me reexplain
   // a course can have any number of prerequisites, and some prerequisites fulfill the same requirement
@@ -326,6 +342,9 @@ function cancelCourse() {
 // but this doesn't have to be a course this could just be a little
 // box you want to make for your convenience / understanding
 const addNodeDiv = document.querySelector('.add-node-div');
+addNodeDiv.addEventListener('mouseover', function() {
+  typing = true;
+});
 const addNodeForm = document.querySelector('.add-node-form');
 function addNode() {
   // set typing to true so certain events aren't triggered
@@ -432,6 +451,10 @@ function cancelNode() {
 const templateform = document.querySelector('.template-form');
 // this is the div holding the form that we show and hide
 const templatediv = document.querySelector('.template-div');
+// when using div disable events
+templatediv.addEventListener('mouseover', function() {
+  typing = true;
+});
 // this button shows templates when pressed
 const showtemplates = document.querySelector("#opentemplates");
 showtemplates.addEventListener('click', function() {
@@ -469,6 +492,7 @@ function openTemplate(url) {
 // closes the template options
 function closeTemplates() {
   templatediv.style.display = 'none';
+  typing = false;
 }
 
 // button that can close template options
@@ -477,6 +501,10 @@ canceltemplates.addEventListener('click', closeTemplates);
 
 // div holding file loader
 const fileloader = document.querySelector('.fileloader-div');
+// disable events when filling out form
+fileloader.addEventListener('mouseover', function() {
+  typing = true;
+});
 // form for file loader
 const fileform = document.querySelector('.fileloader-form');
 // file input
@@ -497,6 +525,7 @@ function closeFL() {
   fileloader.style.display = 'none';
   flresult.value = '';
   selectfiles.value = '';
+  typing = false;
 }
 // when user loads a file this event fired
 selectfiles.addEventListener('change', fileChanged);
@@ -680,7 +709,7 @@ const lineListHandler = (line, index, lines) => {
   noFill();
   beginShape();
   let mousehovering = false;
-  if(mode === "delete" && !typing) {
+  if(mode === "delete") {
     strokeWeight(5);
     stroke(200, 0, 0);
     // so clicking on a point removes the whole line
@@ -690,7 +719,7 @@ const lineListHandler = (line, index, lines) => {
     for(let i = 0; i < line.length - 1; i += 2) {
       // draw some points so they can see what they are trying to delete
       point(line[i], line[i + 1]);
-      if(dist(mouseX, mouseY, line[i], line[i + 1]) < 8) {
+      if(!typing && dist(mouseX, mouseY, line[i], line[i + 1]) < 8) {
         // mouse hovering is used later
         mousehovering = true;
         if(mouseIsPressed)
@@ -756,50 +785,50 @@ const courseListHandler = (course, index, arr) => {
   rectMode(CENTER);
   rect(course.x, course.y, course.width, course.height);
   // in different modes do some different things
-  if(!typing) {
-    switch(mode) {
-      case "delete":
-        // make the text fill different
-        fill(200, 0, 0);
-        // if you click the course delete it
-        // deleting it in this case is just removing it from our master list of courses
-        if(mouseIsPressed && mouseHovering) {
-          // wait more complicated now obviously, because code getting more complicated
-          // every course that comes after this one now moves positions backwards one
-          courseMap.forEach(function(value, key) {
-            if(value > index) {
-              courseMap.set(key, value - 1);
-            }
-          });
-          courseMap.delete(courseList[index].code);
-          arr.splice(index, 1);
-        }
+  switch(mode) {
+    case "delete":
+      // make the text fill different
+      fill(200, 0, 0);
+      if(typing)
         break;
-      case "edit":
-        fill(0, 0, 200);
-        // if we haven't been dragging a course then make this course the one we drag
-        // this actually fixes a plethora of bugs
-        // 1: moving more than one course at a time
-        // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
-        // 3: flashing fill
-        if(draggingcourse === -1 && draggingnode === -1 && mouseIsPressed && mouseHovering) {
-          draggingcourse = index;
-        }
-        // if this is the course we are dragging move it to mouse position
-        // you might have noticed that when dragging the course the box lags behind the text
-        // that's because we basically have to put this here and our box we have to draw before
-        // we actually move the course
-        // this is just the most efficient and it's actually a cool effect so it's staying
-        if(draggingcourse === index) {
-          course.x = mouseX;
-          course.y = mouseY;
-        }
+      // if you click the course delete it
+      // deleting it in this case is just removing it from our master list of courses
+      if(mouseIsPressed && mouseHovering) {
+        // wait more complicated now obviously, because code getting more complicated
+        // every course that comes after this one now moves positions backwards one
+        courseMap.forEach(function(value, key) {
+          if(value > index) {
+            courseMap.set(key, value - 1);
+          }
+        });
+        courseMap.delete(courseList[index].code);
+        arr.splice(index, 1);
+      }
+      break;
+    case "edit":
+      fill(0, 0, 200);
+      if(typing)
         break;
-      default:
-        fill(0, 0, 0);
-    }
-  } else {
-    fill(0);
+      // if we haven't been dragging a course then make this course the one we drag
+      // this actually fixes a plethora of bugs
+      // 1: moving more than one course at a time
+      // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
+      // 3: flashing fill
+      if(draggingcourse === -1 && draggingnode === -1 && mouseIsPressed && mouseHovering) {
+        draggingcourse = index;
+      }
+      // if this is the course we are dragging move it to mouse position
+      // you might have noticed that when dragging the course the box lags behind the text
+      // that's because we basically have to put this here and our box we have to draw before
+      // we actually move the course
+      // this is just the most efficient and it's actually a cool effect so it's staying
+      if(draggingcourse === index) {
+        course.x = mouseX;
+        course.y = mouseY;
+      }
+      break;
+    default:
+      fill(0, 0, 0);
   }
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
   noStroke();
@@ -835,32 +864,32 @@ const nodeListHandler = (node, index, arr) => {
   rectMode(CENTER);
   rect(node.x, node.y, node.width, node.height);
   // TODO: delete and edit
-  if(!typing) {
-    switch(mode) {
-      case "delete":
-        // make the text fill different
-        fill(200, 0, 0);
-        // if you click it delete it
-        if(mouseIsPressed && mouseHovering) {
-          nodeMap.delete(nodeList[index].code);
-          arr.splice(index, 1);
-        }
+  switch(mode) {
+    case "delete":
+      // make the text fill different
+      fill(200, 0, 0);
+      if(typing)
         break;
-      case "edit":
-        fill(0, 0, 200);
-        if(draggingnode === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
-          draggingnode = index;
-        }
-        if(draggingnode === index) {
-          node.x = mouseX;
-          node.y = mouseY;
-        }
+      // if you click it delete it
+      if(mouseIsPressed && mouseHovering) {
+        nodeMap.delete(nodeList[index].code);
+        arr.splice(index, 1);
+      }
+      break;
+    case "edit":
+      fill(0, 0, 200);
+      if(typing)
         break;
-      default:
-        fill(0);
-    }
-  } else {
-    fill(0);
+      if(draggingnode === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
+        draggingnode = index;
+      }
+      if(draggingnode === index) {
+        node.x = mouseX;
+        node.y = mouseY;
+      }
+      break;
+    default:
+      fill(0);
   }
   // don't want stroke on text
   noStroke();
@@ -902,16 +931,6 @@ function lineTest(distance, x1, y1, x2, y2, px, py) {
   return false;
 }
 
-// this is the only fix I can thing of for now
-// it's like a weird drawing mode bug that happens because you click
-// the drawing mode button to enter drawing mode so it counts that click
-// in drawing mode as a point, so just say if they haven't moved the mouse since
-// entering drawing mode just don't do anything
-let mousemovedbtn = false;
-function mouseMoved() {
-  mousemovedbtn = true;
-}
-
 // when mouse is pressed do some stuff
 function mousePressed() {
   // TODO
@@ -920,7 +939,7 @@ function mousePressed() {
   // there's a bug here, not sure how to fix it yet though
   // I fixed it. see mousemovedbtn variable
   // in drawing mode add a point to our list of lines if you click the mouse
-  if(mode === "draw" && mousemovedbtn && !typing) {
+  if(mode === "draw" && !typing) {
     lineList[lineList.length - 1].push(mouseX);
     lineList[lineList.length - 1].push(mouseY);
   }

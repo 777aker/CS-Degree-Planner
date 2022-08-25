@@ -157,3 +157,8 @@
   padding: 10px 10px;
   gap: 10px;
 }
+
+/* File loading buttons need some thickness */
+.filebtn {
+  padding: 5px 5px;
+}
