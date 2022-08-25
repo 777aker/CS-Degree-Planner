@@ -665,11 +665,15 @@ let draggingcourse = -1;
 let draggingnode = -1;
 // need a global variable of if we are moving the screen this frame
 let xy = [0, 0];
+// also a global variable for zoom
+let zoom = 1;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
   // set background color
   background(220);
+  // fake zooming, no one will even be able to tell
+  scale(zoom);
   // if the user is holding a key down move everything around
   xy = [0, 0];
   if(!typing) {
@@ -763,7 +767,7 @@ const courseListHandler = (course, index, arr) => {
   // stroke stuff
   strokeWeight(1);
   stroke(0);
-  textSize(14);
+  textSize(fontsize);
   textFont('Helvetica');
   textStyle(NORMAL);
   textAlign(CENTER, CENTER);
@@ -845,7 +849,7 @@ const nodeListHandler = (node, index, arr) => {
   // set some stroke stuff
   strokeWeight(1);
   stroke(0);
-  textSize(14);
+  textSize(fontsize);
   textFont('Helvetica');
   // move nodes if moving screen
   node.x += xy[0];
@@ -956,6 +960,15 @@ course = {
   y: number
 };
 */
+
+// do a zoom when mouseWheel moved
+function mouseWheel(event) {
+  zoom += event.delta / 1000;
+  if(zoom < .2)
+    zoom = .2;
+  if(zoom > 3)
+    zoom = 3;
+}
 
 // when mouse is released do these things
 function mouseReleased() {
