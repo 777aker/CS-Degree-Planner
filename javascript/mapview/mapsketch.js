@@ -495,6 +495,36 @@ closefl.addEventListener('click', closeFL);
 // also need to clear inputs
 function closeFL() {
   fileloader.style.display = 'none';
+  flresult.value = '';
+  selectfiles.value = '';
+}
+// when user loads a file this event fired
+selectfiles.addEventListener('change', fileChanged);
+// file changed
+function fileChanged() {
+  // load the file, put it into the text area
+  let files = selectfiles.files;
+  if(files.length <= 0)
+    return false;
+  let fr = new FileReader();
+  fr.onload = function(e) {
+    let result = JSON.parse(e.target.result);
+    let formatted = JSON.stringify(result, null, 2);
+    flresult.value = formatted;
+  }
+  fr.readAsText(files.item(0));
+}
+// import button
+// when clicked take the text area and process it
+const importfile = document.querySelector("#import");
+importfile.addEventListener('click', importTextArea);
+// read from the textarea since they can edit file there then
+// once it's an object send it to processJSON to use
+// processJSON does stuff like json.courses so make it a dictionary basically
+function importTextArea() {
+  const json = JSON.parse(flresult.value);
+  processJSON(json);
+  closeFL();
 }
 
 // this is the global mode variable
