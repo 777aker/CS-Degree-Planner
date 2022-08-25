@@ -11,12 +11,36 @@
   </head>
   <body>
     <main>
-      <!-- dropdown menu for edit mode options -->
-      <div class="edit-dropdown">
-        <button class="dropbtn">Edit Menu</button>
-        <div id="dropdown-content">
-          <!-- all buttons placed here in js are class="editbuttons" -->
+      <div class="menus">
+        <!-- dropdown menu for saving options -->
+        <div class="save-dropdown">
+          <button class="dropbtn">File Menu</button>
+          <div id="save-content">
+            <form class="fileform">
+              <label for="savetxt">Save As:</label>
+              <input type="text" name="savetxt" id="savetxt" value="File Name" onfocus="this.value=''">
+              <input type="button" id="savebtn" value="Save">
+              <label for="loadtxt">Load File:</label>
+              <input type="text" name="loadtxt" id="loadtxt" value="File Name" onfocus="this.value=''">
+              <input type="button" id="loadbtn" value="Load">
+            </form>
+            <!-- to add a template look at template div and js template functions -->
+            <button class="templatebtn" id="opentemplates">Open Template Options</button>
+          </div>
         </div>
+        <!-- dropdown menu for edit mode options -->
+        <div class="edit-dropdown">
+          <button class="dropbtn">Edit Menu</button>
+          <div id="dropdown-content">
+            <!-- all buttons placed here in js are class="editbuttons" -->
+          </div>
+        </div>
+      </div>
+      <!-- Form for loading templates -->
+      <div class="template-div">
+        <form class="template-form">
+          <!-- look at js for how to add a template, easier to do there -->
+        </form>
       </div>
       <!-- Form for adding a class -->
       <div class="add-course-div">
@@ -34,20 +58,6 @@
         </form>
         <button type="button" id="submitnode" name="submitnode">Submit Node</button>
         <button type="button" id="cancelnode" name="cancelnode">Cancel</button>
-      </div>
-      <!-- dropdown menu for saving options -->
-      <div class="save-dropdown">
-        <button class="dropbtn">File Menu</button>
-        <div id="save-content">
-          <form class="fileform">
-            <label for="savetxt">Save As:</label>
-            <input type="text" name="savetxt" id="savetxt" value="File Name" onfocus="this.value=''">
-            <input type="button" id="savebtn" value="Save">
-            <label for="loadtxt">Load File:</label>
-            <input type="text" name="loadtxt" id="loadtxt" value="File Name" onfocus="this.value=''">
-            <input type="button" id="loadbtn" value="Load">
-          </form>
-        </div>
       </div>
     </main>
   </body>

@@ -426,6 +426,9 @@ function cancelNode() {
   typing = false;
 }
 
+// form holding the templates we can choose from
+
+
 // this is the global mode variable
 // tells us what mode we are in: draw, delete, edit, ""
 let mode = "";
