@@ -20,6 +20,7 @@
               <label for="savetxt">Save As:</label>
               <input type="text" name="savetxt" id="savetxt" value="File Name" onfocus="this.value=''">
               <input type="button" id="savebtn" value="Save">
+              <input type="button" id="openloader" value="Open File Loader">
             </form>
             <!-- to add a template look at template div and js template functions -->
             <button class="templatebtn" id="opentemplates">Open Template Options</button>
@@ -38,6 +39,16 @@
         <form class="template-form">
           <!-- look at js for how to add a template, easier to do there -->
           <button type="button" id="canceltemplate" name="canceltemplate">Close Templates</button>
+        </form>
+      </div>
+      <!-- Form for loading files -->
+      <div class="fileloader-div">
+        <form class="fileloader-form">
+          <input type="file" id="select-files" value="Import">
+          <input type="button" id="import" value="Import">
+          <textarea id="result" rows="10" cols="40"></textarea>
+          <input type="button" id="confirm" value="Confirm">
+          <input type="button" id="cancelload" value="Close File Loader">
         </form>
       </div>
       <!-- Form for adding a class -->

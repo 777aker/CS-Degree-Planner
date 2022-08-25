@@ -435,7 +435,6 @@ const templatediv = document.querySelector('.template-div');
 // this button shows templates when pressed
 const showtemplates = document.querySelector("#opentemplates");
 showtemplates.addEventListener('click', function() {
-  typing = true;
   templatediv.style.display = "block";
 });
 
@@ -460,29 +459,43 @@ function templateButton(form, name, btnclass, btnid, url) {
   return button;
 }
 
-/*
-function makeAButton(name, fn, btnclass, btnid, parent) {
-  let button = createButton(name);
-  button.mousePressed(fn);
-  button.class(btnclass);
-  button.id(btnid);
-  button.parent(parent);
-}
-*/
-
+// helper function that loads a json from the templates
 function openTemplate(url) {
   let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/' + url;
   loadJSON(furl, processJSON);
   closeTemplates();
 }
 
+// closes the template options
 function closeTemplates() {
-  typing = false;
   templatediv.style.display = 'none';
 }
 
+// button that can close template options
 const canceltemplates = document.querySelector('#canceltemplate');
 canceltemplates.addEventListener('click', closeTemplates);
+
+// div holding file loader
+const fileloader = document.querySelector('.fileloader-div');
+// form for file loader
+const fileform = document.querySelector('.fileloader-form');
+// file input
+const selectfiles = document.querySelector('#select-files');
+// result display and editer
+const flresult = document.querySelector('#result');
+// button that opens file loader
+const openfl = document.querySelector('#openloader');
+openfl.addEventListener('click', function() {
+  fileloader.style.display = 'block';
+});
+// button that closes file loader
+const closefl = document.querySelector('#cancelload');
+closefl.addEventListener('click', closeFL);
+// closes the file loader
+// also need to clear inputs
+function closeFL() {
+  fileloader.style.display = 'none';
+}
 
 // this is the global mode variable
 // tells us what mode we are in: draw, delete, edit, ""
