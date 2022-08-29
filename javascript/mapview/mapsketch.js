@@ -6,7 +6,7 @@ let boxpadding = {
 }
 // whether or not we are typing a form (so that we don't move the screen and stuff while typing / do special key presses)
 let typing = false;
-
+let myFont = 'Helvetica';
 // p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
@@ -667,24 +667,46 @@ let draggingnode = -1;
 let xy = [0, 0];
 // also a global variable for zoom
 let zoom = 1;
+// variable for dragging everything around the screen
+let lastmouse = null;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
   // set background color
   background(220);
-  // fake zooming, no one will even be able to tell
+  // time for zooming
+  translate(mouseX, mouseY);
   scale(zoom);
+  translate(-mouseX, -mouseY);
+  translate();
   // if the user is holding a key down move everything around
   xy = [0, 0];
   if(!typing) {
     if(keyIsDown(87) || keyIsDown(UP_ARROW))
-      xy[1] += movespeed;
+      xy[1] += movespeed / zoom;
     if(keyIsDown(83) || keyIsDown(DOWN_ARROW))
-      xy[1] -= movespeed;
+      xy[1] -= movespeed / zoom;
     if(keyIsDown(65) || keyIsDown(LEFT_ARROW))
-      xy[0] += movespeed;
+      xy[0] += movespeed / zoom;
     if(keyIsDown(68) || keyIsDown(RIGHT_ARROW))
-      xy[0] -= movespeed;
+      xy[0] -= movespeed / zoom;
+  }
+  // dragging time
+  if(mouseIsPressed) {
+    if(mouseButton === CENTER) {
+      xy[0] += mouseX - pmouseX;
+      xy[1] += mouseY - pmouseY;
+    }
+  }
+  if(!typing) {
+    if(mouseX > windowWidth * .9)
+      xy[0] -= movespeed / zoom;
+    if(mouseX < windowWidth * .1)
+      xy[0] += movespeed / zoom;
+    if(mouseY > windowHeight * .9)
+      xy[1] -= movespeed / zoom;
+    if(mouseY < windowHeight * .1)
+      xy[1] += movespeed / zoom;
   }
   // draw mode time, do some nonsense
   // I'm not sure what this will entail yet so gonna put it in another function
@@ -768,7 +790,7 @@ const courseListHandler = (course, index, arr) => {
   strokeWeight(1);
   stroke(0);
   textSize(fontsize);
-  textFont('Helvetica');
+  textFont(myFont);
   textStyle(NORMAL);
   textAlign(CENTER, CENTER);
   // move the courses based on which keys are held
@@ -850,7 +872,7 @@ const nodeListHandler = (node, index, arr) => {
   strokeWeight(1);
   stroke(0);
   textSize(fontsize);
-  textFont('Helvetica');
+  textFont(myFont);
   // move nodes if moving screen
   node.x += xy[0];
   node.y += xy[1];
@@ -963,7 +985,7 @@ course = {
 
 // do a zoom when mouseWheel moved
 function mouseWheel(event) {
-  zoom += event.delta / 1000;
+  zoom += -event.delta / 1000;
   if(zoom < .2)
     zoom = .2;
   if(zoom > 3)
