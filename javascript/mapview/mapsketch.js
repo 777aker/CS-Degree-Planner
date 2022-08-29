@@ -667,8 +667,8 @@ let draggingnode = -1;
 let xy = [0, 0];
 // also a global variable for zoom
 let zoom = 1;
-// variable for dragging everything around the screen
-let lastmouse = null;
+// variable for dragging when near edge of screen
+
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
@@ -698,7 +698,7 @@ function draw() {
       xy[1] += mouseY - pmouseY;
     }
   }
-  if(!typing) {
+  if(!typing && focused) {
     if(mouseX > windowWidth * .9)
       xy[0] -= movespeed / zoom;
     if(mouseX < windowWidth * .1)
