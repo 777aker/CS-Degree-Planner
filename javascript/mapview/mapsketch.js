@@ -667,8 +667,6 @@ let draggingnode = -1;
 let xy = [0, 0];
 // also a global variable for zoom
 let zoom = 1;
-// variable for dragging when near edge of screen
-
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
