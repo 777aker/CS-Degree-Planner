@@ -261,8 +261,43 @@ function editCourse() {
   createFormButton(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup);
   createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
   // now time for the complicated part of this
-  // TOOD: this, needs to fill out for each prereq of the course object thingy
-
+  // for each group of prereqs create a div
+  if(course.prerequisites !== undefined && course.prerequisites !== null) {
+    course.prerequisites.forEach(prereqGroup => {
+      let groupdiv = document.createElement('div');
+      groupdiv.setAttribute('class', 'prereqGroupDiv');
+      addCourseForm.appendChild(groupdiv);
+      // for each actual prereq create a text field
+      prereqGroup.forEach(prereq => {
+        createFormTextField(groupdiv, "", "", prereq);
+      });
+      // buttons that let you add and remove prereqs from a group
+      let prereqbtn = document.createElement("input");
+      prereqbtn.setAttribute("type", "button");
+      prereqbtn.setAttribute("class", "addPrereqBtn");
+      prereqbtn.setAttribute("value", "Add Same Requirement Prerequisite");
+      addCourseForm.appendChild(prereqbtn);
+      // whenever add prereq button clicked create more prereq fields in that div
+      prereqbtn.addEventListener('click', function(){
+        // why is it 5 lines to make a text box, should I fix that?...nah I don't want to rn
+        createFormTextField(groupdiv, "", "", "Enter Prerequisite Code Only");
+      });
+      // remove prerequisite button below add so you can remove a prereq if you made too many
+      // (I kept doing that so I added this so I could undo my mistakes)
+      prereqbtn = document.createElement("input");
+      prereqbtn.setAttribute("type", "button");
+      prereqbtn.setAttribute("class", "removePrereqBtn");
+      prereqbtn.setAttribute("value", "Remove Prerequisite");
+      addCourseForm.appendChild(prereqbtn);
+      // whenever remove is clicked remove the last prerequisite of the group
+      // even works if some jerk decides to press the button a million times
+      // and there are no prerequisites left
+      prereqbtn.addEventListener('click', function(){
+        if(groupdiv.lastChild != null)
+          groupdiv.lastChild.remove();
+      });
+    });
+  }
   addCourseDiv.style.display = 'block';
 }
 // remove a prerequisite group
@@ -351,7 +386,7 @@ function submitCourse() {
     let prereq = [];
     // put them all in the same list
     for(j = 0; j < divlist.length; j++) {
-      if(divlist[j].value !== "Enter Prerequisite Code Only");
+      if(divlist[j].value !== "Enter Prerequisite Code Only")
         prereq.push(divlist[j].value);
     }
     // add that list to our list of lists of prereqs
@@ -395,6 +430,10 @@ function submitCourse() {
     course.x = courseList[courseMap.get(coursecode)].x;
     course.y = courseList[courseMap.get(coursecode)].y;
     courseList[courseMap.get(coursecode)] = course;
+  } else if(courseMap.has(lastCodeClicked)) {
+    course.x = courseList[courseMap.get(lastCodeClicked)].x;
+    course.y = courseList[courseMap.get(lastCodeClicked)].y;
+    courseList[courseMap.get(lastCodeClicked)] = course;
   } else {
     // if the course map doesn't have it then the course doesn't exist push
     // it to the map and save where it is at
@@ -563,7 +602,6 @@ closeNodeBtn.addEventListener("click", function() {
 });
 let lastNodeTypeClicked;
 function openNodeOptions(nodeType, node) {
-  print("opened options: " + nodeType);
   editNodesDiv.style.display = "flex";
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;
@@ -695,7 +733,6 @@ const savetext = document.querySelector("#savetxt");
 // this takes the courselist and linelist we have for everything and saves
 // them to a json file
 function saveFile() {
-  //print(savetext.value);
   let json = {};
   json.courses = courseList;
   json.coursemap = Object.fromEntries(courseMap);
