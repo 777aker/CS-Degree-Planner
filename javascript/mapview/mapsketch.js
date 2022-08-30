@@ -1,3 +1,4 @@
+// -------------------------------- Global Variables -------------------------------- //
 // Putting some global variables up here like I should
 let fontsize = 14;
 let boxpadding = {
@@ -7,6 +8,44 @@ let boxpadding = {
 // whether or not we are typing a form (so that we don't move the screen and stuff while typing / do special key presses)
 let typing = false;
 let myFont = 'Helvetica';
+// global variable list of courses
+let courseList = [];
+// I'm also thinking of making a map that says code is key gives you index in course list
+// would make a lot of things more efficient because idk how to do some weird reaching nonsense
+// I have to do. Like, a lot of courses have to see other courses, and if I don't make this map
+// then you have to like search through all the courses looking for one with a code you want
+// initialize it here
+const courseMap = new Map();
+/*
+course looks like
+course = {
+  code: coursecode,
+  credits: ch,
+  name: coursename,
+  prerequisites: prereqs,
+  x: number,
+  y: number.
+  lines: list of prereqs (removed)
+};
+*/
+// we also need a seperate list of lines
+// global variable of lines to draw
+let lineList = [];
+// this stores all of our nodes
+/*
+  node = {
+    code:
+    title:
+    text:
+    x:
+    y:
+  }
+*/
+let nodeList = [];
+// this is our node hashmap for finding nodes
+const nodeMap = new Map();
+
+// -------------------------------- Set up functions -------------------------------- //
 // p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
@@ -18,7 +57,6 @@ function setup() {
   // set up templates
   setUpTemplates();
 }
-
 // set up the buttons for the edit menu
 function editMenuSetUp() {
   // uses p5js to make buttons because much easier than actual html nonsense
@@ -36,6 +74,17 @@ function editMenuSetUp() {
   makeAButton('Edit Positions', editPositions, "editbuttons", "editbtn", "#dropdown-content");
 }
 
+// -------------------------------- Miscellaneous Menu -------------------------------- //
+// quick bug fix
+const editdropdwn = document.querySelector('.edit-dropdown');
+editdropdwn.addEventListener('mouseover', function() {
+  typing = true;
+});
+editdropdwn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+
+// -------------------------------- Helper Functions -------------------------------- //
 // this function makes a button so I don't have to
 // some of the names are special because I accidently used keywords
 // name of button, function button calls when pressed, class, id, parent
@@ -46,16 +95,89 @@ function makeAButton(name, fn, btnclass, btnid, parent) {
   button.id(btnid);
   button.parent(parent);
 }
+// helper function for creating form text fields
+// form - which form to append it to / element (doesn't have to be a form)
+// label - label for the text box
+// id - id for the text box
+// value - value in the text box
+// br - true or false, add breaks between text boxes or no
+function createFormTextField(form, label, id, value, br) {
+  // create the label element using passed letiables
+  // letiables??? I don't even know what that word is supposed to be
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
+  // create the input element using passed letiables
+  // I did it again, what the freak is a letiable?
+  // is there even such thing as a letiable or does it have to be letiables
+  let tempinput = document.createElement("input");
+  tempinput.setAttribute("type", "text");
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
+  tempinput.setAttribute("value", value);
+  tempinput.setAttribute("onfocus", "this.value=''");
+  form.appendChild(tempinput);
+  if(br)
+    form.appendChild(document.createElement("br"));
+}
+// I also need a text area so copying text field
+function createFormTextArea(form, label, id, value, br) {
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
+  let tempinput = document.createElement("textarea");
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
+  tempinput.setAttribute("value", value);
+  tempinput.setAttribute("onfocus", "this.value=''");
+  tempinput.setAttribute("rows", "10");
+  tempinput.setAttribute("cols", "40");
+  tempinput.setAttribute("wrap", "off");
+  form.appendChild(tempinput);
+  if(br)
+    form.appendChild(document.createElement("br"));
+}
+// need a hash function for the nodes
+function getHash(str) {
+  let hash = 0;
+  for(let i = 0; i < str.length; i++) {
+    let chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return hash;
+}
+// helper function that tells you if you are close to a line segment or not
+// distance - distance from line this will return true at
+// x1, y1, x2, y2 - your line segment
+// px, py - the point you are testing
+function lineTest(distance, x1, y1, x2, y2, px, py) {
+  let topleft = [min(x1, x2), min(y1, y2)];
+  let bottomright = [max(x1, x2), max(y1, y2)];
+  if(px > topleft[0] - distance && px < bottomright[0] + distance && py > topleft[1] - distance && py < bottomright[1] + distance) {
+    let dis = abs((x2-x1)*(y1-py)-(x1-px)*(y2-y1));
+    dis /= dist(x1, y1, x2, y2);
+    if(dis < distance)
+      return true
+  }
+  return false;
+}
 
-// quick bug fix
-const editdropdwn = document.querySelector('.edit-dropdown');
-editdropdwn.addEventListener('mouseover', function() {
-  typing = true;
-});
-editdropdwn.addEventListener('mouseleave', function() {
-  typing = false;
-});
-
+// -------------------------------- Adding Courses Section -------------------------------- //
 // get the course form and div containing it and save as global variables
 const addCourseDiv = document.querySelector('.add-course-div');
 addCourseDiv.addEventListener('mouseover', function() {
@@ -99,7 +221,6 @@ function addCourse() {
   // make it visible (it = the whole form)
   addCourseDiv.style.display = 'block';
 }
-
 // remove a prerequisite group
 // called when add course form remove prerequisite button is pressed
 function removePrereqGroup() {
@@ -119,7 +240,6 @@ function removePrereqGroup() {
   if(lastbtn.length > 0)
     lastbtn[lastbtn.length - 1].remove();
 }
-
 // add prereq group button action in add course form
 // ^ bad wording what does that mean?
 // I'll tell you, it means in the add course form when someone presses the
@@ -161,89 +281,6 @@ function addPrereqGroup() {
       groupdiv.lastChild.remove();
   });
 }
-
-// helper function for creating form text fields
-// form - which form to append it to / element (doesn't have to be a form)
-// label - label for the text box
-// id - id for the text box
-// value - value in the text box
-// br - true or false, add breaks between text boxes or no
-function createFormTextField(form, label, id, value, br) {
-  // create the label element using passed letiables
-  // letiables??? I don't even know what that word is supposed to be
-  if(label !== "") {
-    let templabel = document.createElement("label");
-    templabel.setAttribute("for", id);
-    templabel.innerHTML = label;
-    form.appendChild(templabel);
-    if(br)
-      form.appendChild(document.createElement("br"));
-  }
-  // create the input element using passed letiables
-  // I did it again, what the freak is a letiable?
-  // is there even such thing as a letiable or does it have to be letiables
-  let tempinput = document.createElement("input");
-  tempinput.setAttribute("type", "text");
-  if(id !== "") {
-    tempinput.setAttribute("id", id);
-    tempinput.setAttribute("name", id);
-  }
-  tempinput.setAttribute("value", value);
-  tempinput.setAttribute("onfocus", "this.value=''");
-  form.appendChild(tempinput);
-  if(br)
-    form.appendChild(document.createElement("br"));
-}
-
-// I also need a text area so copying text field
-function createFormTextArea(form, label, id, value, br) {
-  if(label !== "") {
-    let templabel = document.createElement("label");
-    templabel.setAttribute("for", id);
-    templabel.innerHTML = label;
-    form.appendChild(templabel);
-    if(br)
-      form.appendChild(document.createElement("br"));
-  }
-  let tempinput = document.createElement("textarea");
-  if(id !== "") {
-    tempinput.setAttribute("id", id);
-    tempinput.setAttribute("name", id);
-  }
-  tempinput.setAttribute("value", value);
-  tempinput.setAttribute("onfocus", "this.value=''");
-  tempinput.setAttribute("rows", "10");
-  tempinput.setAttribute("cols", "40");
-  tempinput.setAttribute("wrap", "off");
-  form.appendChild(tempinput);
-  if(br)
-    form.appendChild(document.createElement("br"));
-}
-
-// global variable list of courses
-let courseList = [];
-// I'm also thinking of making a map that says code is key gives you index in course list
-// would make a lot of things more efficient because idk how to do some weird reaching nonsense
-// I have to do. Like, a lot of courses have to see other courses, and if I don't make this map
-// then you have to like search through all the courses looking for one with a code you want
-// initialize it here
-const courseMap = new Map();
-/*
-course looks like
-course = {
-  code: coursecode,
-  credits: ch,
-  name: coursename,
-  prerequisites: prereqs,
-  x: number,
-  y: number.
-  lines: list of prereqs (removed)
-};
-*/
-// we also need a seperate list of lines
-// global variable of lines to draw
-let lineList = [];
-
 // set up the submit button for add course form
 const submitcoursebtn = document.querySelector("#submitcourse");
 submitcoursebtn.addEventListener('click', submitCourse);
@@ -324,7 +361,6 @@ function submitCourse() {
   addCourseDiv.style.display = "none";
   typing = false;
 }
-
 // set up the cancel button for add course form
 const cancelcoursebtn = document.querySelector("#cancelcourse");
 cancelcoursebtn.addEventListener('click', cancelCourse);
@@ -337,6 +373,7 @@ function cancelCourse() {
   typing = false;
 }
 
+// -------------------------------- Adding Node Section -------------------------------- //
 // function called when user presses add node button
 // basically will do the same thing as add course button
 // but this doesn't have to be a course this could just be a little
@@ -357,7 +394,6 @@ function addNode() {
   // make it visible
   addNodeDiv.style.display = 'block';
 }
-
 // submit for a new node
 const submitnodebtn = document.querySelector('#submitnode');
 submitnodebtn.addEventListener('click', submitNode);
@@ -412,32 +448,6 @@ function submitNode() {
   addNodeDiv.style.display = 'none';
   typing = false;
 }
-
-// this stores all of our nodes
-/*
-  node = {
-    code:
-    title:
-    text:
-    x:
-    y:
-  }
-*/
-let nodeList = [];
-// this is our node hashmap for finding nodes
-const nodeMap = new Map();
-
-// need a hash function for the nodes
-function getHash(str) {
-  let hash = 0;
-  for(let i = 0; i < str.length; i++) {
-    let chr = str.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0;
-  }
-  return hash;
-}
-
 // cancel adding a node
 const cancelnodebtn = document.querySelector("#cancelnode");
 cancelnodebtn.addEventListener('click', cancelNode);
@@ -447,6 +457,7 @@ function cancelNode() {
   typing = false;
 }
 
+// -------------------------------- Template Section -------------------------------- //
 // this is the form with templates
 const templateform = document.querySelector('.template-form');
 // this is the div holding the form that we show and hide
@@ -460,7 +471,6 @@ const showtemplates = document.querySelector("#opentemplates");
 showtemplates.addEventListener('click', function() {
   templatediv.style.display = "block";
 });
-
 // if you want to add a template option add it here after uploading
 // the templates to the jsons folder
 // WARNING: if hosting site changed need to change the prefix on templates
@@ -469,7 +479,6 @@ function setUpTemplates() {
   // WARNING: url prefix in openTemplate function needs to change if hosting site changes
   templateButton(templateform, 'Computer Science BS Degree', 'templateloadbtns', 'csbs', 'Computer-Science-BS-template.json');
 }
-
 // template button setup function
 function templateButton(form, name, btnclass, btnid, url) {
   let button = createButton(name);
@@ -481,24 +490,22 @@ function templateButton(form, name, btnclass, btnid, url) {
   });
   return button;
 }
-
 // helper function that loads a json from the templates
 function openTemplate(url) {
   let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/' + url;
   loadJSON(furl, processJSON);
   closeTemplates();
 }
-
 // closes the template options
 function closeTemplates() {
   templatediv.style.display = 'none';
   typing = false;
 }
-
 // button that can close template options
 const canceltemplates = document.querySelector('#canceltemplate');
 canceltemplates.addEventListener('click', closeTemplates);
 
+// -------------------------------- File Loader Form -------------------------------- //
 // div holding file loader
 const fileloader = document.querySelector('.fileloader-div');
 // disable events when filling out form
@@ -556,10 +563,10 @@ function importTextArea() {
   closeFL();
 }
 
+// -------------------------------- Mode Handling -------------------------------- //
 // this is the global mode variable
 // tells us what mode we are in: draw, delete, edit, ""
 let mode = "";
-
 // function called when user presses draw path button
 function drawPath() {
   // have to have this moved mouse button nonsense because if you don't then
@@ -572,17 +579,14 @@ function drawPath() {
   // mode changer helper function
   modeChanger("draw", "rgb(0, 200, 0)");
 }
-
 // function called when user presses delete mode button
 function deleteMode() {
   modeChanger("delete", "rgb(200, 0, 0)");
 }
-
 // function called when user presses edit positions button
 function editPositions() {
   modeChanger("edit", "rgb(0, 0, 200)");
 }
-
 // changing the modes looks very similar for everying so here is a helper
 // especially so we don't miss anything
 function modeChanger(fmode, color) {
@@ -608,6 +612,7 @@ function modeChanger(fmode, color) {
   }
 }
 
+// -------------------------------- File Saving -------------------------------- //
 // I can't handle having to make an entire set of nodes for testing anymore
 // so I'm making a save feature
 // set it up
@@ -621,7 +626,6 @@ saveform.addEventListener('mouseleave', function() {
 const savebutton = document.querySelector("#savebtn");
 savebutton.addEventListener('click', saveFile);
 const savetext = document.querySelector("#savetxt");
-
 // this takes the courselist and linelist we have for everything and saves
 // them to a json file
 function saveFile() {
@@ -635,6 +639,7 @@ function saveFile() {
   saveJSON(json, savetext.value);
 }
 
+// -------------------------------- JSON Processing -------------------------------- //
 // process json file loaded
 function processJSON(json) {
   if(json.courses !== null && json.courses !== undefined)
@@ -658,6 +663,7 @@ function processJSON(json) {
   lineList = json.lines;
 }
 
+// -------------------------------- Draw Function -------------------------------- //
 // movement speed (like moving the camera / all the courses and stuff)
 let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
@@ -723,6 +729,7 @@ function draw() {
   courseList.forEach(courseListHandler);
 }
 
+// -------------------------------- Draw For Loops -------------------------------- //
 // helper function that handles the linelist in draw
 const lineListHandler = (line, index, lines) => {
   // set strokeWeight
@@ -779,7 +786,6 @@ const lineListHandler = (line, index, lines) => {
     curveVertex(mouseX, mouseY);
   endShape();
 };
-
 // helper function that handles the first courselist draw
 // actually wait, with the new method we no longer need two draw calls to courselist
 // incredible
@@ -863,7 +869,6 @@ const courseListHandler = (course, index, arr) => {
   textStyle(NORMAL);
   text(course.name, course.x, course.y - course.height/2 + boxpadding.y/2 + textLeading());
 };
-
 // helper function that handles everything for nodes
 const nodeListHandler = (node, index, arr) => {
   // set some stroke stuff
@@ -939,22 +944,7 @@ const nodeListHandler = (node, index, arr) => {
   }
 };
 
-// helper function that tells you if you are close to a line segment or not
-// distance - distance from line this will return true at
-// x1, y1, x2, y2 - your line segment
-// px, py - the point you are testing
-function lineTest(distance, x1, y1, x2, y2, px, py) {
-  let topleft = [min(x1, x2), min(y1, y2)];
-  let bottomright = [max(x1, x2), max(y1, y2)];
-  if(px > topleft[0] - distance && px < bottomright[0] + distance && py > topleft[1] - distance && py < bottomright[1] + distance) {
-    let dis = abs((x2-x1)*(y1-py)-(x1-px)*(y2-y1));
-    dis /= dist(x1, y1, x2, y2);
-    if(dis < distance)
-      return true
-  }
-  return false;
-}
-
+// -------------------------------- Mouse Events -------------------------------- //
 // when mouse is pressed do some stuff
 function mousePressed() {
   // TODO
@@ -968,19 +958,6 @@ function mousePressed() {
     lineList[lineList.length - 1].push(mouseY);
   }
 }
-
-/*
-course looks like
-course = {
-  code: coursecode,
-  credits: ch,
-  name: coursename,
-  prerequisites: prereqs,
-  x: number,
-  y: number
-};
-*/
-
 // do a zoom when mouseWheel moved
 function mouseWheel(event) {
   zoom += -event.delta / 1000;
@@ -989,7 +966,6 @@ function mouseWheel(event) {
   if(zoom > 3)
     zoom = 3;
 }
-
 // when mouse is released do these things
 function mouseReleased() {
   // no longer dragging a course
@@ -997,6 +973,7 @@ function mouseReleased() {
   draggingnode = -1;
 }
 
+// -------------------------------- Keyboard Events -------------------------------- //
 // special key pressed
 function keyPressed() {
   // this stupid collapse function thingy doesn't show up for this one
@@ -1011,15 +988,6 @@ function keyPressed() {
     lineList.push([]);
   }
 }
-
-// if the window is resized this function is called
-function windowResized() {
-  // resize the canvas to fit the screen
-  resizeCanvas(windowWidth-20, windowHeight-20);
-  // set background color
-  background(220);
-}
-
 //  key typed event not for special keys use keyPressed for those
 function keyTyped() {
   // shouldn't be used because will fill out course forms
@@ -1048,4 +1016,13 @@ function keyTyped() {
     print(nodeList);
     print(nodeMap);
   }
+}
+
+// -------------------------------- Miscellaneous Events -------------------------------- //
+// if the window is resized this function is called
+function windowResized() {
+  // resize the canvas to fit the screen
+  resizeCanvas(windowWidth-20, windowHeight-20);
+  // set background color
+  background(220);
 }
