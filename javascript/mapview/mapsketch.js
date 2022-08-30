@@ -513,11 +513,11 @@ let lastNodeTypeClicked;
 function openNodeOptions(nodeType, node) {
   print("opened options: " + nodeType);
   editNodesDiv.style.display = "flex";
-  lastNodeTypeClicked = node;
+  lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;
   // we can expect every node to have an x, y, width, height
-  editNodesDiv.style.bottom = node.y + node.height;
-  editNodesDiv.style.left = node.x;
+  editNodesDiv.style.top = node.y - node.height/2 - textLeading() - 5 + 'px';
+  editNodesDiv.style.left = node.x - node.width/2 + 'px';
 }
 
 // -------------------------------- Template Section -------------------------------- //
@@ -793,7 +793,21 @@ function draw() {
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
   // move edit buttons around with nodes
-
+  if(lastCodeClicked !== "" && lastNodeTypeClicked !== null) {
+    let node;
+    switch(lastNodeTypeClicked) {
+      case nodeTypes.note:
+        node = noteList[noteMap.get(lastCodeClicked)];
+        break;
+      case nodeTypes.course:
+        node = courseList[courseMap.get(lastCodeClicked)];
+        break;
+      default:
+        return; // WARNING: this returns exiting draw don't put anything past this if statement
+    }
+    editNodesDiv.style.top = (node.y - node.height/2 - textLeading() - 5 - mouseY)*zoom + mouseY + 'px';
+    editNodesDiv.style.left = (node.x - node.width/2 - mouseX)*zoom + mouseX + 'px';
+  }
 }
 
 // -------------------------------- Draw For Loops -------------------------------- //
