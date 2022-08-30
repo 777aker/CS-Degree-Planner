@@ -262,7 +262,7 @@ function editCourse() {
   createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
   // now time for the complicated part of this
   // TOOD: this, needs to fill out for each prereq of the course object thingy
-  
+
   addCourseDiv.style.display = 'block';
 }
 // remove a prerequisite group
@@ -351,10 +351,12 @@ function submitCourse() {
     let prereq = [];
     // put them all in the same list
     for(j = 0; j < divlist.length; j++) {
-      prereq.push(divlist[j].value);
+      if(divlist[j].value !== "Enter Prerequisite Code Only");
+        prereq.push(divlist[j].value);
     }
     // add that list to our list of lists of prereqs
-    prereqs.push(prereq);
+    if(prereq.length !== 0)
+      prereqs.push(prereq);
   }
   // ok ^ that loop is a little confusing so let me reexplain
   // a course can have any number of prerequisites, and some prerequisites fulfill the same requirement
@@ -706,6 +708,11 @@ function saveFile() {
 // -------------------------------- JSON Processing -------------------------------- //
 // process json file loaded
 function processJSON(json) {
+  // bug fix need this here
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
+  editNodesDiv.style.display = "none";
+  // json stuff
   if(json.courses !== null && json.courses !== undefined)
     courseList = json.courses;
   if(json.coursemap !== null && json.coursemap !== undefined) {
@@ -754,6 +761,10 @@ function editPositions() {
 // changing the modes looks very similar for everying so here is a helper
 // especially so we don't miss anything
 function modeChanger(fmode, color) {
+  // bug fix put this here
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
+  editNodesDiv.style.display = "none";
   // set each of the edit buttons to black
   let buttons = document.querySelectorAll(".editbuttons");
   buttons.forEach(button => {
@@ -847,7 +858,7 @@ function draw() {
   courseList.forEach(courseListHandler);
   // move edit buttons around with nodes
   if(lastCodeClicked !== "" && lastNodeTypeClicked !== null) {
-    let node;
+    let node = null;
     switch(lastNodeTypeClicked) {
       case nodeTypes.note:
         node = noteList[noteMap.get(lastCodeClicked)];
@@ -855,11 +866,11 @@ function draw() {
       case nodeTypes.course:
         node = courseList[courseMap.get(lastCodeClicked)];
         break;
-      default:
-        return; // WARNING: this returns exiting draw don't put anything past this if statement
     }
-    editNodesDiv.style.top = (node.y - node.height/2 - textLeading() - 5 - mouseY)*zoom + mouseY + 'px';
-    editNodesDiv.style.left = (node.x - node.width/2 - mouseX)*zoom + mouseX + 'px';
+    if(node !== null && node !== undefined) {
+      editNodesDiv.style.top = (node.y - node.height/2 - textLeading() - 5 - mouseY)*zoom + mouseY + 'px';
+      editNodesDiv.style.left = (node.x - node.width/2 - mouseX)*zoom + mouseX + 'px';
+    }
   }
 }
 
