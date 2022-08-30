@@ -31,9 +31,9 @@ course = {
 // we also need a seperate list of lines
 // global variable of lines to draw
 let lineList = [];
-// this stores all of our nodes
+// this stores all of our notes
 /*
-  node = {
+  note = {
     code:
     title:
     text:
@@ -41,15 +41,42 @@ let lineList = [];
     y:
   }
 */
-let nodeList = [];
-// this is our node hashmap for finding nodes
-const nodeMap = new Map();
+let noteList = [];
+// this is our note hashmap for finding notes
+const noteMap = new Map();
+// this stores the last element we clicked for the edit functions to use
+let lastCodeClicked = "";
+// all the types of notes we currently have in an enum
+let nodeTypes = {
+  course: 0,
+  note: 1
+};
+// all the mode types we have
+let modes = {
+  none: 0,
+  delete: 1,
+  edit: 2,
+  draw: 3
+};
+// for referencing html
+let modenames = {
+  0: "none",
+  1: "delete",
+  2: "edit",
+  3: "draw"
+};
 
 // -------------------------------- Set up functions -------------------------------- //
 // p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
-  createCanvas(windowWidth-20, windowHeight-20);
+  let cnv = createCanvas(windowWidth-20, windowHeight-20);
+  cnv.mouseOut(function () {
+    mouseOutsideWindow = true;
+  });
+  cnv.mouseOver(function () {
+    mouseOutsideWindow = false;
+  });
   // set framerate to 30 anything more is a waste of power
   frameRate(30);
   // set up the edit menu
@@ -62,10 +89,10 @@ function editMenuSetUp() {
   // uses p5js to make buttons because much easier than actual html nonsense
   // create add course button (made a helper function for this)
   makeAButton('Add Course', addCourse, "editbuttons", "addcoursebtn", "#dropdown-content");
-  // create add node button
+  // create add note button
   // idk what to tell you about the first being '' and the others being ""
   // ...it's a....convention thing....yea
-  makeAButton('Add Note', addNode, "editbuttons", "addnodebtn", "#dropdown-content");
+  makeAButton('Add Note', addNote, "editbuttons", "addnotebtn", "#dropdown-content");
   // create draw path button
   makeAButton('Draw Path', drawPath, "editbuttons", "drawbtn", "#dropdown-content");
   // create delete button
@@ -151,7 +178,7 @@ function createFormTextArea(form, label, id, value, br) {
   if(br)
     form.appendChild(document.createElement("br"));
 }
-// need a hash function for the nodes
+// need a hash function for the notes
 function getHash(str) {
   let hash = 0;
   for(let i = 0; i < str.length; i++) {
@@ -220,6 +247,11 @@ function addCourse() {
   tempbutton.addEventListener('click', removePrereqGroup);
   // make it visible (it = the whole form)
   addCourseDiv.style.display = 'block';
+}
+// function very similar to addCourse but instead is for editing a course when it is clicked
+// similar because it uses the same form
+function editCourse() {
+  print("editing course");
 }
 // remove a prerequisite group
 // called when add course form remove prerequisite button is pressed
@@ -373,45 +405,50 @@ function cancelCourse() {
   typing = false;
 }
 
-// -------------------------------- Adding Node Section -------------------------------- //
-// function called when user presses add node button
+// -------------------------------- Adding Note Section -------------------------------- //
+// function called when user presses add note button
 // basically will do the same thing as add course button
 // but this doesn't have to be a course this could just be a little
 // box you want to make for your convenience / understanding
-const addNodeDiv = document.querySelector('.add-node-div');
-addNodeDiv.addEventListener('mouseover', function() {
+const addNoteDiv = document.querySelector('.add-note-div');
+addNoteDiv.addEventListener('mouseover', function() {
   typing = true;
 });
-const addNodeForm = document.querySelector('.add-node-form');
-function addNode() {
+const addNoteForm = document.querySelector('.add-note-form');
+function addNote() {
   // set typing to true so certain events aren't triggered
   typing = true;
   // clear the form
-  addNodeForm.innerHTML = '';
+  addNoteForm.innerHTML = '';
   // create the labels and inputs for the form
-  createFormTextField(addNodeForm, "Node Title:", "nodetitle", "Title of the node", true);
-  createFormTextArea(addNodeForm, "Node Text:", "nodetext", "Text of the node", true);
+  createFormTextField(addNoteForm, "Note Title:", "notetitle", "Title of the note", true);
+  createFormTextArea(addNoteForm, "Note Text:", "notetext", "Text of the note", true);
   // make it visible
-  addNodeDiv.style.display = 'block';
+  addNoteDiv.style.display = 'block';
 }
-// submit for a new node
-const submitnodebtn = document.querySelector('#submitnode');
-submitnodebtn.addEventListener('click', submitNode);
-// when submit node is pressed do the following
-function submitNode() {
+// similar to addNote because it uses the same form just fills it out
+function editNote() {
+  print('editing note');
+}
+// submit for a new note
+const submitnotebtn = document.querySelector('#submitnote');
+submitnotebtn.addEventListener('click', submitNote);
+// when submit note is pressed do the following
+function submitNote() {
   // get info from form
-  const title = addNodeForm.querySelector("#nodetitle").value;
-  const text = addNodeForm.querySelector("#nodetext").value;
-  // nodes behind the scenes need unique identifiers for connecting, drawing, and saving
+  const title = addNoteForm.querySelector("#notetitle").value;
+  const text = addNoteForm.querySelector("#notetext").value;
+  // notes behind the scenes need unique identifiers for connecting, drawing, and saving
   // so we are going to make a hash map
-  // TODO: hash function may need some work since most nodes will have same text
-  let hash = getHash(title + text + nodeList.length);
-  while(nodeMap.has(hash)) {
+  // TODO: hash function may need some work since most notes will have same text
+  // TODO: if statement for if opened from edit
+  let hash = getHash(title + text + noteList.length);
+  while(noteMap.has(hash)) {
     hash += 1;
     hash |= 0;
   }
   textSize(fontsize);
-  let hasTitle = title !== '' && title !== 'Title of the node';
+  let hasTitle = title !== '' && title !== 'Title of the note';
   let hasText = text !== '';
   let width = 0;
   let height = 0;
@@ -432,8 +469,8 @@ function submitNode() {
     width = textWidth(title) + boxpadding.x;
     height = textLeading() + boxpadding.y;
   }
-  // add the node
-  const node = {
+  // add the note
+  const note = {
     code: hash,
     title: hasTitle ? title : '',
     text: hasText ? text : '',
@@ -442,19 +479,45 @@ function submitNode() {
     width: width,
     height: height
   };
-  nodeMap.set(hash, nodeList.length);
-  nodeList.push(node);
-  addNodeForm.innerHTML = '';
-  addNodeDiv.style.display = 'none';
+  noteMap.set(hash, noteList.length);
+  noteList.push(note);
+  addNoteForm.innerHTML = '';
+  addNoteDiv.style.display = 'none';
   typing = false;
 }
-// cancel adding a node
-const cancelnodebtn = document.querySelector("#cancelnode");
-cancelnodebtn.addEventListener('click', cancelNode);
-function cancelNode() {
-  addNodeDiv.style.display = 'none';
-  addNodeForm.innerHTML = '';
+// cancel adding a note
+const cancelnotebtn = document.querySelector("#cancelnote");
+cancelnotebtn.addEventListener('click', cancelNote);
+function cancelNote() {
+  addNoteDiv.style.display = 'none';
+  addNoteForm.innerHTML = '';
   typing = false;
+}
+
+// -------------------------------- Edit Nodes Section -------------------------------- //
+// not sure if this is a helper or miscellaneous menu
+// actually, it's its own section
+// opens the buttons that allow you to edit the last clicked element
+const editNodesDiv = document.querySelector(".edit-nodes-div");
+const editNodeBtn = document.querySelector("#editnode");
+
+const showNodeBtn = document.querySelector("#nodeinfo");
+
+const closeNodeBtn = document.querySelector("#closeeditnode");
+closeNodeBtn.addEventListener("click", function() {
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
+  editNodesDiv.style.display = "none";
+});
+let lastNodeTypeClicked;
+function openNodeOptions(nodeType, node) {
+  print("opened options: " + nodeType);
+  editNodesDiv.style.display = "flex";
+  lastNodeTypeClicked = node;
+  lastCodeClicked = node.code;
+  // we can expect every node to have an x, y, width, height
+  editNodesDiv.style.bottom = node.y + node.height;
+  editNodesDiv.style.left = node.x;
 }
 
 // -------------------------------- Template Section -------------------------------- //
@@ -563,57 +626,8 @@ function importTextArea() {
   closeFL();
 }
 
-// -------------------------------- Mode Handling -------------------------------- //
-// this is the global mode variable
-// tells us what mode we are in: draw, delete, edit, ""
-let mode = "";
-// function called when user presses draw path button
-function drawPath() {
-  // have to have this moved mouse button nonsense because if you don't then
-  // it draws a path when the user enter draw path mode because they click to enter it
-  // so set moved mouse to false and wait until they move it before you start draw mode
-  mousemovedbtn = false;
-  // if we entered draw mode make a new line for us to draw on
-  if(mode !== "draw")
-    lineList.push([]);
-  // mode changer helper function
-  modeChanger("draw", "rgb(0, 200, 0)");
-}
-// function called when user presses delete mode button
-function deleteMode() {
-  modeChanger("delete", "rgb(200, 0, 0)");
-}
-// function called when user presses edit positions button
-function editPositions() {
-  modeChanger("edit", "rgb(0, 0, 200)");
-}
-// changing the modes looks very similar for everying so here is a helper
-// especially so we don't miss anything
-function modeChanger(fmode, color) {
-  // set each of the edit buttons to black
-  let buttons = document.querySelectorAll(".editbuttons");
-  buttons.forEach(button => {
-    button.style.color = "rgb(0, 0, 0)";
-  });
-  // if we are in the mode of the button we just pressed then clear mode
-  if(mode === fmode) {
-    mode = "";
-  } else {
-    mode = fmode;
-    // make the button the color passed so we can actually tell what mode we are in
-    document.querySelector("#" + mode + "btn").style.color = color;
-  }
-  // if we got out of draw mode and the last line they were drawing isn't long enough
-  // to actually be a line remove it
-  if(lineList.length > 0 && mode !== "draw") {
-    if(lineList[lineList.length - 1].length < 8) {
-      lineList.pop();
-    }
-  }
-}
-
 // -------------------------------- File Saving -------------------------------- //
-// I can't handle having to make an entire set of nodes for testing anymore
+// I can't handle having to make an entire set of notes for testing anymore
 // so I'm making a save feature
 // set it up
 const saveform = document.querySelector(".fileform");
@@ -633,8 +647,8 @@ function saveFile() {
   let json = {};
   json.courses = courseList;
   json.coursemap = Object.fromEntries(courseMap);
-  json.nodes = nodeList;
-  json.nodemap = Object.fromEntries(nodeMap);
+  json.notes = noteList;
+  json.notemap = Object.fromEntries(noteMap);
   json.lines = lineList;
   saveJSON(json, savetext.value);
 }
@@ -651,16 +665,65 @@ function processJSON(json) {
       courseMap.set(key, value);
     });
   }
-  if(json.nodes !== null && json.nodes !== undefined)
-    nodeList = json.nodes;
-  if(json.nodemap !== null && json.nodemap !== undefined) {
-    const remap2 = new Map(Object.entries(json.nodemap));
-    nodeMap.clear();
+  if(json.notes !== null && json.notes !== undefined)
+    noteList = json.notes;
+  if(json.notemap !== null && json.notemap !== undefined) {
+    const remap2 = new Map(Object.entries(json.notemap));
+    noteMap.clear();
     remap2.forEach(function(value, key) {
-      nodeMap.set(key, value);
+      noteMap.set(key, value);
     });
   }
   lineList = json.lines;
+}
+
+// -------------------------------- Mode Handling -------------------------------- //
+// this is the global mode variable
+// tells us what mode we are in: draw, delete, edit, ""
+let mode = modes.none;
+// function called when user presses draw path button
+function drawPath() {
+  // have to have this moved mouse button nonsense because if you don't then
+  // it draws a path when the user enter draw path mode because they click to enter it
+  // so set moved mouse to false and wait until they move it before you start draw mode
+  mousemovedbtn = false;
+  // if we entered draw mode make a new line for us to draw on
+  if(mode !== modes.draw)
+    lineList.push([]);
+  // mode changer helper function
+  modeChanger(modes.draw, "rgb(0, 200, 0)");
+}
+// function called when user presses delete mode button
+function deleteMode() {
+  modeChanger(modes.delete, "rgb(200, 0, 0)");
+}
+// function called when user presses edit positions button
+function editPositions() {
+  modeChanger(modes.edit, "rgb(0, 0, 200)");
+}
+// changing the modes looks very similar for everying so here is a helper
+// especially so we don't miss anything
+function modeChanger(fmode, color) {
+  // set each of the edit buttons to black
+  let buttons = document.querySelectorAll(".editbuttons");
+  buttons.forEach(button => {
+    button.style.color = "rgb(0, 0, 0)";
+  });
+  // if we are in the mode of the button we just pressed then clear mode
+  if(mode === fmode) {
+    mode = modes.none;
+  } else {
+    mode = fmode;
+    // make the button the color passed so we can actually tell what mode we are in
+    document.querySelector("#" + modenames[fmode] + "btn").style.color = color;
+  }
+  // if we got out of draw mode and the last line they were drawing isn't long enough
+  // to actually be a line remove it
+  if(lineList.length > 0 && mode !== modes.draw) {
+    if(lineList[lineList.length - 1].length < 8) {
+      lineList.pop();
+    }
+  }
 }
 
 // -------------------------------- Draw Function -------------------------------- //
@@ -668,11 +731,13 @@ function processJSON(json) {
 let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
-let draggingnode = -1;
+let draggingnote = -1;
 // need a global variable of if we are moving the screen this frame
 let xy = [0, 0];
 // also a global variable for zoom
 let zoom = 1;
+// global variable for dragging
+let mouseOutsideWindow = false;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
@@ -702,7 +767,7 @@ function draw() {
       xy[1] += mouseY - pmouseY;
     }
   }
-  if(!typing && focused) {
+  if(!typing && focused && !mouseOutsideWindow) {
     if(mouseX > windowWidth * .9)
       xy[0] -= movespeed / zoom;
     if(mouseX < windowWidth * .1)
@@ -722,11 +787,13 @@ function draw() {
   lineList.forEach(lineListHandler);
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
-  // loop that goes through and does everything we need for nodes
+  // loop that goes through and does everything we need for notes
   // mostly same as courses
-  nodeList.forEach(nodeListHandler);
+  noteList.forEach(noteListHandler);
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
+  // move edit buttons around with nodes
+
 }
 
 // -------------------------------- Draw For Loops -------------------------------- //
@@ -740,7 +807,7 @@ const lineListHandler = (line, index, lines) => {
   noFill();
   beginShape();
   let mousehovering = false;
-  if(mode === "delete") {
+  if(mode === modes.delete) {
     strokeWeight(5);
     stroke(200, 0, 0);
     // so clicking on a point removes the whole line
@@ -772,7 +839,7 @@ const lineListHandler = (line, index, lines) => {
     // if they are moving around the screen change line position
     line[i] += xy[0];
     line[i+1] += xy[1];
-    if(mode === "draw" && index === lines.length - 1) {
+    if(mode === modes.draw && index === lines.length - 1) {
       strokeWeight(5);
       point(line[i], line[i + 1]);
       strokeWeight(2);
@@ -782,7 +849,7 @@ const lineListHandler = (line, index, lines) => {
   // if we are in draw mode so they can see what they are about to do treat
   // their mouse position as a point, ie when they click and actually make
   // a point they know what it will look like before they click
-  if(mode === "draw" && index === lines.length - 1)
+  if(mode === modes.draw && index === lines.length - 1)
     curveVertex(mouseX, mouseY);
   endShape();
 };
@@ -816,7 +883,7 @@ const courseListHandler = (course, index, arr) => {
   rect(course.x, course.y, course.width, course.height);
   // in different modes do some different things
   switch(mode) {
-    case "delete":
+    case modes.delete:
       // make the text fill different
       fill(200, 0, 0);
       if(typing)
@@ -835,7 +902,7 @@ const courseListHandler = (course, index, arr) => {
         arr.splice(index, 1);
       }
       break;
-    case "edit":
+    case modes.edit:
       fill(0, 0, 200);
       if(typing)
         break;
@@ -844,7 +911,7 @@ const courseListHandler = (course, index, arr) => {
       // 1: moving more than one course at a time
       // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
       // 3: flashing fill
-      if(draggingcourse === -1 && draggingnode === -1 && mouseIsPressed && mouseHovering) {
+      if(draggingcourse === -1 && draggingnote === -1 && mouseIsPressed && mouseHovering) {
         draggingcourse = index;
       }
       // if this is the course we are dragging move it to mouse position
@@ -858,6 +925,8 @@ const courseListHandler = (course, index, arr) => {
       }
       break;
     default:
+      if(mouseIsPressed && mouseHovering)
+        openNodeOptions(nodeTypes.course, course);
       fill(0, 0, 0);
   }
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
@@ -869,78 +938,80 @@ const courseListHandler = (course, index, arr) => {
   textStyle(NORMAL);
   text(course.name, course.x, course.y - course.height/2 + boxpadding.y/2 + textLeading());
 };
-// helper function that handles everything for nodes
-const nodeListHandler = (node, index, arr) => {
+// helper function that handles everything for notes
+const noteListHandler = (note, index, arr) => {
   // set some stroke stuff
   strokeWeight(1);
   stroke(0);
   textSize(fontsize);
   textFont(myFont);
-  // move nodes if moving screen
-  node.x += xy[0];
-  node.y += xy[1];
+  // move notes if moving screen
+  note.x += xy[0];
+  note.y += xy[1];
 
   // check if dragging this box
-  let mouseHovering = draggingnode === index;
+  let mouseHovering = draggingnote === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > node.x - node.width/2 && mouseX < node.x + node.width/2 && mouseY > node.y - node.height/2 & mouseY < node.y + node.height/2))
+  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2))
     mouseHovering = true;
   if(mouseHovering)
     fill(200, 200, 200);
   else
     fill(255, 255, 255);
-  // draw rect around node
+  // draw rect around note
   rectMode(CENTER);
-  rect(node.x, node.y, node.width, node.height);
+  rect(note.x, note.y, note.width, note.height);
   // TODO: delete and edit
   switch(mode) {
-    case "delete":
+    case modes.delete:
       // make the text fill different
       fill(200, 0, 0);
       if(typing)
         break;
       // if you click it delete it
       if(mouseIsPressed && mouseHovering) {
-        nodeMap.delete(nodeList[index].code);
+        noteMap.delete(noteList[index].code);
         arr.splice(index, 1);
       }
       break;
-    case "edit":
+    case modes.edit:
       fill(0, 0, 200);
       if(typing)
         break;
-      if(draggingnode === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
-        draggingnode = index;
+      if(draggingnote === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
+        draggingnote = index;
       }
-      if(draggingnode === index) {
-        node.x = mouseX;
-        node.y = mouseY;
+      if(draggingnote === index) {
+        note.x = mouseX;
+        note.y = mouseY;
       }
       break;
     default:
+      if(mouseIsPressed && mouseHovering)
+        openNodeOptions(nodeTypes.note, note);
       fill(0);
   }
   // don't want stroke on text
   noStroke();
   // finally draw the text
   // if it doesn't have a title center text
-  if(node.title === '') {
+  if(note.title === '') {
     textStyle(NORMAL);
     textAlign(LEFT, CENTER);
-    text(node.text, node.x - node.width/2 + boxpadding.x/2, node.y);
+    text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y);
   // if it does and text is blank then center it
-  } else if(node.text === '') {
+  } else if(note.text === '') {
     textStyle(BOLD);
     textAlign(CENTER, CENTER);
-    text(node.title, node.x, node.y);
+    text(note.title, note.x, note.y);
   // both exist so put title at top and text after
   } else {
     textStyle(BOLD);
     textAlign(CENTER, TOP);
-    text(node.title, node.x, node.y - node.height/2 + boxpadding.y/2);
+    text(note.title, note.x, note.y - note.height/2 + boxpadding.y/2);
     textStyle(NORMAL);
     textAlign(LEFT, TOP);
-    text(node.text, node.x - node.width/2 + boxpadding.x/2, node.y - node.height/2 + boxpadding.y/2 + textLeading());
+    text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y - note.height/2 + boxpadding.y/2 + textLeading());
   }
 };
 
@@ -953,13 +1024,15 @@ function mousePressed() {
   // there's a bug here, not sure how to fix it yet though
   // I fixed it. see mousemovedbtn variable
   // in drawing mode add a point to our list of lines if you click the mouse
-  if(mode === "draw" && !typing) {
+  if(mode === modes.draw && !typing) {
     lineList[lineList.length - 1].push(mouseX);
     lineList[lineList.length - 1].push(mouseY);
   }
 }
 // do a zoom when mouseWheel moved
 function mouseWheel(event) {
+  if(typing)
+    return;
   zoom += -event.delta / 1000;
   if(zoom < .2)
     zoom = .2;
@@ -970,7 +1043,7 @@ function mouseWheel(event) {
 function mouseReleased() {
   // no longer dragging a course
   draggingcourse = -1;
-  draggingnode = -1;
+  draggingnote = -1;
 }
 
 // -------------------------------- Keyboard Events -------------------------------- //
@@ -981,7 +1054,7 @@ function keyPressed() {
   // it'll fix all the stupid little arrows so you can collapse functions
 
   // if you press enter in drawing mode finish the line and start a new one
-  if(keyCode === ENTER && mode === "draw") {
+  if(keyCode === ENTER && mode === modes.draw) {
     // if the line was too short jk, just pop it and start a new one
     if(lineList[lineList.length - 1].length < 8)
       lineList.pop();
@@ -1011,10 +1084,10 @@ function keyTyped() {
     print(courseList);
     print(courseMap);
   }
-  // and nodes
+  // and notes
   if(key === 'n') {
-    print(nodeList);
-    print(nodeMap);
+    print(noteList);
+    print(noteMap);
   }
 }
 
