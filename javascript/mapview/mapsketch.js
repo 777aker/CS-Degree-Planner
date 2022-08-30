@@ -203,6 +203,15 @@ function lineTest(distance, x1, y1, x2, y2, px, py) {
   }
   return false;
 }
+// also a button maker that's better than the other
+function createFormButton(form, id, value, func) {
+  let tempbutton = document.createElement("input");
+  tempbutton.setAttribute("id", id);
+  tempbutton.setAttribute("type", "button");
+  tempbutton.setAttribute("value", value);
+  form.appendChild(tempbutton);
+  tempbutton.addEventListener('click', func);
+}
 
 // -------------------------------- Adding Courses Section -------------------------------- //
 // get the course form and div containing it and save as global variables
@@ -232,26 +241,29 @@ function addCourse() {
   // I'm leaving it though hehehe
   // this is the button to add a group of prerequisites that fulfill the same requirement
   // if you're confused about this next part function submitCourse explains what's happening here a little better
-  let tempbutton = document.createElement("input");
-  tempbutton.setAttribute("id", "addprereqgroup");
-  tempbutton.setAttribute("type", "button");
-  tempbutton.setAttribute("value", "Add Prerequisite Group");
-  addCourseForm.appendChild(tempbutton);
-  tempbutton.addEventListener('click', addPrereqGroup);
+  createFormButton(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup);
   // remove a prereq group (does opposite of previous button)
-  tempbutton = document.createElement("input");
-  tempbutton.setAttribute("id", "removeprereqgroup");
-  tempbutton.setAttribute("type", "button");
-  tempbutton.setAttribute("value", "Remove Prerequisite Group");
-  addCourseForm.appendChild(tempbutton);
-  tempbutton.addEventListener('click', removePrereqGroup);
+  createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
   // make it visible (it = the whole form)
   addCourseDiv.style.display = 'block';
 }
 // function very similar to addCourse but instead is for editing a course when it is clicked
 // similar because it uses the same form
 function editCourse() {
-  print("editing course");
+  // same as addCourse but we have to fill in things including the complicated prereq nonsense
+  // luckily, hopefully, we can use some stuff we've already created
+  typing = true;
+  addCourseForm.innerHTML = '';
+  let course = courseList[courseMap.get(lastCodeClicked)];
+  createFormTextField(addCourseForm, "Course Code:", "coursecode", course.code, false);
+  createFormTextField(addCourseForm, "Credit Hours:", "ch", course.credits, false);
+  createFormTextField(addCourseForm, "Course Name:", "coursename", course.name, false);
+  createFormButton(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup);
+  createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
+  // now time for the complicated part of this
+  // TOOD: this, needs to fill out for each prereq of the course object thingy
+  
+  addCourseDiv.style.display = 'block';
 }
 // remove a prerequisite group
 // called when add course form remove prerequisite button is pressed
@@ -343,7 +355,6 @@ function submitCourse() {
     }
     // add that list to our list of lists of prereqs
     prereqs.push(prereq);
-    typing = false;
   }
   // ok ^ that loop is a little confusing so let me reexplain
   // a course can have any number of prerequisites, and some prerequisites fulfill the same requirement
@@ -357,7 +368,7 @@ function submitCourse() {
   let bold = textWidth(coursecode + '-' + ch);
   textStyle(NORMAL);
   // now we should actually add all this to the variable that stores all the courses
-  const course = {
+  let course = {
     code: coursecode,
     credits: ch,
     name: coursename,
@@ -391,6 +402,8 @@ function submitCourse() {
   // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
   addCourseDiv.style.display = "none";
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
   typing = false;
 }
 // set up the cancel button for add course form
@@ -428,7 +441,17 @@ function addNote() {
 }
 // similar to addNote because it uses the same form just fills it out
 function editNote() {
-  print('editing note');
+  // set typing to true so certain events aren't triggered
+  typing = true;
+  // clear the form
+  addNoteForm.innerHTML = '';
+  // create the labels and inputs for the form
+  let tempnote = noteList[noteMap.get(lastCodeClicked)];
+  createFormTextField(addNoteForm, "Note Title:", "notetitle", tempnote.title, true);
+  createFormTextArea(addNoteForm, "Note Text:", "notetext", tempnote.text, true);
+  addNoteForm.querySelector('#notetext').innerHTML = tempnote.text;
+  // make it visible
+  addNoteDiv.style.display = 'block';
 }
 // submit for a new note
 const submitnotebtn = document.querySelector('#submitnote');
@@ -441,11 +464,20 @@ function submitNote() {
   // notes behind the scenes need unique identifiers for connecting, drawing, and saving
   // so we are going to make a hash map
   // TODO: hash function may need some work since most notes will have same text
-  // TODO: if statement for if opened from edit
-  let hash = getHash(title + text + noteList.length);
-  while(noteMap.has(hash)) {
-    hash += 1;
-    hash |= 0;
+  let hash;
+  let tempx = windowWidth / 2;
+  let tempy = windowHeight / 2;
+  if(lastNodeTypeClicked !== nodeTypes.note) {
+    hash = getHash(title + text + noteList.length);
+    while(noteMap.has(hash)) {
+      hash += 1;
+      hash |= 0;
+    }
+  } else {
+    let tempnote = noteList[noteMap.get(lastCodeClicked)];
+    hash = tempnote.code;
+    tempx = tempnote.x;
+    tempy = tempnote.y;
   }
   textSize(fontsize);
   let hasTitle = title !== '' && title !== 'Title of the note';
@@ -474,15 +506,21 @@ function submitNote() {
     code: hash,
     title: hasTitle ? title : '',
     text: hasText ? text : '',
-    x: windowWidth / 2,
-    y: windowHeight / 2,
+    x: tempx,
+    y: tempy,
     width: width,
     height: height
   };
-  noteMap.set(hash, noteList.length);
-  noteList.push(note);
+  if(lastNodeTypeClicked === nodeTypes.note) {
+    noteList[noteMap.get(lastCodeClicked)] = note;
+  } else {
+    noteMap.set(hash, noteList.length);
+    noteList.push(note);
+  }
   addNoteForm.innerHTML = '';
   addNoteDiv.style.display = 'none';
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
   typing = false;
 }
 // cancel adding a note
@@ -500,9 +538,21 @@ function cancelNote() {
 // opens the buttons that allow you to edit the last clicked element
 const editNodesDiv = document.querySelector(".edit-nodes-div");
 const editNodeBtn = document.querySelector("#editnode");
-
+editNodeBtn.addEventListener('click', function() {
+  switch(lastNodeTypeClicked) {
+    case nodeTypes.note:
+      editNote();
+      break;
+    case nodeTypes.course:
+      editCourse();
+      break;
+  }
+  editNodesDiv.style.display = "none";
+});
 const showNodeBtn = document.querySelector("#nodeinfo");
+showNodeBtn.addEventListener('click', function() {
 
+});
 const closeNodeBtn = document.querySelector("#closeeditnode");
 closeNodeBtn.addEventListener("click", function() {
   lastCodeClicked = "";
@@ -767,6 +817,8 @@ function draw() {
       xy[1] += mouseY - pmouseY;
     }
   }
+  /* I thought this would be a nice feature but I don't actually like it
+  TODO: if you want mouse dragging can use this
   if(!typing && focused && !mouseOutsideWindow) {
     if(mouseX > windowWidth * .9)
       xy[0] -= movespeed / zoom;
@@ -777,6 +829,7 @@ function draw() {
     if(mouseY < windowHeight * .1)
       xy[1] += movespeed / zoom;
   }
+  */
   // draw mode time, do some nonsense
   // I'm not sure what this will entail yet so gonna put it in another function
   // pass xy also so we can move some stuff around
