@@ -1,3 +1,4 @@
+// -------------------------------- Global Variables -------------------------------- //
 // Putting some global variables up here like I should
 let fontsize = 14;
 let boxpadding = {
@@ -6,11 +7,76 @@ let boxpadding = {
 }
 // whether or not we are typing a form (so that we don't move the screen and stuff while typing / do special key presses)
 let typing = false;
+let myFont = 'Helvetica';
+// global variable list of courses
+let courseList = [];
+// I'm also thinking of making a map that says code is key gives you index in course list
+// would make a lot of things more efficient because idk how to do some weird reaching nonsense
+// I have to do. Like, a lot of courses have to see other courses, and if I don't make this map
+// then you have to like search through all the courses looking for one with a code you want
+// initialize it here
+const courseMap = new Map();
+/*
+course looks like
+course = {
+  code: coursecode,
+  credits: ch,
+  name: coursename,
+  prerequisites: prereqs,
+  x: number,
+  y: number.
+  lines: list of prereqs (removed)
+};
+*/
+// we also need a seperate list of lines
+// global variable of lines to draw
+let lineList = [];
+// this stores all of our notes
+/*
+  note = {
+    code:
+    title:
+    text:
+    x:
+    y:
+  }
+*/
+let noteList = [];
+// this is our note hashmap for finding notes
+const noteMap = new Map();
+// this stores the last element we clicked for the edit functions to use
+let lastCodeClicked = "";
+// all the types of notes we currently have in an enum
+let nodeTypes = {
+  course: 0,
+  note: 1
+};
+// all the mode types we have
+let modes = {
+  none: 0,
+  delete: 1,
+  edit: 2,
+  draw: 3
+};
+// for referencing html
+let modenames = {
+  0: "none",
+  1: "delete",
+  2: "edit",
+  3: "draw"
+};
 
+// -------------------------------- Set up functions -------------------------------- //
 // p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
-  createCanvas(windowWidth-20, windowHeight-20);
+  let cnv = createCanvas(windowWidth-20, windowHeight-20);
+  cnv.mouseOut(function () {
+    mouseOutsideWindow = true;
+  });
+  cnv.mouseOver(function () {
+    mouseOutsideWindow = false;
+  });
   // set framerate to 30 anything more is a waste of power
   frameRate(30);
   // set up the edit menu
@@ -18,16 +84,15 @@ function setup() {
   // set up templates
   setUpTemplates();
 }
-
 // set up the buttons for the edit menu
 function editMenuSetUp() {
   // uses p5js to make buttons because much easier than actual html nonsense
   // create add course button (made a helper function for this)
   makeAButton('Add Course', addCourse, "editbuttons", "addcoursebtn", "#dropdown-content");
-  // create add node button
+  // create add note button
   // idk what to tell you about the first being '' and the others being ""
   // ...it's a....convention thing....yea
-  makeAButton('Add Note', addNode, "editbuttons", "addnodebtn", "#dropdown-content");
+  makeAButton('Add Note', addNote, "editbuttons", "addnotebtn", "#dropdown-content");
   // create draw path button
   makeAButton('Draw Path', drawPath, "editbuttons", "drawbtn", "#dropdown-content");
   // create delete button
@@ -36,6 +101,17 @@ function editMenuSetUp() {
   makeAButton('Edit Positions', editPositions, "editbuttons", "editbtn", "#dropdown-content");
 }
 
+// -------------------------------- Miscellaneous Menu -------------------------------- //
+// quick bug fix
+const editdropdwn = document.querySelector('.edit-dropdown');
+editdropdwn.addEventListener('mouseover', function() {
+  typing = true;
+});
+editdropdwn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+
+// -------------------------------- Helper Functions -------------------------------- //
 // this function makes a button so I don't have to
 // some of the names are special because I accidently used keywords
 // name of button, function button calls when pressed, class, id, parent
@@ -46,16 +122,98 @@ function makeAButton(name, fn, btnclass, btnid, parent) {
   button.id(btnid);
   button.parent(parent);
 }
+// helper function for creating form text fields
+// form - which form to append it to / element (doesn't have to be a form)
+// label - label for the text box
+// id - id for the text box
+// value - value in the text box
+// br - true or false, add breaks between text boxes or no
+function createFormTextField(form, label, id, value, br) {
+  // create the label element using passed letiables
+  // letiables??? I don't even know what that word is supposed to be
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
+  // create the input element using passed letiables
+  // I did it again, what the freak is a letiable?
+  // is there even such thing as a letiable or does it have to be letiables
+  let tempinput = document.createElement("input");
+  tempinput.setAttribute("type", "text");
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
+  tempinput.setAttribute("value", value);
+  tempinput.setAttribute("onfocus", "this.value=''");
+  form.appendChild(tempinput);
+  if(br)
+    form.appendChild(document.createElement("br"));
+}
+// I also need a text area so copying text field
+function createFormTextArea(form, label, id, value, br) {
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
+  let tempinput = document.createElement("textarea");
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
+  tempinput.setAttribute("value", value);
+  tempinput.setAttribute("onfocus", "this.value=''");
+  tempinput.setAttribute("rows", "10");
+  tempinput.setAttribute("cols", "40");
+  tempinput.setAttribute("wrap", "off");
+  form.appendChild(tempinput);
+  if(br)
+    form.appendChild(document.createElement("br"));
+}
+// need a hash function for the notes
+function getHash(str) {
+  let hash = 0;
+  for(let i = 0; i < str.length; i++) {
+    let chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return hash;
+}
+// helper function that tells you if you are close to a line segment or not
+// distance - distance from line this will return true at
+// x1, y1, x2, y2 - your line segment
+// px, py - the point you are testing
+function lineTest(distance, x1, y1, x2, y2, px, py) {
+  let topleft = [min(x1, x2), min(y1, y2)];
+  let bottomright = [max(x1, x2), max(y1, y2)];
+  if(px > topleft[0] - distance && px < bottomright[0] + distance && py > topleft[1] - distance && py < bottomright[1] + distance) {
+    let dis = abs((x2-x1)*(y1-py)-(x1-px)*(y2-y1));
+    dis /= dist(x1, y1, x2, y2);
+    if(dis < distance)
+      return true
+  }
+  return false;
+}
+// also a button maker that's better than the other
+function createFormButton(form, id, value, func) {
+  let tempbutton = document.createElement("input");
+  tempbutton.setAttribute("id", id);
+  tempbutton.setAttribute("type", "button");
+  tempbutton.setAttribute("value", value);
+  form.appendChild(tempbutton);
+  tempbutton.addEventListener('click', func);
+}
 
-// quick bug fix
-const editdropdwn = document.querySelector('.edit-dropdown');
-editdropdwn.addEventListener('mouseover', function() {
-  typing = true;
-});
-editdropdwn.addEventListener('mouseleave', function() {
-  typing = false;
-});
-
+// -------------------------------- Adding Courses Section -------------------------------- //
 // get the course form and div containing it and save as global variables
 const addCourseDiv = document.querySelector('.add-course-div');
 addCourseDiv.addEventListener('mouseover', function() {
@@ -83,23 +241,65 @@ function addCourse() {
   // I'm leaving it though hehehe
   // this is the button to add a group of prerequisites that fulfill the same requirement
   // if you're confused about this next part function submitCourse explains what's happening here a little better
-  let tempbutton = document.createElement("input");
-  tempbutton.setAttribute("id", "addprereqgroup");
-  tempbutton.setAttribute("type", "button");
-  tempbutton.setAttribute("value", "Add Prerequisite Group");
-  addCourseForm.appendChild(tempbutton);
-  tempbutton.addEventListener('click', addPrereqGroup);
+  createFormButton(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup);
   // remove a prereq group (does opposite of previous button)
-  tempbutton = document.createElement("input");
-  tempbutton.setAttribute("id", "removeprereqgroup");
-  tempbutton.setAttribute("type", "button");
-  tempbutton.setAttribute("value", "Remove Prerequisite Group");
-  addCourseForm.appendChild(tempbutton);
-  tempbutton.addEventListener('click', removePrereqGroup);
+  createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
   // make it visible (it = the whole form)
   addCourseDiv.style.display = 'block';
 }
-
+// function very similar to addCourse but instead is for editing a course when it is clicked
+// similar because it uses the same form
+function editCourse() {
+  // same as addCourse but we have to fill in things including the complicated prereq nonsense
+  // luckily, hopefully, we can use some stuff we've already created
+  typing = true;
+  addCourseForm.innerHTML = '';
+  let course = courseList[courseMap.get(lastCodeClicked)];
+  createFormTextField(addCourseForm, "Course Code:", "coursecode", course.code, false);
+  createFormTextField(addCourseForm, "Credit Hours:", "ch", course.credits, false);
+  createFormTextField(addCourseForm, "Course Name:", "coursename", course.name, false);
+  createFormButton(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup);
+  createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
+  // now time for the complicated part of this
+  // for each group of prereqs create a div
+  if(course.prerequisites !== undefined && course.prerequisites !== null) {
+    course.prerequisites.forEach(prereqGroup => {
+      let groupdiv = document.createElement('div');
+      groupdiv.setAttribute('class', 'prereqGroupDiv');
+      addCourseForm.appendChild(groupdiv);
+      // for each actual prereq create a text field
+      prereqGroup.forEach(prereq => {
+        createFormTextField(groupdiv, "", "", prereq);
+      });
+      // buttons that let you add and remove prereqs from a group
+      let prereqbtn = document.createElement("input");
+      prereqbtn.setAttribute("type", "button");
+      prereqbtn.setAttribute("class", "addPrereqBtn");
+      prereqbtn.setAttribute("value", "Add Same Requirement Prerequisite");
+      addCourseForm.appendChild(prereqbtn);
+      // whenever add prereq button clicked create more prereq fields in that div
+      prereqbtn.addEventListener('click', function(){
+        // why is it 5 lines to make a text box, should I fix that?...nah I don't want to rn
+        createFormTextField(groupdiv, "", "", "Enter Prerequisite Code Only");
+      });
+      // remove prerequisite button below add so you can remove a prereq if you made too many
+      // (I kept doing that so I added this so I could undo my mistakes)
+      prereqbtn = document.createElement("input");
+      prereqbtn.setAttribute("type", "button");
+      prereqbtn.setAttribute("class", "removePrereqBtn");
+      prereqbtn.setAttribute("value", "Remove Prerequisite");
+      addCourseForm.appendChild(prereqbtn);
+      // whenever remove is clicked remove the last prerequisite of the group
+      // even works if some jerk decides to press the button a million times
+      // and there are no prerequisites left
+      prereqbtn.addEventListener('click', function(){
+        if(groupdiv.lastChild != null)
+          groupdiv.lastChild.remove();
+      });
+    });
+  }
+  addCourseDiv.style.display = 'block';
+}
 // remove a prerequisite group
 // called when add course form remove prerequisite button is pressed
 function removePrereqGroup() {
@@ -119,7 +319,6 @@ function removePrereqGroup() {
   if(lastbtn.length > 0)
     lastbtn[lastbtn.length - 1].remove();
 }
-
 // add prereq group button action in add course form
 // ^ bad wording what does that mean?
 // I'll tell you, it means in the add course form when someone presses the
@@ -161,89 +360,6 @@ function addPrereqGroup() {
       groupdiv.lastChild.remove();
   });
 }
-
-// helper function for creating form text fields
-// form - which form to append it to / element (doesn't have to be a form)
-// label - label for the text box
-// id - id for the text box
-// value - value in the text box
-// br - true or false, add breaks between text boxes or no
-function createFormTextField(form, label, id, value, br) {
-  // create the label element using passed letiables
-  // letiables??? I don't even know what that word is supposed to be
-  if(label !== "") {
-    let templabel = document.createElement("label");
-    templabel.setAttribute("for", id);
-    templabel.innerHTML = label;
-    form.appendChild(templabel);
-    if(br)
-      form.appendChild(document.createElement("br"));
-  }
-  // create the input element using passed letiables
-  // I did it again, what the freak is a letiable?
-  // is there even such thing as a letiable or does it have to be letiables
-  let tempinput = document.createElement("input");
-  tempinput.setAttribute("type", "text");
-  if(id !== "") {
-    tempinput.setAttribute("id", id);
-    tempinput.setAttribute("name", id);
-  }
-  tempinput.setAttribute("value", value);
-  tempinput.setAttribute("onfocus", "this.value=''");
-  form.appendChild(tempinput);
-  if(br)
-    form.appendChild(document.createElement("br"));
-}
-
-// I also need a text area so copying text field
-function createFormTextArea(form, label, id, value, br) {
-  if(label !== "") {
-    let templabel = document.createElement("label");
-    templabel.setAttribute("for", id);
-    templabel.innerHTML = label;
-    form.appendChild(templabel);
-    if(br)
-      form.appendChild(document.createElement("br"));
-  }
-  let tempinput = document.createElement("textarea");
-  if(id !== "") {
-    tempinput.setAttribute("id", id);
-    tempinput.setAttribute("name", id);
-  }
-  tempinput.setAttribute("value", value);
-  tempinput.setAttribute("onfocus", "this.value=''");
-  tempinput.setAttribute("rows", "10");
-  tempinput.setAttribute("cols", "40");
-  tempinput.setAttribute("wrap", "off");
-  form.appendChild(tempinput);
-  if(br)
-    form.appendChild(document.createElement("br"));
-}
-
-// global variable list of courses
-let courseList = [];
-// I'm also thinking of making a map that says code is key gives you index in course list
-// would make a lot of things more efficient because idk how to do some weird reaching nonsense
-// I have to do. Like, a lot of courses have to see other courses, and if I don't make this map
-// then you have to like search through all the courses looking for one with a code you want
-// initialize it here
-const courseMap = new Map();
-/*
-course looks like
-course = {
-  code: coursecode,
-  credits: ch,
-  name: coursename,
-  prerequisites: prereqs,
-  x: number,
-  y: number.
-  lines: list of prereqs (removed)
-};
-*/
-// we also need a seperate list of lines
-// global variable of lines to draw
-let lineList = [];
-
 // set up the submit button for add course form
 const submitcoursebtn = document.querySelector("#submitcourse");
 submitcoursebtn.addEventListener('click', submitCourse);
@@ -270,11 +386,12 @@ function submitCourse() {
     let prereq = [];
     // put them all in the same list
     for(j = 0; j < divlist.length; j++) {
-      prereq.push(divlist[j].value);
+      if(divlist[j].value !== "Enter Prerequisite Code Only")
+        prereq.push(divlist[j].value);
     }
     // add that list to our list of lists of prereqs
-    prereqs.push(prereq);
-    typing = false;
+    if(prereq.length !== 0)
+      prereqs.push(prereq);
   }
   // ok ^ that loop is a little confusing so let me reexplain
   // a course can have any number of prerequisites, and some prerequisites fulfill the same requirement
@@ -288,7 +405,7 @@ function submitCourse() {
   let bold = textWidth(coursecode + '-' + ch);
   textStyle(NORMAL);
   // now we should actually add all this to the variable that stores all the courses
-  const course = {
+  let course = {
     code: coursecode,
     credits: ch,
     name: coursename,
@@ -313,6 +430,10 @@ function submitCourse() {
     course.x = courseList[courseMap.get(coursecode)].x;
     course.y = courseList[courseMap.get(coursecode)].y;
     courseList[courseMap.get(coursecode)] = course;
+  } else if(courseMap.has(lastCodeClicked)) {
+    course.x = courseList[courseMap.get(lastCodeClicked)].x;
+    course.y = courseList[courseMap.get(lastCodeClicked)].y;
+    courseList[courseMap.get(lastCodeClicked)] = course;
   } else {
     // if the course map doesn't have it then the course doesn't exist push
     // it to the map and save where it is at
@@ -322,9 +443,10 @@ function submitCourse() {
   // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
   addCourseDiv.style.display = "none";
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
   typing = false;
 }
-
 // set up the cancel button for add course form
 const cancelcoursebtn = document.querySelector("#cancelcourse");
 cancelcoursebtn.addEventListener('click', cancelCourse);
@@ -337,45 +459,69 @@ function cancelCourse() {
   typing = false;
 }
 
-// function called when user presses add node button
+// -------------------------------- Adding Note Section -------------------------------- //
+// function called when user presses add note button
 // basically will do the same thing as add course button
 // but this doesn't have to be a course this could just be a little
 // box you want to make for your convenience / understanding
-const addNodeDiv = document.querySelector('.add-node-div');
-addNodeDiv.addEventListener('mouseover', function() {
+const addNoteDiv = document.querySelector('.add-note-div');
+addNoteDiv.addEventListener('mouseover', function() {
   typing = true;
 });
-const addNodeForm = document.querySelector('.add-node-form');
-function addNode() {
+const addNoteForm = document.querySelector('.add-note-form');
+function addNote() {
   // set typing to true so certain events aren't triggered
   typing = true;
   // clear the form
-  addNodeForm.innerHTML = '';
+  addNoteForm.innerHTML = '';
   // create the labels and inputs for the form
-  createFormTextField(addNodeForm, "Node Title:", "nodetitle", "Title of the node", true);
-  createFormTextArea(addNodeForm, "Node Text:", "nodetext", "Text of the node", true);
+  createFormTextField(addNoteForm, "Note Title:", "notetitle", "Title of the note", true);
+  createFormTextArea(addNoteForm, "Note Text:", "notetext", "Text of the note", true);
   // make it visible
-  addNodeDiv.style.display = 'block';
+  addNoteDiv.style.display = 'block';
 }
-
-// submit for a new node
-const submitnodebtn = document.querySelector('#submitnode');
-submitnodebtn.addEventListener('click', submitNode);
-// when submit node is pressed do the following
-function submitNode() {
+// similar to addNote because it uses the same form just fills it out
+function editNote() {
+  // set typing to true so certain events aren't triggered
+  typing = true;
+  // clear the form
+  addNoteForm.innerHTML = '';
+  // create the labels and inputs for the form
+  let tempnote = noteList[noteMap.get(lastCodeClicked)];
+  createFormTextField(addNoteForm, "Note Title:", "notetitle", tempnote.title, true);
+  createFormTextArea(addNoteForm, "Note Text:", "notetext", tempnote.text, true);
+  addNoteForm.querySelector('#notetext').innerHTML = tempnote.text;
+  // make it visible
+  addNoteDiv.style.display = 'block';
+}
+// submit for a new note
+const submitnotebtn = document.querySelector('#submitnote');
+submitnotebtn.addEventListener('click', submitNote);
+// when submit note is pressed do the following
+function submitNote() {
   // get info from form
-  const title = addNodeForm.querySelector("#nodetitle").value;
-  const text = addNodeForm.querySelector("#nodetext").value;
-  // nodes behind the scenes need unique identifiers for connecting, drawing, and saving
+  const title = addNoteForm.querySelector("#notetitle").value;
+  const text = addNoteForm.querySelector("#notetext").value;
+  // notes behind the scenes need unique identifiers for connecting, drawing, and saving
   // so we are going to make a hash map
-  // TODO: hash function may need some work since most nodes will have same text
-  let hash = getHash(title + text + nodeList.length);
-  while(nodeMap.has(hash)) {
-    hash += 1;
-    hash |= 0;
+  // TODO: hash function may need some work since most notes will have same text
+  let hash;
+  let tempx = windowWidth / 2;
+  let tempy = windowHeight / 2;
+  if(lastNodeTypeClicked !== nodeTypes.note) {
+    hash = getHash(title + text + noteList.length);
+    while(noteMap.has(hash)) {
+      hash += 1;
+      hash |= 0;
+    }
+  } else {
+    let tempnote = noteList[noteMap.get(lastCodeClicked)];
+    hash = tempnote.code;
+    tempx = tempnote.x;
+    tempy = tempnote.y;
   }
   textSize(fontsize);
-  let hasTitle = title !== '' && title !== 'Title of the node';
+  let hasTitle = title !== '' && title !== 'Title of the note';
   let hasText = text !== '';
   let width = 0;
   let height = 0;
@@ -396,57 +542,75 @@ function submitNode() {
     width = textWidth(title) + boxpadding.x;
     height = textLeading() + boxpadding.y;
   }
-  // add the node
-  const node = {
+  // add the note
+  const note = {
     code: hash,
     title: hasTitle ? title : '',
     text: hasText ? text : '',
-    x: windowWidth / 2,
-    y: windowHeight / 2,
+    x: tempx,
+    y: tempy,
     width: width,
     height: height
   };
-  nodeMap.set(hash, nodeList.length);
-  nodeList.push(node);
-  addNodeForm.innerHTML = '';
-  addNodeDiv.style.display = 'none';
+  if(lastNodeTypeClicked === nodeTypes.note) {
+    noteList[noteMap.get(lastCodeClicked)] = note;
+  } else {
+    noteMap.set(hash, noteList.length);
+    noteList.push(note);
+  }
+  addNoteForm.innerHTML = '';
+  addNoteDiv.style.display = 'none';
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
+  typing = false;
+}
+// cancel adding a note
+const cancelnotebtn = document.querySelector("#cancelnote");
+cancelnotebtn.addEventListener('click', cancelNote);
+function cancelNote() {
+  addNoteDiv.style.display = 'none';
+  addNoteForm.innerHTML = '';
   typing = false;
 }
 
-// this stores all of our nodes
-/*
-  node = {
-    code:
-    title:
-    text:
-    x:
-    y:
+// -------------------------------- Edit Nodes Section -------------------------------- //
+// not sure if this is a helper or miscellaneous menu
+// actually, it's its own section
+// opens the buttons that allow you to edit the last clicked element
+const editNodesDiv = document.querySelector(".edit-nodes-div");
+const editNodeBtn = document.querySelector("#editnode");
+editNodeBtn.addEventListener('click', function() {
+  switch(lastNodeTypeClicked) {
+    case nodeTypes.note:
+      editNote();
+      break;
+    case nodeTypes.course:
+      editCourse();
+      break;
   }
-*/
-let nodeList = [];
-// this is our node hashmap for finding nodes
-const nodeMap = new Map();
+  editNodesDiv.style.display = "none";
+});
+const showNodeBtn = document.querySelector("#nodeinfo");
+showNodeBtn.addEventListener('click', function() {
 
-// need a hash function for the nodes
-function getHash(str) {
-  let hash = 0;
-  for(let i = 0; i < str.length; i++) {
-    let chr = str.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0;
-  }
-  return hash;
+});
+const closeNodeBtn = document.querySelector("#closeeditnode");
+closeNodeBtn.addEventListener("click", function() {
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
+  editNodesDiv.style.display = "none";
+});
+let lastNodeTypeClicked;
+function openNodeOptions(nodeType, node) {
+  editNodesDiv.style.display = "flex";
+  lastNodeTypeClicked = nodeType;
+  lastCodeClicked = node.code;
+  // we can expect every node to have an x, y, width, height
+  editNodesDiv.style.top = node.y - node.height/2 - textLeading() - 5 + 'px';
+  editNodesDiv.style.left = node.x - node.width/2 + 'px';
 }
 
-// cancel adding a node
-const cancelnodebtn = document.querySelector("#cancelnode");
-cancelnodebtn.addEventListener('click', cancelNode);
-function cancelNode() {
-  addNodeDiv.style.display = 'none';
-  addNodeForm.innerHTML = '';
-  typing = false;
-}
-
+// -------------------------------- Template Section -------------------------------- //
 // this is the form with templates
 const templateform = document.querySelector('.template-form');
 // this is the div holding the form that we show and hide
@@ -460,7 +624,6 @@ const showtemplates = document.querySelector("#opentemplates");
 showtemplates.addEventListener('click', function() {
   templatediv.style.display = "block";
 });
-
 // if you want to add a template option add it here after uploading
 // the templates to the jsons folder
 // WARNING: if hosting site changed need to change the prefix on templates
@@ -469,7 +632,6 @@ function setUpTemplates() {
   // WARNING: url prefix in openTemplate function needs to change if hosting site changes
   templateButton(templateform, 'Computer Science BS Degree', 'templateloadbtns', 'csbs', 'Computer-Science-BS-template.json');
 }
-
 // template button setup function
 function templateButton(form, name, btnclass, btnid, url) {
   let button = createButton(name);
@@ -481,24 +643,22 @@ function templateButton(form, name, btnclass, btnid, url) {
   });
   return button;
 }
-
 // helper function that loads a json from the templates
 function openTemplate(url) {
   let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/' + url;
   loadJSON(furl, processJSON);
   closeTemplates();
 }
-
 // closes the template options
 function closeTemplates() {
   templatediv.style.display = 'none';
   typing = false;
 }
-
 // button that can close template options
 const canceltemplates = document.querySelector('#canceltemplate');
 canceltemplates.addEventListener('click', closeTemplates);
 
+// -------------------------------- File Loader Form -------------------------------- //
 // div holding file loader
 const fileloader = document.querySelector('.fileloader-div');
 // disable events when filling out form
@@ -556,59 +716,8 @@ function importTextArea() {
   closeFL();
 }
 
-// this is the global mode variable
-// tells us what mode we are in: draw, delete, edit, ""
-let mode = "";
-
-// function called when user presses draw path button
-function drawPath() {
-  // have to have this moved mouse button nonsense because if you don't then
-  // it draws a path when the user enter draw path mode because they click to enter it
-  // so set moved mouse to false and wait until they move it before you start draw mode
-  mousemovedbtn = false;
-  // if we entered draw mode make a new line for us to draw on
-  if(mode !== "draw")
-    lineList.push([]);
-  // mode changer helper function
-  modeChanger("draw", "rgb(0, 200, 0)");
-}
-
-// function called when user presses delete mode button
-function deleteMode() {
-  modeChanger("delete", "rgb(200, 0, 0)");
-}
-
-// function called when user presses edit positions button
-function editPositions() {
-  modeChanger("edit", "rgb(0, 0, 200)");
-}
-
-// changing the modes looks very similar for everying so here is a helper
-// especially so we don't miss anything
-function modeChanger(fmode, color) {
-  // set each of the edit buttons to black
-  let buttons = document.querySelectorAll(".editbuttons");
-  buttons.forEach(button => {
-    button.style.color = "rgb(0, 0, 0)";
-  });
-  // if we are in the mode of the button we just pressed then clear mode
-  if(mode === fmode) {
-    mode = "";
-  } else {
-    mode = fmode;
-    // make the button the color passed so we can actually tell what mode we are in
-    document.querySelector("#" + mode + "btn").style.color = color;
-  }
-  // if we got out of draw mode and the last line they were drawing isn't long enough
-  // to actually be a line remove it
-  if(lineList.length > 0 && mode !== "draw") {
-    if(lineList[lineList.length - 1].length < 8) {
-      lineList.pop();
-    }
-  }
-}
-
-// I can't handle having to make an entire set of nodes for testing anymore
+// -------------------------------- File Saving -------------------------------- //
+// I can't handle having to make an entire set of notes for testing anymore
 // so I'm making a save feature
 // set it up
 const saveform = document.querySelector(".fileform");
@@ -621,22 +730,26 @@ saveform.addEventListener('mouseleave', function() {
 const savebutton = document.querySelector("#savebtn");
 savebutton.addEventListener('click', saveFile);
 const savetext = document.querySelector("#savetxt");
-
 // this takes the courselist and linelist we have for everything and saves
 // them to a json file
 function saveFile() {
-  //print(savetext.value);
   let json = {};
   json.courses = courseList;
   json.coursemap = Object.fromEntries(courseMap);
-  json.nodes = nodeList;
-  json.nodemap = Object.fromEntries(nodeMap);
+  json.notes = noteList;
+  json.notemap = Object.fromEntries(noteMap);
   json.lines = lineList;
   saveJSON(json, savetext.value);
 }
 
+// -------------------------------- JSON Processing -------------------------------- //
 // process json file loaded
 function processJSON(json) {
+  // bug fix need this here
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
+  editNodesDiv.style.display = "none";
+  // json stuff
   if(json.courses !== null && json.courses !== undefined)
     courseList = json.courses;
   if(json.coursemap !== null && json.coursemap !== undefined) {
@@ -646,42 +759,125 @@ function processJSON(json) {
       courseMap.set(key, value);
     });
   }
-  if(json.nodes !== null && json.nodes !== undefined)
-    nodeList = json.nodes;
-  if(json.nodemap !== null && json.nodemap !== undefined) {
-    const remap2 = new Map(Object.entries(json.nodemap));
-    nodeMap.clear();
+  if(json.notes !== null && json.notes !== undefined)
+    noteList = json.notes;
+  if(json.notemap !== null && json.notemap !== undefined) {
+    const remap2 = new Map(Object.entries(json.notemap));
+    noteMap.clear();
     remap2.forEach(function(value, key) {
-      nodeMap.set(key, value);
+      noteMap.set(key, value);
     });
   }
   lineList = json.lines;
 }
 
+// -------------------------------- Mode Handling -------------------------------- //
+// this is the global mode variable
+// tells us what mode we are in: draw, delete, edit, ""
+let mode = modes.none;
+// function called when user presses draw path button
+function drawPath() {
+  // have to have this moved mouse button nonsense because if you don't then
+  // it draws a path when the user enter draw path mode because they click to enter it
+  // so set moved mouse to false and wait until they move it before you start draw mode
+  mousemovedbtn = false;
+  // if we entered draw mode make a new line for us to draw on
+  if(mode !== modes.draw)
+    lineList.push([]);
+  // mode changer helper function
+  modeChanger(modes.draw, "rgb(0, 200, 0)");
+}
+// function called when user presses delete mode button
+function deleteMode() {
+  modeChanger(modes.delete, "rgb(200, 0, 0)");
+}
+// function called when user presses edit positions button
+function editPositions() {
+  modeChanger(modes.edit, "rgb(0, 0, 200)");
+}
+// changing the modes looks very similar for everying so here is a helper
+// especially so we don't miss anything
+function modeChanger(fmode, color) {
+  // bug fix put this here
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
+  editNodesDiv.style.display = "none";
+  // set each of the edit buttons to black
+  let buttons = document.querySelectorAll(".editbuttons");
+  buttons.forEach(button => {
+    button.style.color = "rgb(0, 0, 0)";
+  });
+  // if we are in the mode of the button we just pressed then clear mode
+  if(mode === fmode) {
+    mode = modes.none;
+  } else {
+    mode = fmode;
+    // make the button the color passed so we can actually tell what mode we are in
+    document.querySelector("#" + modenames[fmode] + "btn").style.color = color;
+  }
+  // if we got out of draw mode and the last line they were drawing isn't long enough
+  // to actually be a line remove it
+  if(lineList.length > 0 && mode !== modes.draw) {
+    if(lineList[lineList.length - 1].length < 8) {
+      lineList.pop();
+    }
+  }
+}
+
+// -------------------------------- Draw Function -------------------------------- //
 // movement speed (like moving the camera / all the courses and stuff)
 let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
-let draggingnode = -1;
+let draggingnote = -1;
 // need a global variable of if we are moving the screen this frame
 let xy = [0, 0];
+// also a global variable for zoom
+let zoom = 1;
+// global variable for dragging
+let mouseOutsideWindow = false;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
   // set background color
   background(220);
+  // time for zooming
+  translate(mouseX, mouseY);
+  scale(zoom);
+  translate(-mouseX, -mouseY);
+  translate();
   // if the user is holding a key down move everything around
   xy = [0, 0];
   if(!typing) {
     if(keyIsDown(87) || keyIsDown(UP_ARROW))
-      xy[1] += movespeed;
+      xy[1] += movespeed / zoom;
     if(keyIsDown(83) || keyIsDown(DOWN_ARROW))
-      xy[1] -= movespeed;
+      xy[1] -= movespeed / zoom;
     if(keyIsDown(65) || keyIsDown(LEFT_ARROW))
-      xy[0] += movespeed;
+      xy[0] += movespeed / zoom;
     if(keyIsDown(68) || keyIsDown(RIGHT_ARROW))
-      xy[0] -= movespeed;
+      xy[0] -= movespeed / zoom;
   }
+  // dragging time
+  if(mouseIsPressed) {
+    if(mouseButton === CENTER) {
+      xy[0] += mouseX - pmouseX;
+      xy[1] += mouseY - pmouseY;
+    }
+  }
+  /* I thought this would be a nice feature but I don't actually like it
+  TODO: if you want mouse dragging can use this
+  if(!typing && focused && !mouseOutsideWindow) {
+    if(mouseX > windowWidth * .9)
+      xy[0] -= movespeed / zoom;
+    if(mouseX < windowWidth * .1)
+      xy[0] += movespeed / zoom;
+    if(mouseY > windowHeight * .9)
+      xy[1] -= movespeed / zoom;
+    if(mouseY < windowHeight * .1)
+      xy[1] += movespeed / zoom;
+  }
+  */
   // draw mode time, do some nonsense
   // I'm not sure what this will entail yet so gonna put it in another function
   // pass xy also so we can move some stuff around
@@ -692,13 +888,30 @@ function draw() {
   lineList.forEach(lineListHandler);
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
-  // loop that goes through and does everything we need for nodes
+  // loop that goes through and does everything we need for notes
   // mostly same as courses
-  nodeList.forEach(nodeListHandler);
+  noteList.forEach(noteListHandler);
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
+  // move edit buttons around with nodes
+  if(lastCodeClicked !== "" && lastNodeTypeClicked !== null) {
+    let node = null;
+    switch(lastNodeTypeClicked) {
+      case nodeTypes.note:
+        node = noteList[noteMap.get(lastCodeClicked)];
+        break;
+      case nodeTypes.course:
+        node = courseList[courseMap.get(lastCodeClicked)];
+        break;
+    }
+    if(node !== null && node !== undefined) {
+      editNodesDiv.style.top = (node.y - node.height/2 - textLeading() - 5 - mouseY)*zoom + mouseY + 'px';
+      editNodesDiv.style.left = (node.x - node.width/2 - mouseX)*zoom + mouseX + 'px';
+    }
+  }
 }
 
+// -------------------------------- Draw For Loops -------------------------------- //
 // helper function that handles the linelist in draw
 const lineListHandler = (line, index, lines) => {
   // set strokeWeight
@@ -709,7 +922,7 @@ const lineListHandler = (line, index, lines) => {
   noFill();
   beginShape();
   let mousehovering = false;
-  if(mode === "delete") {
+  if(mode === modes.delete) {
     strokeWeight(5);
     stroke(200, 0, 0);
     // so clicking on a point removes the whole line
@@ -741,7 +954,7 @@ const lineListHandler = (line, index, lines) => {
     // if they are moving around the screen change line position
     line[i] += xy[0];
     line[i+1] += xy[1];
-    if(mode === "draw" && index === lines.length - 1) {
+    if(mode === modes.draw && index === lines.length - 1) {
       strokeWeight(5);
       point(line[i], line[i + 1]);
       strokeWeight(2);
@@ -751,11 +964,10 @@ const lineListHandler = (line, index, lines) => {
   // if we are in draw mode so they can see what they are about to do treat
   // their mouse position as a point, ie when they click and actually make
   // a point they know what it will look like before they click
-  if(mode === "draw" && index === lines.length - 1)
+  if(mode === modes.draw && index === lines.length - 1)
     curveVertex(mouseX, mouseY);
   endShape();
 };
-
 // helper function that handles the first courselist draw
 // actually wait, with the new method we no longer need two draw calls to courselist
 // incredible
@@ -763,8 +975,8 @@ const courseListHandler = (course, index, arr) => {
   // stroke stuff
   strokeWeight(1);
   stroke(0);
-  textSize(14);
-  textFont('Helvetica');
+  textSize(fontsize);
+  textFont(myFont);
   textStyle(NORMAL);
   textAlign(CENTER, CENTER);
   // move the courses based on which keys are held
@@ -786,7 +998,7 @@ const courseListHandler = (course, index, arr) => {
   rect(course.x, course.y, course.width, course.height);
   // in different modes do some different things
   switch(mode) {
-    case "delete":
+    case modes.delete:
       // make the text fill different
       fill(200, 0, 0);
       if(typing)
@@ -805,7 +1017,7 @@ const courseListHandler = (course, index, arr) => {
         arr.splice(index, 1);
       }
       break;
-    case "edit":
+    case modes.edit:
       fill(0, 0, 200);
       if(typing)
         break;
@@ -814,7 +1026,7 @@ const courseListHandler = (course, index, arr) => {
       // 1: moving more than one course at a time
       // 2: moving the mouse too fast and leaving the course so you just aren't dragging it anymore
       // 3: flashing fill
-      if(draggingcourse === -1 && draggingnode === -1 && mouseIsPressed && mouseHovering) {
+      if(draggingcourse === -1 && draggingnote === -1 && mouseIsPressed && mouseHovering) {
         draggingcourse = index;
       }
       // if this is the course we are dragging move it to mouse position
@@ -828,6 +1040,8 @@ const courseListHandler = (course, index, arr) => {
       }
       break;
     default:
+      if(mouseIsPressed && mouseHovering)
+        openNodeOptions(nodeTypes.course, course);
       fill(0, 0, 0);
   }
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
@@ -839,98 +1053,84 @@ const courseListHandler = (course, index, arr) => {
   textStyle(NORMAL);
   text(course.name, course.x, course.y - course.height/2 + boxpadding.y/2 + textLeading());
 };
-
-// helper function that handles everything for nodes
-const nodeListHandler = (node, index, arr) => {
+// helper function that handles everything for notes
+const noteListHandler = (note, index, arr) => {
   // set some stroke stuff
   strokeWeight(1);
   stroke(0);
-  textSize(14);
-  textFont('Helvetica');
-  // move nodes if moving screen
-  node.x += xy[0];
-  node.y += xy[1];
+  textSize(fontsize);
+  textFont(myFont);
+  // move notes if moving screen
+  note.x += xy[0];
+  note.y += xy[1];
 
   // check if dragging this box
-  let mouseHovering = draggingnode === index;
+  let mouseHovering = draggingnote === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > node.x - node.width/2 && mouseX < node.x + node.width/2 && mouseY > node.y - node.height/2 & mouseY < node.y + node.height/2))
+  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2))
     mouseHovering = true;
   if(mouseHovering)
     fill(200, 200, 200);
   else
     fill(255, 255, 255);
-  // draw rect around node
+  // draw rect around note
   rectMode(CENTER);
-  rect(node.x, node.y, node.width, node.height);
+  rect(note.x, note.y, note.width, note.height);
   // TODO: delete and edit
   switch(mode) {
-    case "delete":
+    case modes.delete:
       // make the text fill different
       fill(200, 0, 0);
       if(typing)
         break;
       // if you click it delete it
       if(mouseIsPressed && mouseHovering) {
-        nodeMap.delete(nodeList[index].code);
+        noteMap.delete(noteList[index].code);
         arr.splice(index, 1);
       }
       break;
-    case "edit":
+    case modes.edit:
       fill(0, 0, 200);
       if(typing)
         break;
-      if(draggingnode === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
-        draggingnode = index;
+      if(draggingnote === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
+        draggingnote = index;
       }
-      if(draggingnode === index) {
-        node.x = mouseX;
-        node.y = mouseY;
+      if(draggingnote === index) {
+        note.x = mouseX;
+        note.y = mouseY;
       }
       break;
     default:
+      if(mouseIsPressed && mouseHovering)
+        openNodeOptions(nodeTypes.note, note);
       fill(0);
   }
   // don't want stroke on text
   noStroke();
   // finally draw the text
   // if it doesn't have a title center text
-  if(node.title === '') {
+  if(note.title === '') {
     textStyle(NORMAL);
     textAlign(LEFT, CENTER);
-    text(node.text, node.x - node.width/2 + boxpadding.x/2, node.y);
+    text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y);
   // if it does and text is blank then center it
-  } else if(node.text === '') {
+  } else if(note.text === '') {
     textStyle(BOLD);
     textAlign(CENTER, CENTER);
-    text(node.title, node.x, node.y);
+    text(note.title, note.x, note.y);
   // both exist so put title at top and text after
   } else {
     textStyle(BOLD);
     textAlign(CENTER, TOP);
-    text(node.title, node.x, node.y - node.height/2 + boxpadding.y/2);
+    text(note.title, note.x, note.y - note.height/2 + boxpadding.y/2);
     textStyle(NORMAL);
     textAlign(LEFT, TOP);
-    text(node.text, node.x - node.width/2 + boxpadding.x/2, node.y - node.height/2 + boxpadding.y/2 + textLeading());
+    text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y - note.height/2 + boxpadding.y/2 + textLeading());
   }
 };
 
-// helper function that tells you if you are close to a line segment or not
-// distance - distance from line this will return true at
-// x1, y1, x2, y2 - your line segment
-// px, py - the point you are testing
-function lineTest(distance, x1, y1, x2, y2, px, py) {
-  let topleft = [min(x1, x2), min(y1, y2)];
-  let bottomright = [max(x1, x2), max(y1, y2)];
-  if(px > topleft[0] - distance && px < bottomright[0] + distance && py > topleft[1] - distance && py < bottomright[1] + distance) {
-    let dis = abs((x2-x1)*(y1-py)-(x1-px)*(y2-y1));
-    dis /= dist(x1, y1, x2, y2);
-    if(dis < distance)
-      return true
-  }
-  return false;
-}
-
+// -------------------------------- Mouse Events -------------------------------- //
 // when mouse is pressed do some stuff
 function mousePressed() {
   // TODO
@@ -939,31 +1139,29 @@ function mousePressed() {
   // there's a bug here, not sure how to fix it yet though
   // I fixed it. see mousemovedbtn variable
   // in drawing mode add a point to our list of lines if you click the mouse
-  if(mode === "draw" && !typing) {
+  if(mode === modes.draw && !typing) {
     lineList[lineList.length - 1].push(mouseX);
     lineList[lineList.length - 1].push(mouseY);
   }
 }
-
-/*
-course looks like
-course = {
-  code: coursecode,
-  credits: ch,
-  name: coursename,
-  prerequisites: prereqs,
-  x: number,
-  y: number
-};
-*/
-
+// do a zoom when mouseWheel moved
+function mouseWheel(event) {
+  if(typing)
+    return;
+  zoom += -event.delta / 1000;
+  if(zoom < .2)
+    zoom = .2;
+  if(zoom > 3)
+    zoom = 3;
+}
 // when mouse is released do these things
 function mouseReleased() {
   // no longer dragging a course
   draggingcourse = -1;
-  draggingnode = -1;
+  draggingnote = -1;
 }
 
+// -------------------------------- Keyboard Events -------------------------------- //
 // special key pressed
 function keyPressed() {
   // this stupid collapse function thingy doesn't show up for this one
@@ -971,22 +1169,13 @@ function keyPressed() {
   // it'll fix all the stupid little arrows so you can collapse functions
 
   // if you press enter in drawing mode finish the line and start a new one
-  if(keyCode === ENTER && mode === "draw") {
+  if(keyCode === ENTER && mode === modes.draw) {
     // if the line was too short jk, just pop it and start a new one
     if(lineList[lineList.length - 1].length < 8)
       lineList.pop();
     lineList.push([]);
   }
 }
-
-// if the window is resized this function is called
-function windowResized() {
-  // resize the canvas to fit the screen
-  resizeCanvas(windowWidth-20, windowHeight-20);
-  // set background color
-  background(220);
-}
-
 //  key typed event not for special keys use keyPressed for those
 function keyTyped() {
   // shouldn't be used because will fill out course forms
@@ -1010,9 +1199,18 @@ function keyTyped() {
     print(courseList);
     print(courseMap);
   }
-  // and nodes
+  // and notes
   if(key === 'n') {
-    print(nodeList);
-    print(nodeMap);
+    print(noteList);
+    print(noteMap);
   }
+}
+
+// -------------------------------- Miscellaneous Events -------------------------------- //
+// if the window is resized this function is called
+function windowResized() {
+  // resize the canvas to fit the screen
+  resizeCanvas(windowWidth-20, windowHeight-20);
+  // set background color
+  background(220);
 }
