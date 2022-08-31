@@ -844,6 +844,7 @@ let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
 let draggingnote = -1;
+// now time for subnode stuff
 // need a global variable of if we are moving the screen this frame
 let xy = [0, 0];
 // also a global variable for zoom
