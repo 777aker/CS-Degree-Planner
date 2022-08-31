@@ -386,7 +386,7 @@ function submitCourse() {
     let prereq = [];
     // put them all in the same list
     for(j = 0; j < divlist.length; j++) {
-      if(divlist[j].value !== "Enter Prerequisite Code Only")
+      if(divlist[j].value !== "Enter Prerequisite Code Only" && divlist[j].value !== "")
         prereq.push(divlist[j].value);
     }
     // add that list to our list of lists of prereqs
@@ -415,15 +415,6 @@ function submitCourse() {
     height: textLeading() * 2 + boxpadding.y,
     width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x
   };
-  // and also add a line connecting it to our linelist
-  // but we have to do some special formatting so linelist can draw them easily
-  prereqs.forEach(prereqgroup => {
-    // since all of these are in the same prereq group we could probably do something fancy here
-    // TODO this is a good spot to fix how prereqs with the same requirement are added
-    prereqgroup.forEach(prereq => {
-      lineList.push([coursecode, coursecode, prereq, prereq]);
-    });
-  });
   // if the courseMap already has this course code then replace it with the new one
   if(courseMap.has(coursecode)) {
     // also, set course position to where it was
@@ -592,7 +583,7 @@ editNodeBtn.addEventListener('click', function() {
 });
 const showNodeBtn = document.querySelector("#nodeinfo");
 showNodeBtn.addEventListener('click', function() {
-
+  // TODO: view node information
 });
 const closeNodeBtn = document.querySelector("#closeeditnode");
 closeNodeBtn.addEventListener("click", function() {
@@ -600,11 +591,34 @@ closeNodeBtn.addEventListener("click", function() {
   lastNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
 });
+// simple bug fix (the typing variable is a god send)
+editNodeBtn.addEventListener('mouseover', function() {
+  typing = true;
+});
+editNodeBtn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+showNodeBtn.addEventListener('mouseover', function() {
+  typing = true;
+});
+showNodeBtn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+closeNodeBtn.addEventListener('mouseover', function() {
+  typing = true;
+});
+closeNodeBtn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+// time to actually show the buttons
 let lastNodeTypeClicked;
 function openNodeOptions(nodeType, node) {
+  // if typing don't show them do nothing just exit
+  if(typing)
+    return;
   editNodesDiv.style.display = "flex";
   lastNodeTypeClicked = nodeType;
-  lastCodeClicked = node.code;
+  lastCodeClicked = node.code.toString();
   // we can expect every node to have an x, y, width, height
   editNodesDiv.style.top = node.y - node.height/2 - textLeading() - 5 + 'px';
   editNodesDiv.style.left = node.x - node.width/2 + 'px';
@@ -1085,7 +1099,7 @@ const noteListHandler = (note, index, arr) => {
         break;
       // if you click it delete it
       if(mouseIsPressed && mouseHovering) {
-        noteMap.delete(noteList[index].code);
+        noteMap.delete(noteList[index].code.toString());
         arr.splice(index, 1);
       }
       break;
