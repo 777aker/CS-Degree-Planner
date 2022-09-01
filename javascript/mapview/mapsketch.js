@@ -1064,13 +1064,18 @@ const courseListHandler = (course, index, arr) => {
           subnodecourse = index;
           //TODO: move the subnode so it's under it, make line, make subnode box
           //TODO: depending on the order in courselist or notelist, the subnodes may be drawn underneath the node, hm
+
         } else {
           // what if your subnode is being dragged later bc moving it out
           // got to remove it now, check if any subnodes are dragging?
           // foreach subnode, if coursemap.get(subnode) == draggingcourse or notemap.get(subnode) === draggingnote
           course.subnodes.forEach((code, tmpindex, tmparr) => {
-            if(courseMap.get(code) === draggingcourse || noteMap.get(code) === draggingnote)
+            if(courseMap.get(code) === draggingcourse || noteMap.get(parseInt(code)) === draggingnote) {
               tmparr.splice(tmpindex, 1);
+              // TODO: reset subnodes boxes and lines same as down in next if statement
+              // helper function for this?
+
+            }
           });
         }
       }
@@ -1154,7 +1159,7 @@ const noteListHandler = (note, index, arr) => {
           //TODO: depending on the order in courselist or notelist, subnode may show up wrong, fix that ig?
         } else {
           note.subnodes.forEach((code, tmpindex, tmpparr) => {
-            if(courseMap.get(code) === draggingcourse || noteMap.get(code) === draggingnote)
+            if(courseMap.get(code) === draggingcourse || noteMap.get(parseInt(code)) === draggingnote)
               tmpparr.splice(tmpindex, 1);
           });
         }
@@ -1249,7 +1254,6 @@ function keyTyped() {
   // so if typing return
   if(typing)
     return;
-
   // make the software go fullscreen because that's nice
   if(key === 'f' || key === 'F') {
     let fs = fullscreen();
@@ -1269,6 +1273,20 @@ function keyTyped() {
   if(key === 'n') {
     print(noteList);
     print(noteMap);
+  }
+  // and subnodes bc these are a pain
+  if(key === 's') {
+    print('====== Printing Subnodes ======');
+    courseList.forEach(course => {
+      print('---------------');
+      print(course.code);
+      print(course.subnodes);
+    });
+    noteList.forEach(note => {
+      print('---------------');
+      print(note.code);
+      print(note.subnodes);
+    });
   }
 }
 
