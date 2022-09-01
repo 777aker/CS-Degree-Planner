@@ -413,7 +413,9 @@ function submitCourse() {
     x: windowWidth / 2,
     y: windowHeight / 2,
     height: textLeading() * 2 + boxpadding.y,
-    width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x
+    width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x,
+    subnodes: [],
+    subnodebox: {x: 0, y:0}
   };
   // if the courseMap already has this course code then replace it with the new one
   if(courseMap.has(coursecode)) {
@@ -541,7 +543,9 @@ function submitNote() {
     x: tempx,
     y: tempy,
     width: width,
-    height: height
+    height: height,
+    subnodes: [],
+    subnodebox: {x:0,y:0}
   };
   if(lastNodeTypeClicked === nodeTypes.note) {
     noteList[noteMap.get(lastCodeClicked)] = note;
@@ -845,6 +849,8 @@ let movespeed = 5;
 let draggingcourse = -1;
 let draggingnote = -1;
 // now time for subnode stuff
+let subnodecourse = -1;
+let subnodenote = -1;
 // need a global variable of if we are moving the screen this frame
 let xy = [0, 0];
 // also a global variable for zoom
@@ -1002,12 +1008,12 @@ const courseListHandler = (course, index, arr) => {
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2))
+  if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2)) {
     mouseHovering = true;
-  if(mouseHovering)
     fill(200, 200, 200);
-  else
+  } else {
     fill(255, 255, 255);
+  }
   // draw the rectangle around our course
   rectMode(CENTER);
   rect(course.x, course.y, course.width, course.height);
@@ -1049,9 +1055,30 @@ const courseListHandler = (course, index, arr) => {
       // that's because we basically have to put this here and our box we have to draw before
       // we actually move the course
       // this is just the most efficient and it's actually a cool effect so it's staying
-      if(draggingcourse === index) {
-        course.x = mouseX;
-        course.y = mouseY;
+      if(subnodenote === -1 && subnodecourse === -1) {
+        if(draggingcourse === index) {
+          course.x = mouseX;
+          course.y = mouseY;
+        } else if(mouseHovering && mouseIsPressed) {
+          course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
+          subnodecourse = index;
+          //TODO: move the subnode so it's under it, make line, make subnode box
+          //TODO: depending on the order in courselist or notelist, the subnodes may be drawn underneath the node, hm
+        } else {
+          // what if your subnode is being dragged later bc moving it out
+          // got to remove it now, check if any subnodes are dragging?
+          // foreach subnode, if coursemap.get(subnode) == draggingcourse or notemap.get(subnode) === draggingnote
+          course.subnodes.forEach((code, tmpindex, tmparr) => {
+            if(courseMap.get(code) === draggingcourse || noteMap.get(code) === draggingnote)
+              tmparr.splice(tmpindex, 1);
+          });
+        }
+      }
+      if(subnodecourse === index && !mouseHovering) {
+        subnodecourse = -1;
+        course.subnodes.pop();
+        //TODO: reset subnode boxes and lines
+
       }
       break;
     default:
@@ -1174,6 +1201,8 @@ function mouseReleased() {
   // no longer dragging a course
   draggingcourse = -1;
   draggingnote = -1;
+  subnodecourse = -1;
+  subnodenote = -1;
 }
 
 // -------------------------------- Keyboard Events -------------------------------- //
