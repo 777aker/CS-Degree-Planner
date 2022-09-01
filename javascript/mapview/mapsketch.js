@@ -1135,12 +1135,34 @@ const noteListHandler = (note, index, arr) => {
       fill(0, 0, 200);
       if(typing)
         break;
+
       if(draggingnote === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
         draggingnote = index;
       }
-      if(draggingnote === index) {
-        note.x = mouseX;
-        note.y = mouseY;
+      // copying from course cause they work the same
+      // should I just combine the two???
+      // no, I guess they do work differently in many ways
+      // but I could combine this function? eh, eh, seems risky for no reward
+      if(subnodenote === -1 && subnodecourse === -1) {
+        if(draggingnote === index) {
+          note.x = mouseX;
+          note.y = mouseY;
+        } else if(mouseHovering && mouseIsPressed) {
+          note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
+          subnodenote = index;
+          //TODO: move the subnode position so it's under it, make lines, make subnode box a thing
+          //TODO: depending on the order in courselist or notelist, subnode may show up wrong, fix that ig?
+        } else {
+          note.subnodes.forEach((code, tmpindex, tmpparr) => {
+            if(courseMap.get(code) === draggingcourse || noteMap.get(code) === draggingnote)
+              tmpparr.splice(tmpindex, 1);
+          });
+        }
+      }
+      if(subnodenote === index && !mouseHovering) {
+        subnodenote = -1;
+        note.subnodes.pop();
+        // TODO: reset subnode boxes and lines
       }
       break;
     default:
