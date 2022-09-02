@@ -1229,17 +1229,30 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
     // if the subnode has subnodes, we gotta do some different math than if it doesn't
     if(subnode.subnodes.length > 0) {
       // get the subnodes subnodebox
-      let dsub = subnodeboxesList[subnodeboxesMap.get(subnode.code)];
+      let position = subnodeboxesMap.get(subnode.code);
+      let dsub = subnodeboxesList[position];
       // change the subnodes position to be under the current node
       subnode.x = subnodebox.x + subnode.width/2 + subnodeinset + subnodepadding;
       subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading + subnodepadding;
       // figure out our subnodebox size
       subnodebox.height += dsub.height + subnodeleading + subnodepadding*2;
       let width = dsub.width + subnodeinset + subnodepadding*2;
-      print(width);
-      print(subnodebox.width);
       if(subnodebox.width < width)
         subnodebox.width = width;
+      // TODO: check goes here for if subnodes in wrong order
+      // so p5js draws in the order you tell it, so here we can get a subnodebox on top of
+      // another that is smaller and should be on top of the other
+      // so if you're subnode's subnodebox is before yours, switch places in the map with each other
+      let npos = subnodeboxesMap.get(node.code);
+      if(npos !== undefined && position < npos) {
+        /*
+        let tmpbox = subnodeboxesList[position];
+        subnodeboxesList[position] = subnodeboxesList[npos];
+        subnodeboxesList[npos] = tmpbox;
+        subnodeboxesMap.set(node.code, position);
+        subnodeboxesMap.set(subnode.code, npos);
+        */
+      }
     // the subnode doesn't have subnodes so we can do some different stuff
     } else {
       // move our subnode to under us
