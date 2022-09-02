@@ -66,11 +66,8 @@ let modenames = {
   3: "draw"
 };
 // subnode boxes we draw
-let subnodeboxes = [];
+let subnodeboxesList = [];
 let subnodeboxesMap = new Map();
-let subnodepadding = 10;
-let subnodeinset = 8;
-let subnodeleading = 6;
 
 // -------------------------------- Set up functions -------------------------------- //
 // p5js setup function
@@ -913,14 +910,9 @@ function draw() {
   // draw all the subnode stuff
   strokeWeight(2);
   stroke(0);
-  rectMode(LEFT, TOP);
+  rectMode(CORNER);
   fill(255);
-  subnodeboxes.forEach((subnode) => {
-    rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding, subnode.height + subnodepadding);
-    subnode.lines.forEach((ln) => {
-      line(ln[0], ln[1], ln[2], ln[3]);
-    });
-  });
+  subnodeboxesList.forEach(subnodeHandler);
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
   // loop that goes through and does everything we need for notes
@@ -1081,58 +1073,38 @@ const courseListHandler = (course, index, arr) => {
       if(subnodecourse === index && !mouseHovering) {
         subnodecourse = -1;
         course.subnodes.pop();
-        //TODO: remove from subnodeboxeslist
       }
       // loop through all our subnodes time
-      if(course.subnodes.length === 0)
+      if(course.subnodes.length === 0) {
+        // but if we don't have any remove it from the list
+        if(subnodeboxesMap.has(course.code)) {
+          subnodeboxesList.splice(subnodeboxesMap.get(course.code), 1);
+          subnodeboxesMap.delete(course.code);
+        }
         break;
+      }
+      // this is the box around this course that holds all the subnodes
       let subnodebox = {
         code: course.code,
-        x: course.x - course.width,
-        y: course.y - course.height,
+        x: course.x - course.width/2,
+        y: course.y - course.height/2,
         width: course.width,
         height: course.height,
         lines: []
       }
-      let insetx = course.x - course.width + subnodeinset/2;
-      course.subnodes.forEach((fsub, sindex, sarr) => {
-        let subnode = "";
-        if(courseMap.has(fsub))
-          subnode = courseList[courseMap.get(fsub)];
-        else
-          subnode = noteList[noteMap.get(fsub.toString)];
-        if(!mouseHovering && (courseMap.get(fsub) === draggingcourse || noteMap.get(fsub.toString) === draggingnote)) {
-          sarr.splice(sindex, 1);
-          // TODO: remove from subnodeboxes list
-          return;
-        }
-        if(subnode.subnodes.length > 0) {
-          let dsub = subnodeboxesMap.get(subnode);
-          subnode.x = course.x - course.width + subnodeinset;
-          subnode.y = subnodebox.height + subnodeleading;
-          subnodebox.height += dsub.height + subnodeleading;
-          let width = dsub.width + subnodeinset + subnodepadding*2;
-          if(subnodebox.width < width)
-            subnodeboxwidth = width;
-        } else {
-          subnode.x = course.x - course.width + subnodeinset;
-          subnode.y = subnodebox.height + subnodeleading;
-          subnodebox.height += subnode.height + subnodeleading;
-          if(subnodebox.width < subnode.width + subnodeinset)
-            subnodebox.width = subnode.width + subnodeinset;
-        }
-        let temparray = [insetx, subnode.y, subnode.x, subnode.y];
-        subnodebox.lines.push(temparray);
-        if(sindex === sarr.length-1) {
-          tmparray = [insetx, course.y, insetx, subnode.y];
-          subnodebox.lines.push(temparray);
-        }
+      // this is how far in we place lines to subnodes
+      let insetx = course.x - course.width/2 + subnodeinset/2;
+      // well subnodebox isn't the box yet, we gotta calculate all it's stuff
+      course.subnodes.forEach((sub, ind, ar) => {
+        subnodeboxmaker(course, mouseHovering, subnodebox, sub, ind, ar, insetx);
       });
+      // now we have to update our map and list with our new subnodebox
+      // replace the one that already exists for this, or if it doesn't make a new one
       if(subnodeboxesMap.has(subnodebox.code)) {
-        subnodeboxes[subnodeboxesMap.get(subnodebox.code)] = subnodebox;
+        subnodeboxesList[subnodeboxesMap.get(subnodebox.code)] = subnodebox;
       } else {
-        subnodeboxesMap.set(subnodebox.code, subnodeboxes.length-1);
-        subnodeboxes.push(subnodebox);
+        subnodeboxesMap.set(subnodebox.code, subnodeboxesList.length);
+        subnodeboxesList.push(subnodebox);
       }
       break;
     default:
@@ -1241,6 +1213,64 @@ const noteListHandler = (note, index, arr) => {
     text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y - note.height/2 + boxpadding.y/2 + textLeading());
   }
 };
+// In edit process subnodeboxes and make them and all that
+function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, insetx) {
+    let subnode = "";
+    // find the subnode
+    if(courseMap.has(fsub))
+      subnode = courseList[courseMap.get(fsub)];
+    else
+      subnode = noteList[noteMap.get(fsub.toString)];
+    // if we are not hovering over this but still dragging subnode, remove it from our subnodes
+    if(!mouseHovering && (courseMap.get(fsub) === draggingcourse || noteMap.get(fsub.toString) === draggingnote)) {
+      sarr.splice(sindex, 1);
+      return;
+    }
+    // if the subnode has subnodes, we gotta do some different math than if it doesn't
+    if(subnode.subnodes.length > 0) {
+      // get the subnodes subnodebox
+      let dsub = subnodeboxesList[subnodeboxesMap.get(subnode.code)];
+      // change the subnodes position to be under the current node
+      subnode.x = subnodebox.x + subnode.width/2 + subnodeinset + subnodepadding;
+      subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading + subnodepadding;
+      // figure out our subnodebox size
+      subnodebox.height += dsub.height + subnodeleading + subnodepadding*2;
+      let width = dsub.width + subnodeinset + subnodepadding*2;
+      print(width);
+      print(subnodebox.width);
+      if(subnodebox.width < width)
+        subnodebox.width = width;
+    // the subnode doesn't have subnodes so we can do some different stuff
+    } else {
+      // move our subnode to under us
+      subnode.x = subnodebox.x + subnode.width/2 + subnodeinset;
+      subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading;
+      // calculate our subnodebox size
+      subnodebox.height += subnode.height + subnodeleading;
+      if(subnodebox.width < subnode.width + subnodeinset)
+        subnodebox.width = subnode.width + subnodeinset;
+    }
+    // now we gotta add some nice lines to our subnodes
+    // the first line is just horizontal, draw from the left, to the right
+    let temparray = [insetx, subnode.y, subnode.x, subnode.y];
+    subnodebox.lines.push(temparray);
+    // the last line is the vertical line connecting all the horizontal lines
+    if(sindex === sarr.length-1) {
+      temparray = [insetx, node.y, insetx, subnode.y];
+      subnodebox.lines.push(temparray);
+    }
+}
+// helper function for handling subnode drawing
+// plus some variables for drawing a nice box
+let subnodepadding = 10;
+let subnodeinset = 18;
+let subnodeleading = 6;
+const subnodeHandler = (subnode) => {
+  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
+  subnode.lines.forEach((ln) => {
+    line(ln[0], ln[1], ln[2], ln[3]);
+  });
+};
 
 // -------------------------------- Mouse Events -------------------------------- //
 // when mouse is pressed do some stuff
@@ -1330,6 +1360,8 @@ function keyTyped() {
       print(note.code);
       print(note.subnodes);
     });
+    print(subnodeboxesList);
+    print(subnodeboxesMap);
   }
 }
 
