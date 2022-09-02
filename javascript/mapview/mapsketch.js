@@ -65,6 +65,12 @@ let modenames = {
   2: "edit",
   3: "draw"
 };
+// subnode boxes we draw
+let subnodeboxes = [];
+let subnodeboxesMap = new Map();
+let subnodepadding = 10;
+let subnodeinset = 8;
+let subnodeleading = 6;
 
 // -------------------------------- Set up functions -------------------------------- //
 // p5js setup function
@@ -414,8 +420,7 @@ function submitCourse() {
     y: windowHeight / 2,
     height: textLeading() * 2 + boxpadding.y,
     width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x,
-    subnodes: [],
-    subnodebox: {x: 0, y:0}
+    subnodes: []
   };
   // if the courseMap already has this course code then replace it with the new one
   if(courseMap.has(coursecode)) {
@@ -544,8 +549,7 @@ function submitNote() {
     y: tempy,
     width: width,
     height: height,
-    subnodes: [],
-    subnodebox: {x:0,y:0}
+    subnodes: []
   };
   if(lastNodeTypeClicked === nodeTypes.note) {
     noteList[noteMap.get(lastCodeClicked)] = note;
@@ -902,11 +906,21 @@ function draw() {
   // draw mode time, do some nonsense
   // I'm not sure what this will entail yet so gonna put it in another function
   // pass xy also so we can move some stuff around
-
   // draw the lines
   // I love anonymous functions apparently (I use them a lot)
   // for every line that exists this is going to draw them
   lineList.forEach(lineListHandler);
+  // draw all the subnode stuff
+  strokeWeight(2);
+  stroke(0);
+  rectMode(LEFT, TOP);
+  fill(255);
+  subnodeboxes.forEach((subnode) => {
+    rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding, subnode.height + subnodepadding);
+    subnode.lines.forEach((ln) => {
+      line(ln[0], ln[1], ln[2], ln[3]);
+    });
+  });
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
   // loop that goes through and does everything we need for notes
@@ -1062,28 +1076,63 @@ const courseListHandler = (course, index, arr) => {
         } else if(mouseHovering && mouseIsPressed) {
           course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
           subnodecourse = index;
-          //TODO: move the subnode so it's under it, make line, make subnode box
-          //TODO: depending on the order in courselist or notelist, the subnodes may be drawn underneath the node, hm
-
-        } else {
-          // what if your subnode is being dragged later bc moving it out
-          // got to remove it now, check if any subnodes are dragging?
-          // foreach subnode, if coursemap.get(subnode) == draggingcourse or notemap.get(subnode) === draggingnote
-          course.subnodes.forEach((code, tmpindex, tmparr) => {
-            if(courseMap.get(code) === draggingcourse || noteMap.get(parseInt(code)) === draggingnote) {
-              tmparr.splice(tmpindex, 1);
-              // TODO: reset subnodes boxes and lines same as down in next if statement
-              // helper function for this?
-
-            }
-          });
         }
       }
       if(subnodecourse === index && !mouseHovering) {
         subnodecourse = -1;
         course.subnodes.pop();
-        //TODO: reset subnode boxes and lines
-
+        //TODO: remove from subnodeboxeslist
+      }
+      // loop through all our subnodes time
+      if(course.subnodes.length === 0)
+        break;
+      let subnodebox = {
+        code: course.code,
+        x: course.x - course.width,
+        y: course.y - course.height,
+        width: course.width,
+        height: course.height,
+        lines: []
+      }
+      let insetx = course.x - course.width + subnodeinset/2;
+      course.subnodes.forEach((fsub, sindex, sarr) => {
+        let subnode = "";
+        if(courseMap.has(fsub))
+          subnode = courseList[courseMap.get(fsub)];
+        else
+          subnode = noteList[noteMap.get(fsub.toString)];
+        if(!mouseHovering && (courseMap.get(fsub) === draggingcourse || noteMap.get(fsub.toString) === draggingnote)) {
+          sarr.splice(sindex, 1);
+          // TODO: remove from subnodeboxes list
+          return;
+        }
+        if(subnode.subnodes.length > 0) {
+          let dsub = subnodeboxesMap.get(subnode);
+          subnode.x = course.x - course.width + subnodeinset;
+          subnode.y = subnodebox.height + subnodeleading;
+          subnodebox.height += dsub.height + subnodeleading;
+          let width = dsub.width + subnodeinset + subnodepadding*2;
+          if(subnodebox.width < width)
+            subnodeboxwidth = width;
+        } else {
+          subnode.x = course.x - course.width + subnodeinset;
+          subnode.y = subnodebox.height + subnodeleading;
+          subnodebox.height += subnode.height + subnodeleading;
+          if(subnodebox.width < subnode.width + subnodeinset)
+            subnodebox.width = subnode.width + subnodeinset;
+        }
+        let temparray = [insetx, subnode.y, subnode.x, subnode.y];
+        subnodebox.lines.push(temparray);
+        if(sindex === sarr.length-1) {
+          tmparray = [insetx, course.y, insetx, subnode.y];
+          subnodebox.lines.push(temparray);
+        }
+      });
+      if(subnodeboxesMap.has(subnodebox.code)) {
+        subnodeboxes[subnodeboxesMap.get(subnodebox.code)] = subnodebox;
+      } else {
+        subnodeboxesMap.set(subnodebox.code, subnodeboxes.length-1);
+        subnodeboxes.push(subnodebox);
       }
       break;
     default:
@@ -1155,20 +1204,14 @@ const noteListHandler = (note, index, arr) => {
         } else if(mouseHovering && mouseIsPressed) {
           note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
           subnodenote = index;
-          //TODO: move the subnode position so it's under it, make lines, make subnode box a thing
-          //TODO: depending on the order in courselist or notelist, subnode may show up wrong, fix that ig?
-        } else {
-          note.subnodes.forEach((code, tmpindex, tmpparr) => {
-            if(courseMap.get(code) === draggingcourse || noteMap.get(parseInt(code)) === draggingnote)
-              tmpparr.splice(tmpindex, 1);
-          });
         }
       }
       if(subnodenote === index && !mouseHovering) {
         subnodenote = -1;
         note.subnodes.pop();
-        // TODO: reset subnode boxes and lines
       }
+      // loop through subnodes time
+      note.subnodes.forEach(subnodeHandler);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
