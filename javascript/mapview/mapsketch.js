@@ -425,10 +425,21 @@ function submitCourse() {
     course.x = courseList[courseMap.get(coursecode)].x;
     course.y = courseList[courseMap.get(coursecode)].y;
     courseList[courseMap.get(coursecode)] = course;
+    if(lastCodeClicked !== coursecode) {
+      let deleting = courseMap.get(lastCodeClicked);
+      courseMap.forEach((value, key) => {
+        if(value > deleting)
+          courseMap.set(key, value - 1);
+      });
+      courseList.splice(courseMap.get(lastCodeClicked), 1);
+      courseMap.delete(lastCodeClicked);
+    }
   } else if(courseMap.has(lastCodeClicked)) {
     course.x = courseList[courseMap.get(lastCodeClicked)].x;
     course.y = courseList[courseMap.get(lastCodeClicked)].y;
     courseList[courseMap.get(lastCodeClicked)] = course;
+    courseMap.set(course.code, courseMap.get(lastCodeClicked));
+    courseMap.delete(lastCodeClicked);
   } else {
     // if the course map doesn't have it then the course doesn't exist push
     // it to the map and save where it is at
@@ -451,6 +462,8 @@ function cancelCourse() {
   addCourseDiv.style.display = 'none';
   // clear form contents
   addCourseForm.innerHTML = '';
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
   typing = false;
 }
 
@@ -566,6 +579,8 @@ cancelnotebtn.addEventListener('click', cancelNote);
 function cancelNote() {
   addNoteDiv.style.display = 'none';
   addNoteForm.innerHTML = '';
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
   typing = false;
 }
 
@@ -1369,7 +1384,7 @@ function keyTyped() {
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
   if(key === 'l') {
-    print(lineList);
+    print(lastCodeClicked);
   }
   // I also wanna see the courselist and courseMap for debuggingc
   if(key === 'c') {
