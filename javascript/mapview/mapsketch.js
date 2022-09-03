@@ -1065,7 +1065,7 @@ const courseListHandler = (course, index, arr) => {
         if(draggingcourse === index) {
           course.x = mouseX;
           course.y = mouseY;
-        } else if(mouseHovering && mouseIsPressed) {
+        } else if(mouseHovering && mouseIsPressed && subnodecourse === -1) {
           course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
           subnodecourse = index;
         }
@@ -1245,13 +1245,11 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
       // so if you're subnode's subnodebox is before yours, switch places in the map with each other
       let npos = subnodeboxesMap.get(node.code);
       if(npos !== undefined && position < npos) {
-        /*
         let tmpbox = subnodeboxesList[position];
         subnodeboxesList[position] = subnodeboxesList[npos];
         subnodeboxesList[npos] = tmpbox;
         subnodeboxesMap.set(node.code, position);
         subnodeboxesMap.set(subnode.code, npos);
-        */
       }
     // the subnode doesn't have subnodes so we can do some different stuff
     } else {
