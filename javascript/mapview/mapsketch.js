@@ -1057,6 +1057,8 @@ const courseListHandler = (course, index, arr) => {
         });
         courseMap.delete(courseList[index].code);
         arr.splice(index, 1);
+        // remove this node from subnodes list if it exists
+        // go make everyone find all their subnodes and recalculate their boxes
       }
       break;
     case modes.edit:
@@ -1085,7 +1087,7 @@ const courseListHandler = (course, index, arr) => {
           // else if we are hovering and the mouse is pressed and there isn't a subnodecourse then make this the subnode course
         } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
           // put what we are dragging into the subnodes for this course
-          course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
+          course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
           subnodecourse = index;
         }
       }
@@ -1120,7 +1122,7 @@ const courseListHandler = (course, index, arr) => {
         width: course.width,
         height: course.height,
         lines: []
-      }
+      };
       // this is how far in we place lines to subnodes
       let insetx = course.x - course.width/2 + subnodeinset/2;
       // well subnodebox isn't the box yet, we gotta calculate all it's stuff
@@ -1164,12 +1166,12 @@ const noteListHandler = (note, index, arr) => {
   // check if dragging this box
   let mouseHovering = draggingnote === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2))
+  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2)) {
     mouseHovering = true;
-  if(mouseHovering)
     fill(200, 200, 200);
-  else
+  } else {
     fill(255, 255, 255);
+  }
   // draw rect around note
   rectMode(CENTER);
   rect(note.x, note.y, note.width, note.height);
@@ -1187,10 +1189,10 @@ const noteListHandler = (note, index, arr) => {
       }
       break;
     case modes.edit:
+      // this is just a copy of what class does
       fill(0, 0, 200);
       if(typing)
         break;
-
       if(draggingnote === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
         draggingnote = index;
       }
@@ -1202,8 +1204,8 @@ const noteListHandler = (note, index, arr) => {
         if(draggingnote === index) {
           note.x = mouseX;
           note.y = mouseY;
-        } else if(mouseHovering && mouseIsPressed) {
-          note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
+        } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
+          note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
           subnodenote = index;
         }
       }
@@ -1211,8 +1213,36 @@ const noteListHandler = (note, index, arr) => {
         subnodenote = -1;
         note.subnodes.pop();
       }
-      // loop through subnodes time
-      note.subnodes.forEach(subnodeHandler);
+      if(note.subnodes.length === 0) {
+        if(subnodeboxesMap.has(note.code)) {
+          let deleting = subnodeboxesMap.get(note.code);
+          subnodeboxesMap.forEach((value, key) => {
+            if(value > deleting)
+              subnodeboxesMap.set(key, value - 1);
+          });
+          subnodeboxesList.splice(subnodeboxesMap.get(note.code), 1);
+          subnodeboxesMap.delete(note.code);
+        }
+        break;
+      }
+      let subnodebox = {
+        code: note.code,
+        x: note.x - note.width/2,
+        y: note.y - note.height/2,
+        width: note.width,
+        height: note.height,
+        lines: []
+      };
+      let insetx = note.x - note.width/2 + subnodeinset/2;
+      note.subnodes.forEach((sub, ind, ar) => {
+        subnodeboxmaker(note, mouseHovering, subnodebox, sub, ind, ar, insetx);
+      });
+      if(subnodeboxesMap.has(subnodebox.code)) {
+        subnodeboxesList[subnodeboxesMap.get(subnodebox.code)] = subnodebox;
+      } else {
+        subnodeboxesMap.set(subnodebox.code, subnodeboxesList.length);
+        subnodeboxesList.push(subnodebox);
+      }
       break;
     default:
       if(mouseIsPressed && mouseHovering)
