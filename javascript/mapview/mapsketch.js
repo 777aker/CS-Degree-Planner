@@ -1061,23 +1061,37 @@ const courseListHandler = (course, index, arr) => {
       // that's because we basically have to put this here and our box we have to draw before
       // we actually move the course
       // this is just the most efficient and it's actually a cool effect so it's staying
+      // if there isn't any active subnoding right now, do the following
       if(subnodenote === -1 && subnodecourse === -1) {
+        // if this is the course we are dragging then move it to the mouse
         if(draggingcourse === index) {
           course.x = mouseX;
           course.y = mouseY;
-        } else if(mouseHovering && mouseIsPressed && subnodecourse === -1) {
+          // else if we are hovering and the mouse is pressed and there isn't a subnodecourse then make this the subnode course
+        } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
+          // put what we are dragging into the subnodes for this course
           course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code.toString() : courseList[draggingcourse].code);
           subnodecourse = index;
         }
       }
+      // it this is the subnode and we stopped hovering over it remove the subnode we just added
       if(subnodecourse === index && !mouseHovering) {
         subnodecourse = -1;
         course.subnodes.pop();
       }
-      // loop through all our subnodes time
+      // if we don't have any subnodes then break and remove us form the subnodes list
       if(course.subnodes.length === 0) {
-        // but if we don't have any remove it from the list
+        // if we exist in the list of subnodes then delete us since we don't have any anymore
         if(subnodeboxesMap.has(course.code)) {
+          // jesus, this but took so long to figure out
+          // not doing this means there are duplicate subnodes created
+          // ok, now doing this makes duplicates???
+          // ok, got it hopefully
+          let deleting = subnodeboxesMap.get(course.code);
+          subnodeboxesMap.forEach((value, key) => {
+            if(value > deleting)
+              subnodeboxesMap.set(key, value - 1);
+          });
           subnodeboxesList.splice(subnodeboxesMap.get(course.code), 1);
           subnodeboxesMap.delete(course.code);
         }
@@ -1213,16 +1227,21 @@ const noteListHandler = (note, index, arr) => {
     text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y - note.height/2 + boxpadding.y/2 + textLeading());
   }
 };
-// In edit process subnodeboxes and make them and all that
+// In edit, process subnodeboxes and make them and all that
 function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, insetx) {
     let subnode = "";
     // find the subnode
-    if(courseMap.has(fsub))
+    if(courseMap.has(fsub)) {
       subnode = courseList[courseMap.get(fsub)];
-    else
-      subnode = noteList[noteMap.get(fsub.toString)];
-    // if we are not hovering over this but still dragging subnode, remove it from our subnodes
-    if(!mouseHovering && (courseMap.get(fsub) === draggingcourse || noteMap.get(fsub.toString) === draggingnote)) {
+    } else if(noteMap.has(fsub)) {
+      subnode = noteList[noteMap.get(fsub)];
+    // the subnode doesn't exist which must mean it was deleted so lets remove it from our subnodes, and return
+    } else {
+      sarr.splice(sindex, 1);
+      return;
+    }
+    // if we are not hovering over this but dragging subnode, remove it from our subnodes
+    if(!mouseHovering && (courseMap.get(fsub) === draggingcourse || noteMap.get(fsub) === draggingnote)) {
       sarr.splice(sindex, 1);
       return;
     }
@@ -1273,9 +1292,13 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
 }
 // helper function for handling subnode drawing
 // plus some variables for drawing a nice box
+// spacing around the subnodes
 let subnodepadding = 10;
+// how far in a subnode goes
 let subnodeinset = 18;
+// spacing between subnode items
 let subnodeleading = 6;
+// this function just draws all the subnode boxes and lines connecting subnodes, very simple
 const subnodeHandler = (subnode) => {
   rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
   subnode.lines.forEach((ln) => {
@@ -1373,6 +1396,15 @@ function keyTyped() {
     });
     print(subnodeboxesList);
     print(subnodeboxesMap);
+  }
+  // just subnode list and map
+  if(key === 'S') {
+    subnodeboxesList.forEach(subnodebox => {
+      print(subnodebox.code);
+    });
+    subnodeboxesMap.forEach((value, key) => {
+      print(value + ":" + key)
+    });
   }
 }
 
