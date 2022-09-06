@@ -258,9 +258,24 @@ function replaceElement(list, map, key, element) {
 function replaceElementByKeys(list, map, key, seckey) {
   replaceElement(list, map, key, list[map.get(seckey)]);
 }
+function switchElements(list, map, ind, secind) {
+  let tmpelement = list[ind];
+  list[ind] = list[secind];
+  list[secind] = tmpelement;
+  map.set(list[ind].code, ind);
+  map.set(list[secind].code, secind);
+}
 function pushElement(list, map, element) {
   if(map.has(element.code)) {
     replaceElement(list, map, element.code, element);
+    return;
+  }
+  map.set(element.code, list.length);
+  list.push(element);
+}
+function pushElementNoPosition(list, map, element) {
+  if(map.has(element.code)) {
+    list[map.get(element.code)] = element;
     return;
   }
   map.set(element.code, list.length);
@@ -662,7 +677,7 @@ function openNodeOptions(nodeType, node) {
     return;
   editNodesDiv.style.display = "flex";
   lastNodeTypeClicked = nodeType;
-  lastCodeClicked = node.code.toString();
+  lastCodeClicked = node.code;
   // we can expect every node to have an x, y, width, height
   editNodesDiv.style.top = node.y - node.height/2 - textLeading() - 5 + 'px';
   editNodesDiv.style.left = node.x - node.width/2 + 'px';
@@ -1132,13 +1147,10 @@ const courseListHandler = (course, index, arr) => {
           // not doing this means there are duplicate subnodes created
           // ok, now doing this makes duplicates???
           // ok, got it hopefully
-          let deleting = subnodeboxesMap.get(course.code);
-          subnodeboxesMap.forEach((value, key) => {
-            if(value > deleting)
-              subnodeboxesMap.set(key, value - 1);
-          });
-          subnodeboxesList.splice(subnodeboxesMap.get(course.code), 1);
-          subnodeboxesMap.delete(course.code);
+          // ok, now that seems like a dumb thing to say, but I added a helper function now
+          // before I was deleting but not moving everything which is why it broke
+          // that probably doesn't make sense as an explanation but whatever
+          deleteElement(subnodeboxesList, subnodeboxesMap, course.code);
         }
         break;
       }
@@ -1159,12 +1171,7 @@ const courseListHandler = (course, index, arr) => {
       });
       // now we have to update our map and list with our new subnodebox
       // replace the one that already exists for this, or if it doesn't make a new one
-      if(subnodeboxesMap.has(subnodebox.code)) {
-        subnodeboxesList[subnodeboxesMap.get(subnodebox.code)] = subnodebox;
-      } else {
-        subnodeboxesMap.set(subnodebox.code, subnodeboxesList.length);
-        subnodeboxesList.push(subnodebox);
-      }
+      pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
@@ -1242,13 +1249,7 @@ const noteListHandler = (note, index, arr) => {
       }
       if(note.subnodes.length === 0) {
         if(subnodeboxesMap.has(note.code)) {
-          let deleting = subnodeboxesMap.get(note.code);
-          subnodeboxesMap.forEach((value, key) => {
-            if(value > deleting)
-              subnodeboxesMap.set(key, value - 1);
-          });
-          subnodeboxesList.splice(subnodeboxesMap.get(note.code), 1);
-          subnodeboxesMap.delete(note.code);
+          deleteElement(subnodeboxesList, subnodeboxesMap, note.code);
         }
         break;
       }
@@ -1264,12 +1265,7 @@ const noteListHandler = (note, index, arr) => {
       note.subnodes.forEach((sub, ind, ar) => {
         subnodeboxmaker(note, mouseHovering, subnodebox, sub, ind, ar, insetx);
       });
-      if(subnodeboxesMap.has(subnodebox.code)) {
-        subnodeboxesList[subnodeboxesMap.get(subnodebox.code)] = subnodebox;
-      } else {
-        subnodeboxesMap.set(subnodebox.code, subnodeboxesList.length);
-        subnodeboxesList.push(subnodebox);
-      }
+      pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
@@ -1336,11 +1332,7 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
       // so if you're subnode's subnodebox is before yours, switch places in the map with each other
       let npos = subnodeboxesMap.get(node.code);
       if(npos !== undefined && position < npos) {
-        let tmpbox = subnodeboxesList[position];
-        subnodeboxesList[position] = subnodeboxesList[npos];
-        subnodeboxesList[npos] = tmpbox;
-        subnodeboxesMap.set(node.code, position);
-        subnodeboxesMap.set(subnode.code, npos);
+        switchElements(subnodeboxesList, subnodeboxesMap, position, npos);
       }
     // the subnode doesn't have subnodes so we can do some different stuff
     } else {
