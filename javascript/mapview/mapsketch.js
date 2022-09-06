@@ -65,6 +65,9 @@ let modenames = {
   2: "edit",
   3: "draw"
 };
+// subnode boxes we draw
+let subnodeboxesList = [];
+let subnodeboxesMap = new Map();
 
 // -------------------------------- Set up functions -------------------------------- //
 // p5js setup function
@@ -211,6 +214,72 @@ function createFormButton(form, id, value, func) {
   tempbutton.setAttribute("value", value);
   form.appendChild(tempbutton);
   tempbutton.addEventListener('click', func);
+}
+// map and list helper functions
+/* this will help us delete things properly
+basically making these because I had impossible to find bugs because I didn't
+do all the steps a delete takes
+  list - list we delete from
+  map - map that maps to the list
+  key - key to delete or replace
+  ind - delete index instead
+  element - an element of the list type to add or replace
+*/
+function deleteElement(list, map, delkey) {
+  let deleting = map.get(delkey);
+  map.forEach((value, key) => {
+    if(value > deleting)
+      map.set(key, value-1);
+  });
+  list.splice(deleting, 1);
+  map.delete(delkey);
+}
+function deleteElementByIndex(list, map, ind) {
+  map.forEach((value, key) => {
+    if(value > ind)
+      map.set(key, value-1);
+  });
+  map.delete(list[ind].code);
+  list.splice(ind, 1);
+}
+function replaceElement(list, map, key, element) {
+  let keyind = map.get(key);
+  element.x = list[keyind].x;
+  element.y = list[keyind].y;
+  list[keyind] = element;
+  if(key !== element.code) {
+    if(map.has(element.code)) {
+      deleteElement(list, map, element.code);
+    }
+    map.set(element.code, keyind);
+    map.delete(key);
+  }
+}
+function replaceElementByKeys(list, map, key, seckey) {
+  replaceElement(list, map, key, list[map.get(seckey)]);
+}
+function switchElements(list, map, ind, secind) {
+  let tmpelement = list[ind];
+  list[ind] = list[secind];
+  list[secind] = tmpelement;
+  map.set(list[ind].code, ind);
+  map.set(list[secind].code, secind);
+}
+function pushElement(list, map, element) {
+  if(map.has(element.code)) {
+    replaceElement(list, map, element.code, element);
+    return;
+  }
+  map.set(element.code, list.length);
+  list.push(element);
+}
+function pushElementNoPosition(list, map, element) {
+  if(map.has(element.code)) {
+    list[map.get(element.code)] = element;
+    return;
+  }
+  map.set(element.code, list.length);
+  list.push(element);
 }
 
 // -------------------------------- Adding Courses Section -------------------------------- //
@@ -413,23 +482,14 @@ function submitCourse() {
     x: windowWidth / 2,
     y: windowHeight / 2,
     height: textLeading() * 2 + boxpadding.y,
-    width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x
+    width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x,
+    subnodes: []
   };
-  // if the courseMap already has this course code then replace it with the new one
-  if(courseMap.has(coursecode)) {
-    // also, set course position to where it was
-    course.x = courseList[courseMap.get(coursecode)].x;
-    course.y = courseList[courseMap.get(coursecode)].y;
-    courseList[courseMap.get(coursecode)] = course;
-  } else if(courseMap.has(lastCodeClicked)) {
-    course.x = courseList[courseMap.get(lastCodeClicked)].x;
-    course.y = courseList[courseMap.get(lastCodeClicked)].y;
-    courseList[courseMap.get(lastCodeClicked)] = course;
+  if(courseMap.has(lastCodeClicked)) {
+    replaceElement(courseList, courseMap, lastCodeClicked, course);
   } else {
-    // if the course map doesn't have it then the course doesn't exist push
-    // it to the map and save where it is at
-    courseMap.set(coursecode, courseList.length);
-    courseList.push(course);
+    // helper function that puts things into our course list
+    pushElement(courseList, courseMap, course);
   }
   // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
@@ -447,6 +507,8 @@ function cancelCourse() {
   addCourseDiv.style.display = 'none';
   // clear form contents
   addCourseForm.innerHTML = '';
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
   typing = false;
 }
 
@@ -497,19 +559,18 @@ function submitNote() {
   // so we are going to make a hash map
   // TODO: hash function may need some work since most notes will have same text
   let hash;
-  let tempx = windowWidth / 2;
-  let tempy = windowHeight / 2;
-  if(lastNodeTypeClicked !== nodeTypes.note) {
+  let tmpsubnodes = [];
+  if(noteMap.has(lastCodeClicked)) {
+    let tmpnote = noteList[noteMap.get(lastCodeClicked)];
+    hash = tmpnote.code;
+    tmpsubnodes = tmpnote.subnodes;
+  } else {
     hash = getHash(title + text + noteList.length);
-    while(noteMap.has(hash)) {
+    while(noteMap.has(hash.toString())) {
       hash += 1;
       hash |= 0;
     }
-  } else {
-    let tempnote = noteList[noteMap.get(lastCodeClicked)];
-    hash = tempnote.code;
-    tempx = tempnote.x;
-    tempy = tempnote.y;
+    hash = hash.toString();
   }
   textSize(fontsize);
   let hasTitle = title !== '' && title !== 'Title of the note';
@@ -538,17 +599,13 @@ function submitNote() {
     code: hash,
     title: hasTitle ? title : '',
     text: hasText ? text : '',
-    x: tempx,
-    y: tempy,
+    x: windowWidth / 2,
+    y: windowHeight / 2,
     width: width,
-    height: height
+    height: height,
+    subnodes: tmpsubnodes
   };
-  if(lastNodeTypeClicked === nodeTypes.note) {
-    noteList[noteMap.get(lastCodeClicked)] = note;
-  } else {
-    noteMap.set(hash, noteList.length);
-    noteList.push(note);
-  }
+  pushElement(noteList, noteMap, note);
   addNoteForm.innerHTML = '';
   addNoteDiv.style.display = 'none';
   lastCodeClicked = "";
@@ -561,6 +618,8 @@ cancelnotebtn.addEventListener('click', cancelNote);
 function cancelNote() {
   addNoteDiv.style.display = 'none';
   addNoteForm.innerHTML = '';
+  lastCodeClicked = "";
+  lastNodeTypeClicked = null;
   typing = false;
 }
 
@@ -618,7 +677,7 @@ function openNodeOptions(nodeType, node) {
     return;
   editNodesDiv.style.display = "flex";
   lastNodeTypeClicked = nodeType;
-  lastCodeClicked = node.code.toString();
+  lastCodeClicked = node.code;
   // we can expect every node to have an x, y, width, height
   editNodesDiv.style.top = node.y - node.height/2 - textLeading() - 5 + 'px';
   editNodesDiv.style.left = node.x - node.width/2 + 'px';
@@ -752,6 +811,8 @@ function saveFile() {
   json.coursemap = Object.fromEntries(courseMap);
   json.notes = noteList;
   json.notemap = Object.fromEntries(noteMap);
+  json.subnodes = subnodeboxesList;
+  json.subnodemap = Object.fromEntries(subnodeboxesMap);
   json.lines = lineList;
   saveJSON(json, savetext.value);
 }
@@ -764,25 +825,32 @@ function processJSON(json) {
   lastNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
   // json stuff
-  if(json.courses !== null && json.courses !== undefined)
-    courseList = json.courses;
-  if(json.coursemap !== null && json.coursemap !== undefined) {
-    const remap = new Map(Object.entries(json.coursemap));
-    courseMap.clear();
-    remap.forEach(function(value, key) {
-      courseMap.set(key, value);
-    });
-  }
-  if(json.notes !== null && json.notes !== undefined)
-    noteList = json.notes;
-  if(json.notemap !== null && json.notemap !== undefined) {
-    const remap2 = new Map(Object.entries(json.notemap));
-    noteMap.clear();
-    remap2.forEach(function(value, key) {
-      noteMap.set(key, value);
-    });
-  }
+  let jsonlist = json.courses;
+  // have to do it this way instead of a helper because js is crazy
+  // array = new array - pass by value
+  // array[index] = new thing - pass by reference
+  if(jsonlist !== null && jsonlist !== undefined)
+    courseList = jsonlist;
+  makeMap(courseMap, json.coursemap);
+  jsonlist = json.notes;
+  if(jsonlist !== null && jsonlist !== undefined)
+    noteList = jsonlist;
+  makeMap(noteMap, json.notemap);
+  jsonlist = json.subnodes;
+  if(jsonlist !== null && jsonlist !== undefined)
+    subnodeboxesList = jsonlist;
+  makeMap(subnodeboxesMap, json.subnodemap);
+  // lines bad nobody cares rn
   lineList = json.lines;
+}
+function makeMap(map, jsonmap) {
+  if(jsonmap !== null && jsonmap !== undefined) {
+    const remap = new Map(Object.entries(jsonmap));
+    map.clear();
+    remap.forEach((value, key) => {
+      map.set(key, value);
+    });
+  }
 }
 
 // -------------------------------- Mode Handling -------------------------------- //
@@ -844,6 +912,9 @@ let movespeed = 5;
 // is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
 let draggingnote = -1;
+// now time for subnode stuff
+let subnodecourse = -1;
+let subnodenote = -1;
 // need a global variable of if we are moving the screen this frame
 let xy = [0, 0];
 // also a global variable for zoom
@@ -895,11 +966,16 @@ function draw() {
   // draw mode time, do some nonsense
   // I'm not sure what this will entail yet so gonna put it in another function
   // pass xy also so we can move some stuff around
-
   // draw the lines
   // I love anonymous functions apparently (I use them a lot)
   // for every line that exists this is going to draw them
   lineList.forEach(lineListHandler);
+  // draw all the subnode stuff
+  strokeWeight(2);
+  stroke(0);
+  rectMode(CORNER);
+  fill(255);
+  subnodeboxesList.forEach(subnodeHandler);
   // foreach loop that does everything to every course we want to do
   // each frame. IE, move courses if keys held, draw them
   // loop that goes through and does everything we need for notes
@@ -1001,12 +1077,12 @@ const courseListHandler = (course, index, arr) => {
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2))
+  if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2)) {
     mouseHovering = true;
-  if(mouseHovering)
     fill(200, 200, 200);
-  else
+  } else {
     fill(255, 255, 255);
+  }
   // draw the rectangle around our course
   rectMode(CENTER);
   rect(course.x, course.y, course.width, course.height);
@@ -1022,13 +1098,10 @@ const courseListHandler = (course, index, arr) => {
       if(mouseIsPressed && mouseHovering) {
         // wait more complicated now obviously, because code getting more complicated
         // every course that comes after this one now moves positions backwards one
-        courseMap.forEach(function(value, key) {
-          if(value > index) {
-            courseMap.set(key, value - 1);
-          }
-        });
-        courseMap.delete(courseList[index].code);
-        arr.splice(index, 1);
+        deleteElementByIndex(courseList, courseMap, index);
+        // remove this node from subnodes list if it exists
+        // go make everyone find all their subnodes and recalculate their boxes
+        //TODO ^
       }
       break;
     case modes.edit:
@@ -1048,10 +1121,57 @@ const courseListHandler = (course, index, arr) => {
       // that's because we basically have to put this here and our box we have to draw before
       // we actually move the course
       // this is just the most efficient and it's actually a cool effect so it's staying
-      if(draggingcourse === index) {
-        course.x = mouseX;
-        course.y = mouseY;
+      // if there isn't any active subnoding right now, do the following
+      if(subnodenote === -1 && subnodecourse === -1) {
+        // if this is the course we are dragging then move it to the mouse
+        if(draggingcourse === index) {
+          course.x = mouseX;
+          course.y = mouseY;
+          // else if we are hovering and the mouse is pressed and there isn't a subnodecourse then make this the subnode course
+        } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
+          // put what we are dragging into the subnodes for this course
+          course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
+          subnodecourse = index;
+        }
       }
+      // it this is the subnode and we stopped hovering over it remove the subnode we just added
+      if(subnodecourse === index && !mouseHovering) {
+        subnodecourse = -1;
+        course.subnodes.pop();
+      }
+      // if we don't have any subnodes then break and remove us form the subnodes list
+      if(course.subnodes.length === 0) {
+        // if we exist in the list of subnodes then delete us since we don't have any anymore
+        if(subnodeboxesMap.has(course.code)) {
+          // jesus, this but took so long to figure out
+          // not doing this means there are duplicate subnodes created
+          // ok, now doing this makes duplicates???
+          // ok, got it hopefully
+          // ok, now that seems like a dumb thing to say, but I added a helper function now
+          // before I was deleting but not moving everything which is why it broke
+          // that probably doesn't make sense as an explanation but whatever
+          deleteElement(subnodeboxesList, subnodeboxesMap, course.code);
+        }
+        break;
+      }
+      // this is the box around this course that holds all the subnodes
+      let subnodebox = {
+        code: course.code,
+        x: course.x - course.width/2,
+        y: course.y - course.height/2,
+        width: course.width,
+        height: course.height,
+        lines: []
+      };
+      // this is how far in we place lines to subnodes
+      let insetx = course.x - course.width/2 + subnodeinset/2;
+      // well subnodebox isn't the box yet, we gotta calculate all it's stuff
+      course.subnodes.forEach((sub, ind, ar) => {
+        subnodeboxmaker(course, mouseHovering, subnodebox, sub, ind, ar, insetx);
+      });
+      // now we have to update our map and list with our new subnodebox
+      // replace the one that already exists for this, or if it doesn't make a new one
+      pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
@@ -1081,12 +1201,12 @@ const noteListHandler = (note, index, arr) => {
   // check if dragging this box
   let mouseHovering = draggingnote === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2))
+  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2)) {
     mouseHovering = true;
-  if(mouseHovering)
     fill(200, 200, 200);
-  else
+  } else {
     fill(255, 255, 255);
+  }
   // draw rect around note
   rectMode(CENTER);
   rect(note.x, note.y, note.width, note.height);
@@ -1099,21 +1219,53 @@ const noteListHandler = (note, index, arr) => {
         break;
       // if you click it delete it
       if(mouseIsPressed && mouseHovering) {
-        noteMap.delete(noteList[index].code.toString());
-        arr.splice(index, 1);
+        deleteElementByIndex(noteList, noteMap, index);
       }
       break;
     case modes.edit:
+      // this is just a copy of what class does
       fill(0, 0, 200);
       if(typing)
         break;
       if(draggingnote === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
         draggingnote = index;
       }
-      if(draggingnote === index) {
-        note.x = mouseX;
-        note.y = mouseY;
+      // copying from course cause they work the same
+      // should I just combine the two???
+      // no, I guess they do work differently in many ways
+      // but I could combine this function? eh, eh, seems risky for no reward
+      if(subnodenote === -1 && subnodecourse === -1) {
+        if(draggingnote === index) {
+          note.x = mouseX;
+          note.y = mouseY;
+        } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
+          note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
+          subnodenote = index;
+        }
       }
+      if(subnodenote === index && !mouseHovering) {
+        subnodenote = -1;
+        note.subnodes.pop();
+      }
+      if(note.subnodes.length === 0) {
+        if(subnodeboxesMap.has(note.code)) {
+          deleteElement(subnodeboxesList, subnodeboxesMap, note.code);
+        }
+        break;
+      }
+      let subnodebox = {
+        code: note.code,
+        x: note.x - note.width/2,
+        y: note.y - note.height/2,
+        width: note.width,
+        height: note.height,
+        lines: []
+      };
+      let insetx = note.x - note.width/2 + subnodeinset/2;
+      note.subnodes.forEach((sub, ind, ar) => {
+        subnodeboxmaker(note, mouseHovering, subnodebox, sub, ind, ar, insetx);
+      });
+      pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
@@ -1142,6 +1294,80 @@ const noteListHandler = (note, index, arr) => {
     textAlign(LEFT, TOP);
     text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y - note.height/2 + boxpadding.y/2 + textLeading());
   }
+};
+// In edit, process subnodeboxes and make them and all that
+function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, insetx) {
+    let subnode = "";
+    // find the subnode
+    if(courseMap.has(fsub)) {
+      subnode = courseList[courseMap.get(fsub)];
+    } else if(noteMap.has(fsub)) {
+      subnode = noteList[noteMap.get(fsub)];
+    // the subnode doesn't exist which must mean it was deleted so lets remove it from our subnodes, and return
+    } else {
+      sarr.splice(sindex, 1);
+      return;
+    }
+    // if we are not hovering over this but dragging subnode, remove it from our subnodes
+    if(!mouseHovering && (courseMap.get(fsub) === draggingcourse || noteMap.get(fsub) === draggingnote)) {
+      sarr.splice(sindex, 1);
+      return;
+    }
+    // if the subnode has subnodes, we gotta do some different math than if it doesn't
+    if(subnode.subnodes.length > 0) {
+      // get the subnodes subnodebox
+      let position = subnodeboxesMap.get(subnode.code);
+      let dsub = subnodeboxesList[position];
+      // change the subnodes position to be under the current node
+      subnode.x = subnodebox.x + subnode.width/2 + subnodeinset + subnodepadding;
+      subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading + subnodepadding;
+      // figure out our subnodebox size
+      subnodebox.height += dsub.height + subnodeleading + subnodepadding*2;
+      let width = dsub.width + subnodeinset + subnodepadding*2;
+      if(subnodebox.width < width)
+        subnodebox.width = width;
+      // TODO: check goes here for if subnodes in wrong order
+      // so p5js draws in the order you tell it, so here we can get a subnodebox on top of
+      // another that is smaller and should be on top of the other
+      // so if you're subnode's subnodebox is before yours, switch places in the map with each other
+      let npos = subnodeboxesMap.get(node.code);
+      if(npos !== undefined && position < npos) {
+        switchElements(subnodeboxesList, subnodeboxesMap, position, npos);
+      }
+    // the subnode doesn't have subnodes so we can do some different stuff
+    } else {
+      // move our subnode to under us
+      subnode.x = subnodebox.x + subnode.width/2 + subnodeinset;
+      subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading;
+      // calculate our subnodebox size
+      subnodebox.height += subnode.height + subnodeleading;
+      if(subnodebox.width < subnode.width + subnodeinset)
+        subnodebox.width = subnode.width + subnodeinset;
+    }
+    // now we gotta add some nice lines to our subnodes
+    // the first line is just horizontal, draw from the left, to the right
+    let temparray = [insetx, subnode.y, subnode.x, subnode.y];
+    subnodebox.lines.push(temparray);
+    // the last line is the vertical line connecting all the horizontal lines
+    if(sindex === sarr.length-1) {
+      temparray = [insetx, node.y, insetx, subnode.y];
+      subnodebox.lines.push(temparray);
+    }
+}
+// helper function for handling subnode drawing
+// plus some variables for drawing a nice box
+// spacing around the subnodes
+let subnodepadding = 10;
+// how far in a subnode goes
+let subnodeinset = 18;
+// spacing between subnode items
+let subnodeleading = 6;
+// this function just draws all the subnode boxes and lines connecting subnodes, very simple
+const subnodeHandler = (subnode) => {
+  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
+  subnode.lines.forEach((ln) => {
+    line(ln[0], ln[1], ln[2], ln[3]);
+  });
 };
 
 // -------------------------------- Mouse Events -------------------------------- //
@@ -1173,6 +1399,8 @@ function mouseReleased() {
   // no longer dragging a course
   draggingcourse = -1;
   draggingnote = -1;
+  subnodecourse = -1;
+  subnodenote = -1;
 }
 
 // -------------------------------- Keyboard Events -------------------------------- //
@@ -1197,7 +1425,6 @@ function keyTyped() {
   // so if typing return
   if(typing)
     return;
-
   // make the software go fullscreen because that's nice
   if(key === 'f' || key === 'F') {
     let fs = fullscreen();
@@ -1206,7 +1433,7 @@ function keyTyped() {
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
   if(key === 'l') {
-    print(lineList);
+    print(lastCodeClicked);
   }
   // I also wanna see the courselist and courseMap for debuggingc
   if(key === 'c') {
@@ -1217,6 +1444,31 @@ function keyTyped() {
   if(key === 'n') {
     print(noteList);
     print(noteMap);
+  }
+  // and subnodes bc these are a pain
+  if(key === 's') {
+    print('====== Printing Subnodes ======');
+    courseList.forEach(course => {
+      print('---------------');
+      print(course.code);
+      print(course.subnodes);
+    });
+    noteList.forEach(note => {
+      print('---------------');
+      print(note.code);
+      print(note.subnodes);
+    });
+    print(subnodeboxesList);
+    print(subnodeboxesMap);
+  }
+  // just subnode list and map
+  if(key === 'S') {
+    subnodeboxesList.forEach(subnodebox => {
+      print(subnodebox.code);
+    });
+    subnodeboxesMap.forEach((value, key) => {
+      print(value + ":" + key)
+    });
   }
 }
 
