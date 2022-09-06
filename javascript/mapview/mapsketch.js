@@ -215,6 +215,57 @@ function createFormButton(form, id, value, func) {
   form.appendChild(tempbutton);
   tempbutton.addEventListener('click', func);
 }
+// map and list helper functions
+/* this will help us delete things properly
+basically making these because I had impossible to find bugs because I didn't
+do all the steps a delete takes
+  list - list we delete from
+  map - map that maps to the list
+  key - key to delete or replace
+  ind - delete index instead
+  element - an element of the list type to add or replace
+*/
+function deleteElement(list, map, delkey) {
+  let deleting = map.get(delkey);
+  map.forEach((value, key) => {
+    if(value > deleting)
+      map.set(key, value-1);
+  });
+  list.splice(deleting, 1);
+  map.delete(delkey);
+}
+function deleteElementByIndex(list, map, ind) {
+  map.forEach((value, key) => {
+    if(value > ind)
+      map.set(key, value-1);
+  });
+  map.delete(list[ind].code);
+  list.splice(ind, 1);
+}
+function replaceElement(list, map, key, element) {
+  let keyind = map.get(key);
+  element.x = list[keyind].x;
+  element.y = list[keyind].y;
+  list[keyind] = element;
+  if(key !== element.code) {
+    if(map.has(element.code)) {
+      deleteElement(list, map, element.code);
+    }
+    map.set(element.code, keyind);
+    map.delete(key);
+  }
+}
+function replaceElementByKeys(list, map, key, seckey) {
+  replaceElement(list, map, key, list[map.get(seckey)]);
+}
+function pushElement(list, map, element) {
+  if(map.has(element.code)) {
+    replaceElement(list, map, element.code, element);
+    return;
+  }
+  map.set(element.code, list.length);
+  list.push(element);
+}
 
 // -------------------------------- Adding Courses Section -------------------------------- //
 // get the course form and div containing it and save as global variables
@@ -419,32 +470,11 @@ function submitCourse() {
     width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x,
     subnodes: []
   };
-  // if the courseMap already has this course code then replace it with the new one
-  if(courseMap.has(coursecode)) {
-    // also, set course position to where it was
-    course.x = courseList[courseMap.get(coursecode)].x;
-    course.y = courseList[courseMap.get(coursecode)].y;
-    courseList[courseMap.get(coursecode)] = course;
-    if(lastCodeClicked !== coursecode) {
-      let deleting = courseMap.get(lastCodeClicked);
-      courseMap.forEach((value, key) => {
-        if(value > deleting)
-          courseMap.set(key, value - 1);
-      });
-      courseList.splice(courseMap.get(lastCodeClicked), 1);
-      courseMap.delete(lastCodeClicked);
-    }
-  } else if(courseMap.has(lastCodeClicked)) {
-    course.x = courseList[courseMap.get(lastCodeClicked)].x;
-    course.y = courseList[courseMap.get(lastCodeClicked)].y;
-    courseList[courseMap.get(lastCodeClicked)] = course;
-    courseMap.set(course.code, courseMap.get(lastCodeClicked));
-    courseMap.delete(lastCodeClicked);
+  if(courseMap.has(lastCodeClicked)) {
+    replaceElement(courseList, courseMap, lastCodeClicked, course);
   } else {
-    // if the course map doesn't have it then the course doesn't exist push
-    // it to the map and save where it is at
-    courseMap.set(coursecode, courseList.length);
-    courseList.push(course);
+    // helper function that puts things into our course list
+    pushElement(courseList, courseMap, course);
   }
   // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
@@ -514,19 +544,18 @@ function submitNote() {
   // so we are going to make a hash map
   // TODO: hash function may need some work since most notes will have same text
   let hash;
-  let tempx = windowWidth / 2;
-  let tempy = windowHeight / 2;
-  if(lastNodeTypeClicked !== nodeTypes.note) {
+  let tmpsubnodes = [];
+  if(noteMap.has(lastCodeClicked)) {
+    let tmpnote = noteList[noteMap.get(lastCodeClicked)];
+    hash = tmpnote.code;
+    tmpsubnodes = tmpnote.subnodes;
+  } else {
     hash = getHash(title + text + noteList.length);
-    while(noteMap.has(hash)) {
+    while(noteMap.has(hash.toString())) {
       hash += 1;
       hash |= 0;
     }
-  } else {
-    let tempnote = noteList[noteMap.get(lastCodeClicked)];
-    hash = tempnote.code;
-    tempx = tempnote.x;
-    tempy = tempnote.y;
+    hash = hash.toString();
   }
   textSize(fontsize);
   let hasTitle = title !== '' && title !== 'Title of the note';
@@ -555,18 +584,13 @@ function submitNote() {
     code: hash,
     title: hasTitle ? title : '',
     text: hasText ? text : '',
-    x: tempx,
-    y: tempy,
+    x: windowWidth / 2,
+    y: windowHeight / 2,
     width: width,
     height: height,
-    subnodes: []
+    subnodes: tmpsubnodes
   };
-  if(lastNodeTypeClicked === nodeTypes.note) {
-    noteList[noteMap.get(lastCodeClicked)] = note;
-  } else {
-    noteMap.set(hash, noteList.length);
-    noteList.push(note);
-  }
+  pushElement(noteList, noteMap, note);
   addNoteForm.innerHTML = '';
   addNoteDiv.style.display = 'none';
   lastCodeClicked = "";
@@ -772,6 +796,8 @@ function saveFile() {
   json.coursemap = Object.fromEntries(courseMap);
   json.notes = noteList;
   json.notemap = Object.fromEntries(noteMap);
+  json.subnodes = subnodeboxesList;
+  json.subnodemap = Object.fromEntries(subnodeboxesMap);
   json.lines = lineList;
   saveJSON(json, savetext.value);
 }
@@ -784,25 +810,32 @@ function processJSON(json) {
   lastNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
   // json stuff
-  if(json.courses !== null && json.courses !== undefined)
-    courseList = json.courses;
-  if(json.coursemap !== null && json.coursemap !== undefined) {
-    const remap = new Map(Object.entries(json.coursemap));
-    courseMap.clear();
-    remap.forEach(function(value, key) {
-      courseMap.set(key, value);
-    });
-  }
-  if(json.notes !== null && json.notes !== undefined)
-    noteList = json.notes;
-  if(json.notemap !== null && json.notemap !== undefined) {
-    const remap2 = new Map(Object.entries(json.notemap));
-    noteMap.clear();
-    remap2.forEach(function(value, key) {
-      noteMap.set(key, value);
-    });
-  }
+  let jsonlist = json.courses;
+  // have to do it this way instead of a helper because js is crazy
+  // array = new array - pass by value
+  // array[index] = new thing - pass by reference
+  if(jsonlist !== null && jsonlist !== undefined)
+    courseList = jsonlist;
+  makeMap(courseMap, json.coursemap);
+  jsonlist = json.notes;
+  if(jsonlist !== null && jsonlist !== undefined)
+    noteList = jsonlist;
+  makeMap(noteMap, json.notemap);
+  jsonlist = json.subnodes;
+  if(jsonlist !== null && jsonlist !== undefined)
+    subnodeboxesList = jsonlist;
+  makeMap(subnodeboxesMap, json.subnodemap);
+  // lines bad nobody cares rn
   lineList = json.lines;
+}
+function makeMap(map, jsonmap) {
+  if(jsonmap !== null && jsonmap !== undefined) {
+    const remap = new Map(Object.entries(jsonmap));
+    map.clear();
+    remap.forEach((value, key) => {
+      map.set(key, value);
+    });
+  }
 }
 
 // -------------------------------- Mode Handling -------------------------------- //
@@ -1050,15 +1083,10 @@ const courseListHandler = (course, index, arr) => {
       if(mouseIsPressed && mouseHovering) {
         // wait more complicated now obviously, because code getting more complicated
         // every course that comes after this one now moves positions backwards one
-        courseMap.forEach(function(value, key) {
-          if(value > index) {
-            courseMap.set(key, value - 1);
-          }
-        });
-        courseMap.delete(courseList[index].code);
-        arr.splice(index, 1);
+        deleteElementByIndex(courseList, courseMap, index);
         // remove this node from subnodes list if it exists
         // go make everyone find all their subnodes and recalculate their boxes
+        //TODO ^
       }
       break;
     case modes.edit:
@@ -1184,8 +1212,7 @@ const noteListHandler = (note, index, arr) => {
         break;
       // if you click it delete it
       if(mouseIsPressed && mouseHovering) {
-        noteMap.delete(noteList[index].code.toString());
-        arr.splice(index, 1);
+        deleteElementByIndex(noteList, noteMap, index);
       }
       break;
     case modes.edit:
