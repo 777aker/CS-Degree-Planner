@@ -1129,9 +1129,27 @@ const courseListHandler = (course, index, arr) => {
           course.y = mouseY;
           // else if we are hovering and the mouse is pressed and there isn't a subnodecourse then make this the subnode course
         } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
-          // put what we are dragging into the subnodes for this course
-          course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
-          subnodecourse = index;
+          // so before we actually make this a subnode, we have to check and make sure it is not
+          // a subnode of what we are trying to make a subnode of it because then we get a weird
+          // they're both subnodes of each other which doesn't make sense
+          let test = false;
+          if(draggingnote !== -1) {
+            noteList[draggingnote].subnodes.forEach((subnode) => {
+              if(subnode.code === course.code)
+                test = true;
+            });
+          } else if(draggingcourse !== -1) {
+            courseList[draggingcourse].subnodes.forEach((subnode) => {
+              if(subnode.code === course.code)
+                test = true;
+            });
+          }
+          if(!test) {
+            print('hello hello');
+            // put what we are dragging into the subnodes for this course
+            course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
+            subnodecourse = index;
+          }
         }
       }
       // it this is the subnode and we stopped hovering over it remove the subnode we just added
@@ -1139,44 +1157,28 @@ const courseListHandler = (course, index, arr) => {
         subnodecourse = -1;
         course.subnodes.pop();
       }
-      // if we don't have any subnodes then break and remove us form the subnodes list
-      if(course.subnodes.length === 0) {
-        // if we exist in the list of subnodes then delete us since we don't have any anymore
-        if(subnodeboxesMap.has(course.code)) {
-          // jesus, this but took so long to figure out
-          // not doing this means there are duplicate subnodes created
-          // ok, now doing this makes duplicates???
-          // ok, got it hopefully
-          // ok, now that seems like a dumb thing to say, but I added a helper function now
-          // before I was deleting but not moving everything which is why it broke
-          // that probably doesn't make sense as an explanation but whatever
-          deleteElement(subnodeboxesList, subnodeboxesMap, course.code);
-        }
-        break;
-      }
-      // this is the box around this course that holds all the subnodes
-      let subnodebox = {
-        code: course.code,
-        x: course.x - course.width/2,
-        y: course.y - course.height/2,
-        width: course.width,
-        height: course.height,
-        lines: []
-      };
-      // this is how far in we place lines to subnodes
-      let insetx = course.x - course.width/2 + subnodeinset/2;
-      // well subnodebox isn't the box yet, we gotta calculate all it's stuff
-      course.subnodes.forEach((sub, ind, ar) => {
-        subnodeboxmaker(course, mouseHovering, subnodebox, sub, ind, ar, insetx);
-      });
-      // now we have to update our map and list with our new subnodebox
-      // replace the one that already exists for this, or if it doesn't make a new one
-      pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
         openNodeOptions(nodeTypes.course, course);
       fill(0, 0, 0);
+  }
+  // if we don't have any subnodes then break and remove us form the subnodes list
+  if(course.subnodes.length === 0) {
+    // if we exist in the list of subnodes then delete us since we don't have any anymore
+    if(subnodeboxesMap.has(course.code)) {
+      // jesus, this but took so long to figure out
+      // not doing this means there are duplicate subnodes created
+      // ok, now doing this makes duplicates???
+      // ok, got it hopefully
+      // ok, now that seems like a dumb thing to say, but I added a helper function now
+      // before I was deleting but not moving everything which is why it broke
+      // that probably doesn't make sense as an explanation but whatever
+      deleteElement(subnodeboxesList, subnodeboxesMap, course.code);
+    }
+  } else {
+    // subnodes can change in lots of ways, so each frame just check on and update your subnodes
+    updateSubnodes(course, mouseHovering);
   }
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
   noStroke();
@@ -1239,38 +1241,46 @@ const noteListHandler = (note, index, arr) => {
           note.x = mouseX;
           note.y = mouseY;
         } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
-          note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
-          subnodenote = index;
+          // so before we actually make this a subnode, we have to check and make sure it is not
+          // a subnode of what we are trying to make a subnode of it because then we get a weird
+          // they're both subnodes of each other which doesn't make sense
+          let test = false;
+          if(draggingnote !== -1) {
+            noteList[draggingnote].subnodes.forEach((subnode) => {
+              if(subnode.code === note.code)
+                test = true;
+            });
+          } else if(draggingcourse !== -1) {
+            courseList[draggingcourse].subnodes.forEach((subnode) => {
+              if(subnode.code === note.code)
+                test = true;
+            });
+          }
+          if(!test) {
+            print('hello hello');
+            // put what we are dragging into the subnodes for this course
+            note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
+            subnodenote = index;
+          }
         }
       }
       if(subnodenote === index && !mouseHovering) {
         subnodenote = -1;
         note.subnodes.pop();
       }
-      if(note.subnodes.length === 0) {
-        if(subnodeboxesMap.has(note.code)) {
-          deleteElement(subnodeboxesList, subnodeboxesMap, note.code);
-        }
-        break;
-      }
-      let subnodebox = {
-        code: note.code,
-        x: note.x - note.width/2,
-        y: note.y - note.height/2,
-        width: note.width,
-        height: note.height,
-        lines: []
-      };
-      let insetx = note.x - note.width/2 + subnodeinset/2;
-      note.subnodes.forEach((sub, ind, ar) => {
-        subnodeboxmaker(note, mouseHovering, subnodebox, sub, ind, ar, insetx);
-      });
-      pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
         openNodeOptions(nodeTypes.note, note);
       fill(0);
+  }
+  if(note.subnodes.length === 0) {
+    if(subnodeboxesMap.has(note.code)) {
+      deleteElement(subnodeboxesList, subnodeboxesMap, note.code);
+    }
+  } else {
+    // subnodes can change in lots of ways, so each frame just check on and update your subnodes
+    updateSubnodes(note, mouseHovering);
   }
   // don't want stroke on text
   noStroke();
@@ -1295,6 +1305,47 @@ const noteListHandler = (note, index, arr) => {
     text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y - note.height/2 + boxpadding.y/2 + textLeading());
   }
 };
+// some variables for drawing a nice box
+// spacing around the subnodes
+let subnodepadding = 10;
+// how far in a subnode goes
+let subnodeinset = 18;
+// spacing between subnode items
+let subnodeleading = 6;
+// helper function for handling subnode drawing
+// this function just draws all the subnode boxes and lines connecting subnodes, very simple
+const subnodeHandler = (subnode, ind, arr) => {
+  if(!courseMap.has(subnode.code) && !noteMap.has(subnode.code)) {
+    deleteElement(subnodeboxesList, subnodeboxesMap, subnode.code);
+    return;
+  }
+  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
+  subnode.lines.forEach((ln) => {
+    line(ln[0], ln[1], ln[2], ln[3]);
+  });
+};
+// actually, changed my mind, this is a function that will update a nodes subnodes
+function updateSubnodes(node, mh) {
+  // sadly, this should just happen every frame for now since so many things effect this
+  // this is the box around this course that holds all the subnodes
+  let subnodebox = {
+    code: node.code,
+    x: node.x - node.width/2,
+    y: node.y - node.height/2,
+    width: node.width,
+    height: node.height,
+    lines: []
+  };
+  // this is how far in we place lines to subnodes
+  let insetx = node.x - node.width/2 + subnodeinset/2;
+  // well subnodebox isn't the box yet, we gotta calculate all it's stuff
+  node.subnodes.forEach((sub, ind, ar) => {
+    subnodeboxmaker(node, mh, subnodebox, sub, ind, ar, insetx);
+  });
+  // now we have to update our map and list with our new subnodebox
+  // replace the one that already exists for this, or if it doesn't make a new one
+  pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
+}
 // In edit, process subnodeboxes and make them and all that
 function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, insetx) {
     let subnode = "";
@@ -1354,21 +1405,6 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
       subnodebox.lines.push(temparray);
     }
 }
-// helper function for handling subnode drawing
-// plus some variables for drawing a nice box
-// spacing around the subnodes
-let subnodepadding = 10;
-// how far in a subnode goes
-let subnodeinset = 18;
-// spacing between subnode items
-let subnodeleading = 6;
-// this function just draws all the subnode boxes and lines connecting subnodes, very simple
-const subnodeHandler = (subnode) => {
-  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
-  subnode.lines.forEach((ln) => {
-    line(ln[0], ln[1], ln[2], ln[3]);
-  });
-};
 
 // -------------------------------- Mouse Events -------------------------------- //
 // when mouse is pressed do some stuff
