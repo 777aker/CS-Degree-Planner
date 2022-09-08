@@ -1145,7 +1145,6 @@ const courseListHandler = (course, index, arr) => {
             });
           }
           if(!test) {
-            print('hello hello');
             // put what we are dragging into the subnodes for this course
             course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
             subnodecourse = index;
@@ -1257,7 +1256,6 @@ const noteListHandler = (note, index, arr) => {
             });
           }
           if(!test) {
-            print('hello hello');
             // put what we are dragging into the subnodes for this course
             note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
             subnodenote = index;
