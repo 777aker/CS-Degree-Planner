@@ -195,6 +195,7 @@ function getHash(str) {
 // distance - distance from line this will return true at
 // x1, y1, x2, y2 - your line segment
 // px, py - the point you are testing
+// I'M A GENIUS, I FORGOT I MADE THIS AH, SO HELPFUL PAST ME
 function lineTest(distance, x1, y1, x2, y2, px, py) {
   let topleft = [min(x1, x2), min(y1, y2)];
   let bottomright = [max(x1, x2), max(y1, y2)];
@@ -280,6 +281,9 @@ function pushElementNoPosition(list, map, element) {
   }
   map.set(element.code, list.length);
   list.push(element);
+}
+function getElement(key) {
+  return courseMap.has(key) ? courseList[courseMap.get(key)] : noteList[noteMap.get(key)];
 }
 
 // -------------------------------- Adding Courses Section -------------------------------- //
@@ -840,8 +844,8 @@ function processJSON(json) {
   if(jsonlist !== null && jsonlist !== undefined)
     subnodeboxesList = jsonlist;
   makeMap(subnodeboxesMap, json.subnodemap);
-  // lines bad nobody cares rn
-  lineList = json.lines;
+  if(json.lines !== null && json.lines !== undefined)
+    lineList = json.lines;
 }
 function makeMap(map, jsonmap) {
   if(jsonmap !== null && jsonmap !== undefined) {
@@ -900,7 +904,7 @@ function modeChanger(fmode, color) {
   // if we got out of draw mode and the last line they were drawing isn't long enough
   // to actually be a line remove it
   if(lineList.length > 0 && mode !== modes.draw) {
-    if(lineList[lineList.length - 1].length < 8) {
+    if(lineList[lineList.length - 1].length < 2) {
       lineList.pop();
     }
   }
@@ -951,7 +955,7 @@ function draw() {
     }
   }
   /* I thought this would be a nice feature but I don't actually like it
-  TODO: if you want mouse dragging can use this
+  REMOVED: if you want mouse dragging edge of screen can use this
   if(!typing && focused && !mouseOutsideWindow) {
     if(mouseX > windowWidth * .9)
       xy[0] -= movespeed / zoom;
@@ -963,13 +967,7 @@ function draw() {
       xy[1] += movespeed / zoom;
   }
   */
-  // draw mode time, do some nonsense
-  // I'm not sure what this will entail yet so gonna put it in another function
-  // pass xy also so we can move some stuff around
-  // draw the lines
-  // I love anonymous functions apparently (I use them a lot)
-  // for every line that exists this is going to draw them
-  lineList.forEach(lineListHandler);
+  // TODO: when done with lines move them here
   // draw all the subnode stuff
   strokeWeight(2);
   stroke(0);
@@ -983,6 +981,15 @@ function draw() {
   noteList.forEach(noteListHandler);
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
+  // for testing purposes, moving lines to last so they draw on top
+  // draw mode time, do some nonsense
+  // draw the lines
+  // I love anonymous functions apparently (I use them a lot)
+  // for every line that exists this is going to draw them
+  strokeWeight(2);
+  stroke(0);
+  noFill();
+  lineList.forEach(lineListHandler);
   // move edit buttons around with nodes
   if(lastCodeClicked !== "" && lastNodeTypeClicked !== null) {
     let node = null;
@@ -1003,60 +1010,48 @@ function draw() {
 
 // -------------------------------- Draw For Loops -------------------------------- //
 // helper function that handles the linelist in draw
-const lineListHandler = (line, index, lines) => {
-  // set strokeWeight
-  strokeWeight(2);
-  stroke(0);
-  // remove fill so lines don't do this weird nonsense effect where they
-  // fill in the area you were drawing
-  noFill();
-  beginShape();
-  let mousehovering = false;
+const lineListHandler = (ln, index, lines) => {
+  if(ln.length === 0)
+    return;
+  let node1 = getElement(ln[0]);
+  if(node1 === undefined)
+    return;
+  let p1 = {
+    x: node1.x,
+    y: node1.y
+  };
+  let p2;
+  if(mode === modes.draw && index === lines.length-1) {
+    p2 = {
+      x: mouseX,
+      y: mouseY
+    };
+  } else {
+    let node2 = getElement(ln[1]);
+    if(node2 === undefined)
+      return;
+    p2 = {
+      x: node2.x,
+      y: node2.y
+    };
+  }
   if(mode === modes.delete) {
-    strokeWeight(5);
-    stroke(200, 0, 0);
-    // so clicking on a point removes the whole line
-    // I did it this way for now at least because any other way
-    // is way more work and complicated and math and innefecient
-    // than I want it to be
-    for(let i = 0; i < line.length - 1; i += 2) {
-      // draw some points so they can see what they are trying to delete
-      point(line[i], line[i + 1]);
-      if(!typing && dist(mouseX, mouseY, line[i], line[i + 1]) < 8) {
-        // mouse hovering is used later
-        mousehovering = true;
-        if(mouseIsPressed)
-          lines.splice(index, 1);
+    // if mouse intersecting line highlight it red
+    // if mouse pressed also delete it
+    // AAAHHHH, PAST ME MADE THIS ALREADY!!!!!!
+    // yaaaayyyyyyyyy
+    if(lineTest(20, p1.x, p1.y, p2.x, p2.y, mouseX, mouseY)) {
+      if(mouseIsPressed) {
+        lines.splice(index, 1);
+        return;
       }
-    }
-    strokeWeight(2);
-  }
-  // you might have noticed we loop through the lines twice
-  // this is because first we need to check if we are hovering over the line
-  // because if we are we need to go through and draw the line in a different color
-  // so users know what they are deleting
-  for(let i = 0; i < line.length - 1; i += 2) {
-    // highlight line if you are hovering over it
-    if(mousehovering)
-      stroke(200, 0, 0);
-    else
+      stroke(255, 0, 0);
+    } else {
       stroke(0);
-    // if they are moving around the screen change line position
-    line[i] += xy[0];
-    line[i+1] += xy[1];
-    if(mode === modes.draw && index === lines.length - 1) {
-      strokeWeight(5);
-      point(line[i], line[i + 1]);
-      strokeWeight(2);
     }
-    curveVertex(line[i], line[i + 1]);
   }
-  // if we are in draw mode so they can see what they are about to do treat
-  // their mouse position as a point, ie when they click and actually make
-  // a point they know what it will look like before they click
-  if(mode === modes.draw && index === lines.length - 1)
-    curveVertex(mouseX, mouseY);
-  endShape();
+  //line(1, 1, 50, 50);
+  line(p1.x, p1.y, p2.x, p2.y);
 };
 // helper function that handles the first courselist draw
 // actually wait, with the new method we no longer need two draw calls to courselist
@@ -1099,9 +1094,6 @@ const courseListHandler = (course, index, arr) => {
         // wait more complicated now obviously, because code getting more complicated
         // every course that comes after this one now moves positions backwards one
         deleteElementByIndex(courseList, courseMap, index);
-        // remove this node from subnodes list if it exists
-        // go make everyone find all their subnodes and recalculate their boxes
-        //TODO ^
       }
       break;
     case modes.edit:
@@ -1157,6 +1149,10 @@ const courseListHandler = (course, index, arr) => {
         course.subnodes.pop();
       }
       break;
+    case modes.draw:
+      drawMode(course, mouseHovering);
+      fill(0, 0, 0);
+      break;
     default:
       if(mouseIsPressed && mouseHovering)
         openNodeOptions(nodeTypes.course, course);
@@ -1211,7 +1207,6 @@ const noteListHandler = (note, index, arr) => {
   // draw rect around note
   rectMode(CENTER);
   rect(note.x, note.y, note.width, note.height);
-  // TODO: delete and edit
   switch(mode) {
     case modes.delete:
       // make the text fill different
@@ -1266,6 +1261,10 @@ const noteListHandler = (note, index, arr) => {
         subnodenote = -1;
         note.subnodes.pop();
       }
+      break;
+    case modes.draw:
+      drawMode(note, mouseHovering);
+      fill(0);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
@@ -1375,7 +1374,6 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
       let width = dsub.width + subnodeinset + subnodepadding*2;
       if(subnodebox.width < width)
         subnodebox.width = width;
-      // TODO: check goes here for if subnodes in wrong order
       // so p5js draws in the order you tell it, so here we can get a subnodebox on top of
       // another that is smaller and should be on top of the other
       // so if you're subnode's subnodebox is before yours, switch places in the map with each other
@@ -1403,20 +1401,24 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
       subnodebox.lines.push(temparray);
     }
 }
+// this is just the method that nodes call in draw
+function drawMode(node, mouseHovering) {
+  if(!mouseHovering || !mouseIsPressed || typing)
+    return;
+  let lastitem = lineList[lineList.length-1];
+  if(lastitem.length == 0) {
+    lastitem.push(node.code);
+  } else if(lastitem[lastitem.length-1] !== node.code) {
+    lastitem.push(node.code);
+    lineList.push([]);
+  }
+  print(lineList);
+}
 
 // -------------------------------- Mouse Events -------------------------------- //
 // when mouse is pressed do some stuff
 function mousePressed() {
-  // TODO
-  // no longer check here for linelist check in courseList since want to know if intersecting
-  // so delete this
-  // there's a bug here, not sure how to fix it yet though
-  // I fixed it. see mousemovedbtn variable
-  // in drawing mode add a point to our list of lines if you click the mouse
-  if(mode === modes.draw && !typing) {
-    lineList[lineList.length - 1].push(mouseX);
-    lineList[lineList.length - 1].push(mouseY);
-  }
+
 }
 // do a zoom when mouseWheel moved
 function mouseWheel(event) {
@@ -1447,7 +1449,7 @@ function keyPressed() {
   // if you press enter in drawing mode finish the line and start a new one
   if(keyCode === ENTER && mode === modes.draw) {
     // if the line was too short jk, just pop it and start a new one
-    if(lineList[lineList.length - 1].length < 8)
+    if(lineList[lineList.length - 1].length < 2)
       lineList.pop();
     lineList.push([]);
   }
@@ -1467,7 +1469,7 @@ function keyTyped() {
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
   if(key === 'l') {
-    print(lastCodeClicked);
+    print(lineList);
   }
   // I also wanna see the courselist and courseMap for debuggingc
   if(key === 'c') {

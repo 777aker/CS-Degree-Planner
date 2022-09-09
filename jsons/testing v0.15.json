@@ -1,0 +1,331 @@
+{
+  "courses": [
+    {
+      "code": "CSCI 1000",
+      "credits": "1",
+      "name": "Computer Science as a Field of Work and Study",
+      "prerequisites": [],
+      "x": 339,
+      "y": 80,
+      "height": 45,
+      "width": 313.552734375,
+      "subnodes": [
+        "-1394879839"
+      ]
+    },
+    {
+      "code": "CSCI 1300",
+      "credits": "4",
+      "name": "Computer Science 1: Starting Computing",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "APPM 1350",
+          "MATH 1150",
+          "MATH 1300"
+        ]
+      ],
+      "x": 807,
+      "y": 311,
+      "height": 45,
+      "width": 269.4609375,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 1235",
+      "credits": "4",
+      "name": "Pre-Calculus for Engineers",
+      "prerequisites": [],
+      "x": 291.14501953125,
+      "y": 818,
+      "height": 45,
+      "width": 182.2958984375,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 1350",
+      "credits": "4",
+      "name": "Calculus 1 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1300"
+        ]
+      ],
+      "x": 876.0859375,
+      "y": 745.25,
+      "height": 45,
+      "width": 167.5234375,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 1150",
+      "credits": "4",
+      "name": "Precalculus Mathematics",
+      "prerequisites": [
+        [
+          "MATH 1011"
+        ]
+      ],
+      "x": 285.3037109375,
+      "y": 767,
+      "height": 45,
+      "width": 170.61328125,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 1300",
+      "credits": "5",
+      "name": "Calculus 1",
+      "prerequisites": [
+        [
+          "MATH 1150",
+          "APPM 1235"
+        ]
+      ],
+      "x": 843.2666015625,
+      "y": 694.25,
+      "height": 45,
+      "width": 101.884765625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 2270",
+      "credits": "4",
+      "name": "Computer Science 2: Data Structures",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "MATH 1300",
+          "APPM 1350"
+        ]
+      ],
+      "x": 1307,
+      "y": 472,
+      "height": 45,
+      "width": 246.8818359375,
+      "subnodes": [
+        "297405059"
+      ]
+    },
+    {
+      "code": "CSCI 2400",
+      "credits": "4",
+      "name": "Computer Systems",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 1661,
+      "y": 708,
+      "height": 45,
+      "width": 134.0341796875,
+      "subnodes": []
+    }
+  ],
+  "coursemap": {
+    "CSCI 1000": 0,
+    "CSCI 1300": 1,
+    "APPM 1235": 2,
+    "APPM 1350": 3,
+    "MATH 1150": 4,
+    "MATH 1300": 5,
+    "CSCI 2270": 6,
+    "CSCI 2400": 7
+  },
+  "notes": [
+    {
+      "code": "-1394879839",
+      "title": "",
+      "text": "Restricted to students with 0-26 credits",
+      "x": 328.33349609375,
+      "y": 122.25,
+      "width": 256.2197265625,
+      "height": 27.5,
+      "subnodes": []
+    },
+    {
+      "code": "1201074917",
+      "title": "Pre-Calculus",
+      "text": "Requires ALEKS math exam taken\nin 2016 or earlier, or placement\ninto pre-calculus based on your\nadmissions data and/or CU Boulder\ncoursework.",
+      "x": 300,
+      "y": 681,
+      "width": 236.005859375,
+      "height": 115,
+      "subnodes": [
+        "MATH 1150",
+        "APPM 1235"
+      ]
+    },
+    {
+      "code": "720334344",
+      "title": "Calculus",
+      "text": "",
+      "x": 811,
+      "y": 652,
+      "width": 73.3515625,
+      "height": 27.5,
+      "subnodes": [
+        "MATH 1300",
+        "APPM 1350"
+      ]
+    },
+    {
+      "code": "110256",
+      "title": "",
+      "text": "Requires Pre-Calculus or\nCalculus as a corequisite\nor prerequisite",
+      "x": 602,
+      "y": 481,
+      "width": 171.392578125,
+      "height": 62.5,
+      "subnodes": []
+    },
+    {
+      "code": "297405059",
+      "title": "",
+      "text": "Calculus can be taken as corequisite",
+      "x": 1323.06884765625,
+      "y": 514.25,
+      "width": 243.01953125,
+      "height": 27.5,
+      "subnodes": []
+    }
+  ],
+  "notemap": {
+    "110256": 3,
+    "297405059": 4,
+    "720334344": 2,
+    "1201074917": 1,
+    "-1394879839": 0
+  },
+  "subnodes": [
+    {
+      "code": "CSCI 1000",
+      "x": 182.2236328125,
+      "y": 57.5,
+      "width": 313.552734375,
+      "height": 78.5,
+      "lines": [
+        [
+          191.2236328125,
+          122.25,
+          328.33349609375,
+          122.25
+        ],
+        [
+          191.2236328125,
+          80,
+          191.2236328125,
+          122.25
+        ]
+      ]
+    },
+    {
+      "code": "1201074917",
+      "x": 181.9970703125,
+      "y": 623.5,
+      "width": 236.005859375,
+      "height": 217,
+      "lines": [
+        [
+          190.9970703125,
+          767,
+          285.3037109375,
+          767
+        ],
+        [
+          190.9970703125,
+          818,
+          291.14501953125,
+          818
+        ],
+        [
+          190.9970703125,
+          681,
+          190.9970703125,
+          818
+        ]
+      ]
+    },
+    {
+      "code": "720334344",
+      "x": 774.32421875,
+      "y": 638.25,
+      "width": 185.5234375,
+      "height": 129.5,
+      "lines": [
+        [
+          783.32421875,
+          694.25,
+          843.2666015625,
+          694.25
+        ],
+        [
+          783.32421875,
+          745.25,
+          876.0859375,
+          745.25
+        ],
+        [
+          783.32421875,
+          652,
+          783.32421875,
+          745.25
+        ]
+      ]
+    },
+    {
+      "code": "CSCI 2270",
+      "x": 1183.55908203125,
+      "y": 449.5,
+      "width": 261.01953125,
+      "height": 78.5,
+      "lines": [
+        [
+          1192.55908203125,
+          514.25,
+          1323.06884765625,
+          514.25
+        ],
+        [
+          1192.55908203125,
+          472,
+          1192.55908203125,
+          514.25
+        ]
+      ]
+    }
+  ],
+  "subnodemap": {
+    "720334344": 2,
+    "1201074917": 1,
+    "CSCI 1000": 0,
+    "CSCI 2270": 3
+  },
+  "lines": [
+    [
+      "1201074917",
+      "110256"
+    ],
+    [
+      "720334344",
+      "110256"
+    ],
+    [
+      "110256",
+      "CSCI 1300"
+    ],
+    [
+      "CSCI 1300",
+      "CSCI 2270"
+    ],
+    [
+      "720334344",
+      "CSCI 2270"
+    ],
+    []
+  ]
+}
