@@ -31,6 +31,8 @@ course = {
 // we also need a seperate list of lines
 // global variable of lines to draw
 let lineList = [];
+// I've created a prototype for the new lines, time to actually do it though
+// https://editor.p5js.org/777aker/sketches/gHNWCe4Eu
 // this stores all of our notes
 /*
   note = {
