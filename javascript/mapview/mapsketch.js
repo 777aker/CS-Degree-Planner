@@ -1050,7 +1050,7 @@ const lineListHandler = (ln, index, lines) => {
       stroke(0);
     }
   }
-  //line(1, 1, 50, 50);
+
   line(p1.x, p1.y, p2.x, p2.y);
 };
 // helper function that handles the first courselist draw
