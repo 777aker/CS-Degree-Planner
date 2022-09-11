@@ -927,6 +927,8 @@ let xy = [0, 0];
 let zoom = 1;
 // global variable for dragging
 let mouseOutsideWindow = false;
+// keeping track of time
+let time = 0;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
@@ -969,7 +971,18 @@ function draw() {
       xy[1] += movespeed / zoom;
   }
   */
-  // TODO: when done with lines move them here
+  // draw mode time, do some nonsense
+  // draw the lines
+  // I love anonymous functions apparently (I use them a lot)
+  // for every line that exists this is going to draw them
+  strokeWeight(4);
+  stroke(0);
+  noFill();
+  time += deltaTime / 25;
+  drawingContext.lineDashOffset = -time;
+  drawingContext.setLineDash([10,20]);
+  lineList.forEach(lineListHandler);
+  drawingContext.setLineDash([0,0]);
   // draw all the subnode stuff
   strokeWeight(2);
   stroke(0);
@@ -983,15 +996,6 @@ function draw() {
   noteList.forEach(noteListHandler);
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
-  // for testing purposes, moving lines to last so they draw on top
-  // draw mode time, do some nonsense
-  // draw the lines
-  // I love anonymous functions apparently (I use them a lot)
-  // for every line that exists this is going to draw them
-  strokeWeight(2);
-  stroke(0);
-  noFill();
-  lineList.forEach(lineListHandler);
   // move edit buttons around with nodes
   if(lastCodeClicked !== "" && lastNodeTypeClicked !== null) {
     let node = null;
@@ -1052,7 +1056,6 @@ const lineListHandler = (ln, index, lines) => {
       stroke(0);
     }
   }
-
   line(p1.x, p1.y, p2.x, p2.y);
 };
 // helper function that handles the first courselist draw
@@ -1414,7 +1417,6 @@ function drawMode(node, mouseHovering) {
     lastitem.push(node.code);
     lineList.push([]);
   }
-  print(lineList);
 }
 
 // -------------------------------- Mouse Events -------------------------------- //
