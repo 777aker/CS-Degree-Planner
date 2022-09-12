@@ -1027,9 +1027,9 @@ function draw() {
   noFill();
   timep += deltaTime / 25;
   drawingContext.lineDashOffset = -timep;
-  drawingContext.setLineDash([10,20]);
   lineList.forEach(lineListHandler);
   drawingContext.setLineDash([0,0]);
+  noStroke();
   // draw all the subnode stuff
   strokeWeight(2);
   stroke(0);
@@ -1099,26 +1099,45 @@ const lineListHandler = (ln, index, lines) => {
         return;
       }
       // applying a gradient so directionality more clear
-      let grad = drawingContext.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-      grad.addColorStop(0, 'red');
-      grad.addColorStop(1, 'lightgrey');
-      drawingContext.strokeStyle = grad;
+      lineGradient(node1.code, true, p1.x, p1.y, p2.x, p2.y);
     } else {
       // applying a gradient so directionality more clear
-      let grad = drawingContext.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-      grad.addColorStop(0, 'black');
-      grad.addColorStop(1, 'lightgrey');
-      drawingContext.strokeStyle = grad;
+      lineGradient(node1.code, false, p1.x, p1.y, p2.x, p2.y);
     }
   } else {
     // applying a gradient so directionality more clear
-    let grad = drawingContext.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-    grad.addColorStop(0, 'black');
-    grad.addColorStop(1, 'lightgrey');
-    drawingContext.strokeStyle = grad;
+    lineGradient(node1.code, false, p1.x, p1.y, p2.x, p2.y);
   }
   line(p1.x, p1.y, p2.x, p2.y);
 };
+function lineGradient(code, red, x1, y1, x2, y2) {
+  let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
+  switch(completionMap.get(code)) {
+    case completions.complete:
+    case completions.planned:
+      if(red) {
+        grad.addColorStop(0, 'rgba(255, 0, 0, 255)');
+        grad.addColorStop(1, 'rgba(220, 200, 200, 0)');
+      } else {
+        grad.addColorStop(0, 'rgba(0, 0, 0, 255)');
+        grad.addColorStop(1, 'rgba(200, 200, 200, 0)');
+      }
+      drawingContext.strokeStyle = grad;
+      drawingContext.setLineDash([10, 20]);
+      break;
+    default:
+      if(red) {
+        grad.addColorStop(0, 'rgba(120, 100, 100, 255)');
+        grad.addColorStop(1, 'rgba(220, 200, 200, 50)');
+      } else {
+        grad.addColorStop(0, 'rgba(100, 100, 100, 255)');
+        grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
+      }
+      drawingContext.strokeStyle = grad;
+      drawingContext.setLineDash([1, 20]);
+  }
+}
+
 // helper function that handles the first courselist draw
 // actually wait, with the new method we no longer need two draw calls to courselist
 // incredible
