@@ -70,6 +70,16 @@ let modenames = {
 // subnode boxes we draw
 let subnodeboxesList = [];
 let subnodeboxesMap = new Map();
+// completing a course time
+// this is a separate map because I want to actually save it differently than everything else
+// that way you can just load a completed coursework specifically file
+let completions = {
+  planned: 0,
+  inprogress: 1,
+  complete: 2,
+  incomplete: 3,
+};
+let completionMap = new Map();
 
 // -------------------------------- Set up functions -------------------------------- //
 // p5js setup function
@@ -684,9 +694,46 @@ function openNodeOptions(nodeType, node) {
   editNodesDiv.style.display = "flex";
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;
+  // fill in completed
+  changeCompletion(node.code);
   // we can expect every node to have an x, y, width, height
   editNodesDiv.style.top = node.y - node.height/2 - textLeading() - 5 + 'px';
   editNodesDiv.style.left = node.x - node.width/2 + 'px';
+}
+// now time for switching a courses completion
+const completionBtn = document.querySelector("#completion");
+completionBtn.addEventListener('mouseover', function() {
+  typing = true;
+});
+completionBtn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+completionBtn.addEventListener('click', function() {
+  if(completionMap.has(lastCodeClicked)) {
+    completionMap.set(lastCodeClicked, (completionMap.get(lastCodeClicked) + 1) % 4);
+  } else {
+    completionMap.set(lastCodeClicked, 0);
+  }
+  changeCompletion(lastCodeClicked);
+});
+function changeCompletion(code) {
+  if(completionMap.has(code)) {
+    switch(completionMap.get(code)) {
+      case completions.inprogress:
+        completionBtn.innerHTML = "in progress";
+        break;
+      case completions.complete:
+        completionBtn.innerHTML = "complete"
+        break;
+      case completions.planned:
+        completionBtn.innerHTML = "planned";
+        break;
+      default:
+        completionBtn.innerHTML = "incomplete";
+    }
+  } else {
+    completionBtn.innerHTML = "incomplete";
+  }
 }
 
 // -------------------------------- Template Section -------------------------------- //
@@ -928,7 +975,7 @@ let zoom = 1;
 // global variable for dragging
 let mouseOutsideWindow = false;
 // keeping track of time
-let time = 0;
+let timep = 0;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
@@ -978,8 +1025,8 @@ function draw() {
   strokeWeight(4);
   stroke(0);
   noFill();
-  time += deltaTime / 25;
-  drawingContext.lineDashOffset = -time;
+  timep += deltaTime / 25;
+  drawingContext.lineDashOffset = -timep;
   drawingContext.setLineDash([10,20]);
   lineList.forEach(lineListHandler);
   drawingContext.setLineDash([0,0]);
@@ -1051,10 +1098,24 @@ const lineListHandler = (ln, index, lines) => {
         lines.splice(index, 1);
         return;
       }
-      stroke(255, 0, 0);
+      // applying a gradient so directionality more clear
+      let grad = drawingContext.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+      grad.addColorStop(0, 'red');
+      grad.addColorStop(1, 'lightgrey');
+      drawingContext.strokeStyle = grad;
     } else {
-      stroke(0);
+      // applying a gradient so directionality more clear
+      let grad = drawingContext.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+      grad.addColorStop(0, 'black');
+      grad.addColorStop(1, 'lightgrey');
+      drawingContext.strokeStyle = grad;
     }
+  } else {
+    // applying a gradient so directionality more clear
+    let grad = drawingContext.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+    grad.addColorStop(0, 'black');
+    grad.addColorStop(1, 'lightgrey');
+    drawingContext.strokeStyle = grad;
   }
   line(p1.x, p1.y, p2.x, p2.y);
 };
@@ -1072,16 +1133,31 @@ const courseListHandler = (course, index, arr) => {
   // move the courses based on which keys are held
   course.x += xy[0];
   course.y += xy[1];
-
+  // quick alpha value based on completion
+  // TODO: I don't think I like this actually
+  let alpha = 255;
+  switch(completionMap.get(course.code)) {
+    case completions.planned:
+      alpha = 100;
+      break;
+    case completions.inprogress:
+      alpha = 180;
+      break;
+    case completions.complete:
+      alpha = 255;
+      break;
+    default:
+      alpha = 50;
+  }
   // if hovering over the box change fill
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
   if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2)) {
     mouseHovering = true;
-    fill(200, 200, 200);
+    fill(200, 200, 200, alpha);
   } else {
-    fill(255, 255, 255);
+    fill(255, 255, 255, alpha);
   }
   // draw the rectangle around our course
   rectMode(CENTER);
@@ -1090,7 +1166,7 @@ const courseListHandler = (course, index, arr) => {
   switch(mode) {
     case modes.delete:
       // make the text fill different
-      fill(200, 0, 0);
+      fill(200, 0, 0, alpha);
       if(typing)
         break;
       // if you click the course delete it
@@ -1102,7 +1178,7 @@ const courseListHandler = (course, index, arr) => {
       }
       break;
     case modes.edit:
-      fill(0, 0, 200);
+      fill(0, 0, 200, alpha);
       if(typing)
         break;
       // if we haven't been dragging a course then make this course the one we drag
@@ -1156,12 +1232,12 @@ const courseListHandler = (course, index, arr) => {
       break;
     case modes.draw:
       drawMode(course, mouseHovering);
-      fill(0, 0, 0);
+      fill(0, 0, 0, alpha);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
         openNodeOptions(nodeTypes.course, course);
-      fill(0, 0, 0);
+      fill(0, 0, 0, alpha);
   }
   // if we don't have any subnodes then break and remove us form the subnodes list
   if(course.subnodes.length === 0) {
@@ -1199,15 +1275,29 @@ const noteListHandler = (note, index, arr) => {
   // move notes if moving screen
   note.x += xy[0];
   note.y += xy[1];
-
+  // TODO: I don't think I like this actually
+  let alpha = 255;
+  switch(completionMap.get(note.code)) {
+    case completions.planned:
+      alpha = 100;
+      break;
+    case completions.inprogress:
+      alpha = 180;
+      break;
+    case completions.complete:
+      alpha = 255;
+      break;
+    default:
+      alpha = 50;
+  }
   // check if dragging this box
   let mouseHovering = draggingnote === index;
   // intersecting course check
   if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2)) {
     mouseHovering = true;
-    fill(200, 200, 200);
+    fill(200, 200, 200, alpha);
   } else {
-    fill(255, 255, 255);
+    fill(255, 255, 255, alpha);
   }
   // draw rect around note
   rectMode(CENTER);
@@ -1215,7 +1305,7 @@ const noteListHandler = (note, index, arr) => {
   switch(mode) {
     case modes.delete:
       // make the text fill different
-      fill(200, 0, 0);
+      fill(200, 0, 0, alpha);
       if(typing)
         break;
       // if you click it delete it
@@ -1225,7 +1315,7 @@ const noteListHandler = (note, index, arr) => {
       break;
     case modes.edit:
       // this is just a copy of what class does
-      fill(0, 0, 200);
+      fill(0, 0, 200, alpha);
       if(typing)
         break;
       if(draggingnote === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
@@ -1269,12 +1359,12 @@ const noteListHandler = (note, index, arr) => {
       break;
     case modes.draw:
       drawMode(note, mouseHovering);
-      fill(0);
+      fill(0, 0, 0, alpha);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
         openNodeOptions(nodeTypes.note, note);
-      fill(0);
+      fill(0, 0, 0, alpha);
   }
   if(note.subnodes.length === 0) {
     if(subnodeboxesMap.has(note.code)) {
