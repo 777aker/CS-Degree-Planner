@@ -1110,25 +1110,36 @@ const lineListHandler = (ln, index, lines) => {
   }
   line(p1.x, p1.y, p2.x, p2.y);
 };
+// helper function that draws gradients and stuff
 function lineGradient(code, red, x1, y1, x2, y2) {
   let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
   switch(completionMap.get(code)) {
     case completions.complete:
-    case completions.planned:
       if(red) {
         grad.addColorStop(0, 'rgba(255, 0, 0, 255)');
-        grad.addColorStop(1, 'rgba(220, 200, 200, 0)');
+        grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
       } else {
         grad.addColorStop(0, 'rgba(0, 0, 0, 255)');
-        grad.addColorStop(1, 'rgba(200, 200, 200, 0)');
+        grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
+      }
+      drawingContext.strokeStyle = grad;
+      drawingContext.setLineDash([10, 10]);
+      break;
+    case completions.inprogress:
+      if(red) {
+        grad.addColorStop(0, 'rgba(255, 100, 100, 200)');
+        grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
+      } else {
+        grad.addColorStop(0, 'rgba(100, 100, 100, 200)');
+        grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
       }
       drawingContext.strokeStyle = grad;
       drawingContext.setLineDash([10, 20]);
       break;
     default:
       if(red) {
-        grad.addColorStop(0, 'rgba(120, 100, 100, 255)');
-        grad.addColorStop(1, 'rgba(220, 200, 200, 50)');
+        grad.addColorStop(0, 'rgba(200, 100, 100, 255)');
+        grad.addColorStop(1, 'rgba(255, 200, 200, 50)');
       } else {
         grad.addColorStop(0, 'rgba(100, 100, 100, 255)');
         grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
@@ -1137,7 +1148,6 @@ function lineGradient(code, red, x1, y1, x2, y2) {
       drawingContext.setLineDash([1, 20]);
   }
 }
-
 // helper function that handles the first courselist draw
 // actually wait, with the new method we no longer need two draw calls to courselist
 // incredible
@@ -1152,40 +1162,20 @@ const courseListHandler = (course, index, arr) => {
   // move the courses based on which keys are held
   course.x += xy[0];
   course.y += xy[1];
-  // quick alpha value based on completion
-  // TODO: I don't think I like this actually
-  let alpha = 255;
-  switch(completionMap.get(course.code)) {
-    case completions.planned:
-      alpha = 100;
-      break;
-    case completions.inprogress:
-      alpha = 180;
-      break;
-    case completions.complete:
-      alpha = 255;
-      break;
-    default:
-      alpha = 50;
-  }
   // if hovering over the box change fill
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
   if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2)) {
     mouseHovering = true;
-    fill(200, 200, 200, alpha);
-  } else {
-    fill(255, 255, 255, alpha);
   }
   // draw the rectangle around our course
+  boxFill(course.code, mouseHovering);
   rectMode(CENTER);
   rect(course.x, course.y, course.width, course.height);
   // in different modes do some different things
   switch(mode) {
     case modes.delete:
-      // make the text fill different
-      fill(200, 0, 0, alpha);
       if(typing)
         break;
       // if you click the course delete it
@@ -1197,7 +1187,6 @@ const courseListHandler = (course, index, arr) => {
       }
       break;
     case modes.edit:
-      fill(0, 0, 200, alpha);
       if(typing)
         break;
       // if we haven't been dragging a course then make this course the one we drag
@@ -1251,12 +1240,10 @@ const courseListHandler = (course, index, arr) => {
       break;
     case modes.draw:
       drawMode(course, mouseHovering);
-      fill(0, 0, 0, alpha);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
         openNodeOptions(nodeTypes.course, course);
-      fill(0, 0, 0, alpha);
   }
   // if we don't have any subnodes then break and remove us form the subnodes list
   if(course.subnodes.length === 0) {
@@ -1280,6 +1267,7 @@ const courseListHandler = (course, index, arr) => {
   // draw course code, credit hours, and name to the screen
   textAlign(CENTER, TOP);
   textStyle(BOLD);
+  textFill(course.code);
   text(course.code + "-" + course.credits, course.x, course.y - course.height/2 + boxpadding.y/2);
   textStyle(NORMAL);
   text(course.name, course.x, course.y - course.height/2 + boxpadding.y/2 + textLeading());
@@ -1294,37 +1282,18 @@ const noteListHandler = (note, index, arr) => {
   // move notes if moving screen
   note.x += xy[0];
   note.y += xy[1];
-  // TODO: I don't think I like this actually
-  let alpha = 255;
-  switch(completionMap.get(note.code)) {
-    case completions.planned:
-      alpha = 100;
-      break;
-    case completions.inprogress:
-      alpha = 180;
-      break;
-    case completions.complete:
-      alpha = 255;
-      break;
-    default:
-      alpha = 50;
-  }
   // check if dragging this box
   let mouseHovering = draggingnote === index;
   // intersecting course check
   if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2)) {
     mouseHovering = true;
-    fill(200, 200, 200, alpha);
-  } else {
-    fill(255, 255, 255, alpha);
   }
   // draw rect around note
   rectMode(CENTER);
+  boxFill(note.code, mouseHovering);
   rect(note.x, note.y, note.width, note.height);
   switch(mode) {
     case modes.delete:
-      // make the text fill different
-      fill(200, 0, 0, alpha);
       if(typing)
         break;
       // if you click it delete it
@@ -1334,7 +1303,6 @@ const noteListHandler = (note, index, arr) => {
       break;
     case modes.edit:
       // this is just a copy of what class does
-      fill(0, 0, 200, alpha);
       if(typing)
         break;
       if(draggingnote === -1 && draggingcourse === -1 && mouseIsPressed && mouseHovering) {
@@ -1378,12 +1346,10 @@ const noteListHandler = (note, index, arr) => {
       break;
     case modes.draw:
       drawMode(note, mouseHovering);
-      fill(0, 0, 0, alpha);
       break;
     default:
       if(mouseIsPressed && mouseHovering)
         openNodeOptions(nodeTypes.note, note);
-      fill(0, 0, 0, alpha);
   }
   if(note.subnodes.length === 0) {
     if(subnodeboxesMap.has(note.code)) {
@@ -1397,6 +1363,7 @@ const noteListHandler = (note, index, arr) => {
   noStroke();
   // finally draw the text
   // if it doesn't have a title center text
+  textFill(note.code);
   if(note.title === '') {
     textStyle(NORMAL);
     textAlign(LEFT, CENTER);
@@ -1416,6 +1383,73 @@ const noteListHandler = (note, index, arr) => {
     text(note.text, note.x - note.width/2 + boxpadding.x/2, note.y - note.height/2 + boxpadding.y/2 + textLeading());
   }
 };
+// helper function that determines boxfill
+function boxFill(code, mh) {
+  switch(completionMap.get(code)) {
+    case completions.planned:
+    case completions.inprogress:
+      stroke(0, 0, 0, 255);
+      if(mh) {
+        fill(230, 230, 230, 255);
+      } else {
+        fill(255, 255, 255, 255);
+      }
+      break;
+    case completions.complete:
+      stroke(0, 0, 0, 255)
+      if(mh) {
+        if(mode === modes.delete) {
+          fill(50, 0, 0, 255);
+        } else {
+          fill(50, 50, 50, 255);
+        }
+      } else {
+        fill(0, 0, 0, 255);
+      }
+      break;
+    default:
+      stroke(0, 0, 0, 50);
+      if(mh) {
+        fill(180, 180, 180, 50)
+      } else {
+        fill(200, 200, 200, 50);
+      }
+      break;
+  }
+}
+function textFill(code) {
+  let r = 130;
+  let g = 130;
+  let b = 130;
+  switch(completionMap.get(code)) {
+    case completions.planned:
+      r = 50;
+      g = 50;
+      b = 50;
+      break;
+    case completions.inprogress:
+      r = 0;
+      g = 0;
+      b = 0;
+      break;
+    case completions.complete:
+      r = 255;
+      g = 255;
+      b = 255;
+  }
+  switch(mode) {
+    case modes.delete:
+      r += 125;
+      break;
+    case modes.edit:
+      b += 125;
+      break;
+    case modes.draw:
+      g += 125;
+      break;
+  }
+  fill(r, g, b, 255);
+}
 // some variables for drawing a nice box
 // spacing around the subnodes
 let subnodepadding = 10;
@@ -1430,6 +1464,7 @@ const subnodeHandler = (subnode, ind, arr) => {
     deleteElement(subnodeboxesList, subnodeboxesMap, subnode.code);
     return;
   }
+  boxFill(subnode.code, false);
   rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
   subnode.lines.forEach((ln) => {
     line(ln[0], ln[1], ln[2], ln[3]);
