@@ -259,6 +259,7 @@ function replaceElement(list, map, key, element) {
   let keyind = map.get(key);
   element.x = list[keyind].x;
   element.y = list[keyind].y;
+  element.subnodes = list[keyind].subnodes;
   list[keyind] = element;
   if(key !== element.code) {
     if(map.has(element.code)) {
@@ -471,8 +472,10 @@ function submitCourse() {
     let prereq = [];
     // put them all in the same list
     for(j = 0; j < divlist.length; j++) {
-      if(divlist[j].value !== "Enter Prerequisite Code Only" && divlist[j].value !== "")
+      if(divlist[j].value !== "Enter Prerequisite Code Only" && divlist[j].value !== "") {
         prereq.push(divlist[j].value);
+        lineList.push([divlist[j].value, coursecode]);
+      }
     }
     // add that list to our list of lists of prereqs
     if(prereq.length !== 0)
@@ -846,6 +849,9 @@ function importTextArea() {
 // I can't handle having to make an entire set of notes for testing anymore
 // so I'm making a save feature
 // set it up
+/*
+  All of this is course layout stuff
+*/
 const saveform = document.querySelector(".fileform");
 saveform.addEventListener('mouseover', function() {
   typing = true;
@@ -854,12 +860,15 @@ saveform.addEventListener('mouseleave', function() {
   typing = false;
 });
 const savebutton = document.querySelector("#savebtn");
-savebutton.addEventListener('click', saveFile);
-const savetext = document.querySelector("#savetxt");
+savebutton.addEventListener('click', saveCourseLayout);
+const savecourseworkbtn = document.querySelector("#courseworksave");
+savecourseworkbtn.addEventListener('click', saveCourseWork);
+//const savetext = document.querySelector("#savetxt");
 // this takes the courselist and linelist we have for everything and saves
 // them to a json file
-function saveFile() {
+function saveCourseLayout() {
   let json = {};
+  json.fileType = "courselayout";
   json.courses = courseList;
   json.coursemap = Object.fromEntries(courseMap);
   json.notes = noteList;
@@ -867,7 +876,13 @@ function saveFile() {
   json.subnodes = subnodeboxesList;
   json.subnodemap = Object.fromEntries(subnodeboxesMap);
   json.lines = lineList;
-  saveJSON(json, savetext.value);
+  saveJSON(json, "Courses Layout");
+}
+function saveCourseWork() {
+  let json = {};
+  json.fileType = "coursework";
+  json.completionMap = Object.fromEntries(completionMap);
+  saveJSON(json, "Coursework");
 }
 
 // -------------------------------- JSON Processing -------------------------------- //
@@ -877,6 +892,19 @@ function processJSON(json) {
   lastCodeClicked = "";
   lastNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
+  switch(json.fileType) {
+    case "courselayout":
+      processCourseLayout(json);
+      break;
+    case "coursework":
+      processCoursework(json);
+      break;
+  }
+}
+function processCoursework(json) {
+  makeMap(completionMap, json.completionMap);
+}
+function processCourseLayout(json) {
   // json stuff
   let jsonlist = json.courses;
   // have to do it this way instead of a helper because js is crazy
@@ -1094,7 +1122,7 @@ const lineListHandler = (ln, index, lines) => {
     // AAAHHHH, PAST ME MADE THIS ALREADY!!!!!!
     // yaaaayyyyyyyyy
     if(lineTest(20, p1.x, p1.y, p2.x, p2.y, mouseX, mouseY)) {
-      if(mouseIsPressed) {
+      if(mouseIsPressed && !typing) {
         lines.splice(index, 1);
         return;
       }
@@ -1388,39 +1416,39 @@ function boxFill(code, mh) {
   switch(completionMap.get(code)) {
     case completions.planned:
     case completions.inprogress:
-      stroke(0, 0, 0, 255);
+      stroke(0, 0, 0);
       if(mh) {
-        fill(230, 230, 230, 255);
+        fill(230, 230, 230);
       } else {
-        fill(255, 255, 255, 255);
+        fill(255, 255, 255);
       }
       break;
     case completions.complete:
-      stroke(0, 0, 0, 255)
+      stroke(0, 0, 0)
       if(mh) {
         if(mode === modes.delete) {
-          fill(50, 0, 0, 255);
+          fill(50, 0, 0);
         } else {
-          fill(50, 50, 50, 255);
+          fill(50, 50, 50);
         }
       } else {
-        fill(0, 0, 0, 255);
+        fill(0, 0, 0);
       }
       break;
     default:
-      stroke(0, 0, 0, 50);
+      stroke(245, 245, 245);
       if(mh) {
-        fill(180, 180, 180, 50)
+        fill(215, 215, 215)
       } else {
-        fill(200, 200, 200, 50);
+        fill(225, 225, 225);
       }
       break;
   }
 }
 function textFill(code) {
-  let r = 130;
-  let g = 130;
-  let b = 130;
+  let r = 100;
+  let g = 100;
+  let b = 100;
   switch(completionMap.get(code)) {
     case completions.planned:
       r = 50;
