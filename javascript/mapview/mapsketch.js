@@ -1133,7 +1133,7 @@ const lineListHandler = (ln, index, lines) => {
       lineGradient(node1.code, node2, true, p1.x, p1.y, p2.x, p2.y);
     } else {
       // applying a gradient so directionality more clear
-      lineGradient(node1.code, false, p1.x, p1.y, p2.x, p2.y);
+      lineGradient(node1.code, node2, false, p1.x, p1.y, p2.x, p2.y);
     }
   } else {
     // applying a gradient so directionality more clear
