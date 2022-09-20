@@ -98,6 +98,8 @@ function setup() {
   editMenuSetUp();
   // set up templates
   setUpTemplates();
+  // go ahead and load CS by default
+  openTemplate("Computer-Science-BS-template.json");
 }
 // set up the buttons for the edit menu
 function editMenuSetUp() {
