@@ -1104,13 +1104,14 @@ const lineListHandler = (ln, index, lines) => {
     y: node1.y
   };
   let p2;
+  let node2 = undefined;
   if(mode === modes.draw && index === lines.length-1) {
     p2 = {
       x: mouseX,
       y: mouseY
     };
   } else {
-    let node2 = getElement(ln[1]);
+    node2 = getElement(ln[1]);
     if(node2 === undefined)
       return;
     p2 = {
@@ -1129,19 +1130,19 @@ const lineListHandler = (ln, index, lines) => {
         return;
       }
       // applying a gradient so directionality more clear
-      lineGradient(node1.code, true, p1.x, p1.y, p2.x, p2.y);
+      lineGradient(node1.code, node2, true, p1.x, p1.y, p2.x, p2.y);
     } else {
       // applying a gradient so directionality more clear
       lineGradient(node1.code, false, p1.x, p1.y, p2.x, p2.y);
     }
   } else {
     // applying a gradient so directionality more clear
-    lineGradient(node1.code, false, p1.x, p1.y, p2.x, p2.y);
+    lineGradient(node1.code, node2, false, p1.x, p1.y, p2.x, p2.y);
   }
   line(p1.x, p1.y, p2.x, p2.y);
 };
 // helper function that draws gradients and stuff
-function lineGradient(code, red, x1, y1, x2, y2) {
+function lineGradient(code, node, red, x1, y1, x2, y2) {
   let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
   switch(completionMap.get(code)) {
     case completions.complete:
@@ -1153,7 +1154,10 @@ function lineGradient(code, red, x1, y1, x2, y2) {
         grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
       }
       drawingContext.strokeStyle = grad;
-      drawingContext.setLineDash([10, 10]);
+      if(node !== undefined && completionMap.get(node.code) === completions.complete)
+        drawingContext.setLineDash([0,0]);
+      else
+        drawingContext.setLineDash([10, 10]);
       break;
     case completions.inprogress:
       if(red) {
