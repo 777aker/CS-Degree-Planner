@@ -48,9 +48,18 @@
       <!-- Form for loading files -->
       <div class="fileloader-div">
         <form class="fileloader-form">
+          <p>
+            Here you can load course layout files, course work files, or any other files
+            created with this software so that you can personalize your experience.
+          </p>
           <input type="file" id="select-files">
-          <textarea id="result" rows="10" cols="40"></textarea>
-          <input type="button" id="import" value="Import">
+          <label for="result">
+            This field shows what the file looks like, and allows you to make edits.
+            You don't have to look at it or do anything with it.
+          </label>
+          <textarea name="result" id="result" rows="10" cols="40"></textarea>
+
+          <input type="button" id="import" value="Import" title="Load the file into the software, including changes made in edit area">
           <input type="button" id="cancelload" value="Close File Loader">
         </form>
       </div>

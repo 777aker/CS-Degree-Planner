@@ -184,6 +184,32 @@ function createFormTextField(form, label, id, placeholder, br) {
   if(br)
     form.appendChild(document.createElement("br"));
 }
+function createFormTextFieldWithValue(form, label, id, placeholder, value, br) {
+  // create the label element using passed letiables
+  // letiables??? I don't even know what that word is supposed to be
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
+  // create the input element using passed letiables
+  // I did it again, what the freak is a letiable?
+  // is there even such thing as a letiable or does it have to be letiables
+  let tempinput = document.createElement("input");
+  tempinput.setAttribute("type", "text");
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
+  tempinput.setAttribute("value", value);
+  tempinput.setAttribute("placeholder", placeholder);
+  form.appendChild(tempinput);
+  if(br)
+    form.appendChild(document.createElement("br"));
+}
 function createFormText(form, value, br) {
   let tempp = createElement("p", value);
   tempp.parent(form);
@@ -191,7 +217,30 @@ function createFormText(form, value, br) {
     form.appendChild(createElement("br"));
 }
 // I also need a text area so copying text field
-function createFormTextArea(form, label, id, value, br) {
+function createFormTextArea(form, label, id, placeholder, br) {
+  if(label !== "") {
+    let templabel = document.createElement("label");
+    templabel.setAttribute("for", id);
+    templabel.innerHTML = label;
+    form.appendChild(templabel);
+    if(br)
+      form.appendChild(document.createElement("br"));
+  }
+  let tempinput = document.createElement("textarea");
+  if(id !== "") {
+    tempinput.setAttribute("id", id);
+    tempinput.setAttribute("name", id);
+  }
+  tempinput.setAttribute("value", "");
+  tempinput.setAttribute("placeholder", placeholder);
+  tempinput.setAttribute("rows", "10");
+  tempinput.setAttribute("cols", "40");
+  tempinput.setAttribute("wrap", "off");
+  form.appendChild(tempinput);
+  if(br)
+    form.appendChild(document.createElement("br"));
+}
+function createFormTextAreaWithValue(form, label, id, placeholder, value, br) {
   if(label !== "") {
     let templabel = document.createElement("label");
     templabel.setAttribute("for", id);
@@ -206,7 +255,7 @@ function createFormTextArea(form, label, id, value, br) {
     tempinput.setAttribute("name", id);
   }
   tempinput.setAttribute("value", value);
-  tempinput.setAttribute("onfocus", "this.value=''");
+  tempinput.setAttribute("placeholder", placeholder);
   tempinput.setAttribute("rows", "10");
   tempinput.setAttribute("cols", "40");
   tempinput.setAttribute("wrap", "off");
@@ -361,7 +410,7 @@ function addCourse() {
   // this is the button to add a group of prerequisites that fulfill the same requirement
   // if you're confused about this next part function submitCourse explains what's happening here a little better
   createFormButtonWithTitle(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup,
-    "This will add a group of prerequisites that all fulfill the same requirement");
+    "This will add a group of prerequisites. Each group should contain prerequisites that fulfill the same requirement");
   // remove a prereq group (does opposite of previous button)
   createFormButtonWithTitle(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup,
     "This will remove the bottommost list of prerequisites");
@@ -376,11 +425,13 @@ function editCourse() {
   typing = true;
   addCourseForm.innerHTML = '';
   let course = courseList[courseMap.get(lastCodeClicked)];
-  createFormTextField(addCourseForm, "Course Code:", "coursecode", course.code, false);
-  createFormTextField(addCourseForm, "Credit Hours:", "ch", course.credits, false);
-  createFormTextField(addCourseForm, "Course Name:", "coursename", course.name, false);
-  createFormButton(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup);
-  createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
+  createFormTextFieldWithValue(addCourseForm, "Course Code:", "coursecode", "Enter Course Code", course.code, false);
+  createFormTextFieldWithValue(addCourseForm, "Credit Hours:", "ch", "Enter Credit Hours", course.credits, false);
+  createFormTextFieldWithValue(addCourseForm, "Course Name:", "coursename", "Enter Course Name", course.name, false);
+  createFormButtonWithTitle(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup,
+    "This will add a group of prerequisites. Each group should contain prerequisites that fulfill the same requirement");
+  createFormButtonWithTitle(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup,
+    "This will remove the bottommost list of prerequisites");
   // now time for the complicated part of this
   // for each group of prereqs create a div
   if(course.prerequisites !== undefined && course.prerequisites !== null) {
@@ -390,7 +441,7 @@ function editCourse() {
       addCourseForm.appendChild(groupdiv);
       // for each actual prereq create a text field
       prereqGroup.forEach(prereq => {
-        createFormTextField(groupdiv, "", "", prereq);
+        createFormTextFieldWithValue(groupdiv, "", "", "Enter Prerequisite Code Only", prereq);
       });
       // buttons that let you add and remove prereqs from a group
       let prereqbtn = document.createElement("input");
@@ -460,6 +511,7 @@ function addPrereqGroup() {
   prereqbtn.setAttribute("type", "button");
   prereqbtn.setAttribute("class", "addPrereqBtn");
   prereqbtn.setAttribute("value", "Add Same Requirement Prerequisite");
+  prereqbtn.setAttribute("title", "Add another prerequisite code that fulfills the same requirement");
   addCourseForm.appendChild(prereqbtn);
   // whenever add prereq button clicked create more prereq fields in that div
   prereqbtn.addEventListener('click', function(){
@@ -472,6 +524,7 @@ function addPrereqGroup() {
   prereqbtn.setAttribute("type", "button");
   prereqbtn.setAttribute("class", "removePrereqBtn");
   prereqbtn.setAttribute("value", "Remove Prerequisite");
+  prereqbtn.setAttribute("title", "Remove most recently added prerequisite code box");
   addCourseForm.appendChild(prereqbtn);
   // whenever remove is clicked remove the last prerequisite of the group
   // even works if some jerk decides to press the button a million times
@@ -582,8 +635,13 @@ function addNote() {
   // clear the form
   addNoteForm.innerHTML = '';
   // create the labels and inputs for the form
-  createFormTextField(addNoteForm, "Note Title:", "notetitle", "Title of the note", true);
-  createFormTextArea(addNoteForm, "Note Text:", "notetext", "Text of the note", true);
+  createFormText(addNoteForm,
+`This allows you to create notes for explanations, organization, or whatever is helpful.
+The title will be bold and the text will be the default font. Both are optional`);
+  createFormTextField(addNoteForm, "Note Title:", "notetitle", "Title of the note (Optional)", true);
+  createFormTextArea(addNoteForm, "Note Text:", "notetext",
+`Text of the note (Optional).
+Will need to hit enter if you want line breaks`, true);
   // make it visible
   addNoteDiv.style.display = 'block';
 }
@@ -595,8 +653,13 @@ function editNote() {
   addNoteForm.innerHTML = '';
   // create the labels and inputs for the form
   let tempnote = noteList[noteMap.get(lastCodeClicked)];
-  createFormTextField(addNoteForm, "Note Title:", "notetitle", tempnote.title, true);
-  createFormTextArea(addNoteForm, "Note Text:", "notetext", tempnote.text, true);
+  createFormText(addNoteForm,
+`This allows you to create notes for explanations, organization, or whatever is helpful.
+The title will be bold and the text will be the default font. Both are optional`);
+  createFormTextFieldWithValue(addNoteForm, "Note Title:", "notetitle", "Enter title of note (optional)", tempnote.title, true);
+  createFormTextAreaWithValue(addNoteForm, "Note Text:", "notetext",
+`Text of the note (Optional)
+Will need to hit enter if you want line breaks`, tempnote.text, true);
   addNoteForm.querySelector('#notetext').innerHTML = tempnote.text;
   // make it visible
   addNoteDiv.style.display = 'block';
@@ -794,14 +857,17 @@ showtemplates.addEventListener('click', function() {
 function setUpTemplates() {
   // create the cs button
   // WARNING: url prefix in openTemplate function needs to change if hosting site changes
-  templateButton(templateform, 'Computer Science BS Degree', 'templateloadbtns', 'csbs', 'Computer-Science-BS-template.json');
+  templateButton(templateform, 'Computer Science BS Degree', 'templateloadbtns', 'csbs',
+  'This will load all the courses and degree requirements for CU CS BS degree',
+  'Computer-Science-BS-template.json');
 }
 // template button setup function
-function templateButton(form, name, btnclass, btnid, url) {
+function templateButton(form, name, btnclass, btnid, btntitle, url) {
   let button = createButton(name);
   button.class(btnclass);
   button.id(btnid);
   button.parent(form);
+  button.attribute("title", btntitle);
   button.mousePressed(() => {
     openTemplate(url);
   });
