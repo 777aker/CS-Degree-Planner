@@ -105,17 +105,22 @@ function setup() {
 function editMenuSetUp() {
   // uses p5js to make buttons because much easier than actual html nonsense
   // create add course button (made a helper function for this)
-  makeAButton('Add Course', addCourse, "editbuttons", "addcoursebtn", "#dropdown-content");
+  makeAButtonWithHover('Add Course', addCourse, "editbuttons", "addcoursebtn", "#dropdown-content",
+  "Opens a form to add a course to the layout");
   // create add note button
   // idk what to tell you about the first being '' and the others being ""
   // ...it's a....convention thing....yea
-  makeAButton('Add Note', addNote, "editbuttons", "addnotebtn", "#dropdown-content");
+  makeAButtonWithHover('Add Note', addNote, "editbuttons", "addnotebtn", "#dropdown-content",
+  "Opens a form to add a note to the layout");
   // create draw path button
-  makeAButton('Draw Path', drawPath, "editbuttons", "drawbtn", "#dropdown-content");
+  makeAButtonWithHover('Draw Path', drawPath, "editbuttons", "drawbtn", "#dropdown-content",
+  "Toggles ability to draw lines connecting courses and/or notes");
   // create delete button
-  makeAButton('Delete Mode', deleteMode, "editbuttons", "deletebtn", "#dropdown-content");
+  makeAButtonWithHover('Delete Mode', deleteMode, "editbuttons", "deletebtn", "#dropdown-content",
+  "Toggles ability to delete lines, courses, or notes by clicking on them");
   // create move button
-  makeAButton('Edit Positions', editPositions, "editbuttons", "editbtn", "#dropdown-content");
+  makeAButtonWithHover('Edit Positions', editPositions, "editbuttons", "editbtn", "#dropdown-content",
+  "Allows you to drag courses/notes to new positions");
 }
 
 // -------------------------------- Miscellaneous Menu -------------------------------- //
@@ -139,13 +144,21 @@ function makeAButton(name, fn, btnclass, btnid, parent) {
   button.id(btnid);
   button.parent(parent);
 }
+function makeAButtonWithHover(name, fn, btnclass, btnid, parent, hovertext) {
+  let button = createButton(name);
+  button.mousePressed(fn);
+  button.class(btnclass);
+  button.id(btnid);
+  button.parent(parent);
+  button.attribute('title', hovertext);
+}
 // helper function for creating form text fields
 // form - which form to append it to / element (doesn't have to be a form)
 // label - label for the text box
 // id - id for the text box
 // value - value in the text box
 // br - true or false, add breaks between text boxes or no
-function createFormTextField(form, label, id, value, br) {
+function createFormTextField(form, label, id, placeholder, br) {
   // create the label element using passed letiables
   // letiables??? I don't even know what that word is supposed to be
   if(label !== "") {
@@ -165,11 +178,17 @@ function createFormTextField(form, label, id, value, br) {
     tempinput.setAttribute("id", id);
     tempinput.setAttribute("name", id);
   }
-  tempinput.setAttribute("value", value);
-  tempinput.setAttribute("onfocus", "this.value=''");
+  tempinput.setAttribute("value", "");
+  tempinput.setAttribute("placeholder", placeholder);
   form.appendChild(tempinput);
   if(br)
     form.appendChild(document.createElement("br"));
+}
+function createFormText(form, value, br) {
+  let tempp = createElement("p", value);
+  tempp.parent(form);
+  if(br)
+    form.appendChild(createElement("br"));
 }
 // I also need a text area so copying text field
 function createFormTextArea(form, label, id, value, br) {
@@ -227,6 +246,15 @@ function createFormButton(form, id, value, func) {
   tempbutton.setAttribute("id", id);
   tempbutton.setAttribute("type", "button");
   tempbutton.setAttribute("value", value);
+  form.appendChild(tempbutton);
+  tempbutton.addEventListener('click', func);
+}
+function createFormButtonWithTitle(form, id, value, func, title) {
+  let tempbutton = document.createElement("input");
+  tempbutton.setAttribute("id", id);
+  tempbutton.setAttribute("type", "button");
+  tempbutton.setAttribute("value", value);
+  tempbutton.setAttribute("title", title);
   form.appendChild(tempbutton);
   tempbutton.addEventListener('click', func);
 }
@@ -314,10 +342,13 @@ function addCourse() {
   typing = true;
   // clear the form
   addCourseForm.innerHTML = '';
+  // create a description explaining this thingy
+  createFormText(addCourseForm, "This is a form that allows you to add courses to the layout", false);
   // create the labels and inputs for the form
   // first the course code input field
   // I was smart and made a form helper function
   createFormTextField(addCourseForm, "Course Code:", "coursecode", "Enter Course Code", false);
+  createFormText(addCourseForm, "If the course code already exists this form will replace that course when submitted");
   // credit hours input field
   createFormTextField(addCourseForm, "Credit Hours:", "ch", "Enter Credit Hours", false);
   // course name input field
@@ -329,9 +360,11 @@ function addCourse() {
   // I'm leaving it though hehehe
   // this is the button to add a group of prerequisites that fulfill the same requirement
   // if you're confused about this next part function submitCourse explains what's happening here a little better
-  createFormButton(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup);
+  createFormButtonWithTitle(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup,
+    "This will add a group of prerequisites that all fulfill the same requirement");
   // remove a prereq group (does opposite of previous button)
-  createFormButton(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup);
+  createFormButtonWithTitle(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup,
+    "This will remove the bottommost list of prerequisites");
   // make it visible (it = the whole form)
   addCourseDiv.style.display = 'block';
 }
