@@ -377,6 +377,10 @@ function pushElementNoPosition(list, map, element) {
 function getElement(key) {
   return courseMap.has(key) ? courseList[courseMap.get(key)] : noteList[noteMap.get(key)];
 }
+// function for user to know they did something wrong
+function throwError(type) {
+  print("ERROR: " + type);
+}
 
 // -------------------------------- Adding Courses Section -------------------------------- //
 // get the course form and div containing it and save as global variables
@@ -904,6 +908,7 @@ const flresult = document.querySelector('#result');
 // button that opens file loader
 const openfl = document.querySelector('#openloader');
 openfl.addEventListener('click', function() {
+  clearAndReplace.checked = false;
   fileloader.style.display = 'block';
 });
 // button that closes file loader
@@ -937,12 +942,21 @@ function fileChanged() {
 // when clicked take the text area and process it
 const importfile = document.querySelector("#import");
 importfile.addEventListener('click', importTextArea);
+// replace or don't replace
+const clearAndReplace = document.querySelector("#clearandreplace");
 // read from the textarea since they can edit file there then
 // once it's an object send it to processJSON to use
 // processJSON does stuff like json.courses so make it a dictionary basically
 function importTextArea() {
+  if(flresult.value === "" || flresult.value === undefined || flresult.value === null) {
+    throwError("File Empty");
+    return;
+  }
   const json = JSON.parse(flresult.value);
-  processJSON(json);
+  if(clearAndReplace.checked === true)
+    processJSONAppend(json);
+  else
+    processJSON(json);
   closeFL();
 }
 
@@ -987,7 +1001,7 @@ function saveCourseWork() {
 }
 
 // -------------------------------- JSON Processing -------------------------------- //
-// process json file loaded
+// process json file loaded (these completely replace current data)
 function processJSON(json) {
   // bug fix need this here
   lastCodeClicked = "";
@@ -1033,6 +1047,10 @@ function makeMap(map, jsonmap) {
       map.set(key, value);
     });
   }
+}
+// process json file loaded but append rather than replace
+function processJSONAppend(json) {
+  print("ur mom");
 }
 
 // -------------------------------- Mode Handling -------------------------------- //

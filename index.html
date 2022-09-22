@@ -28,6 +28,8 @@
             <button class="filebtn" id="opentemplates" title='These are preset course layouts that show different degrees and the pertinent courses for those degrees'>
               Open Template Options
             </button>
+            <input class="filebtn" type="button" id="clearbtn" value="Reset Data"
+              title="This will allow you to reset certain aspects of the software">
           </div>
         </div>
         <!-- dropdown menu for edit mode options -->
@@ -58,7 +60,10 @@
             You don't have to look at it or do anything with it.
           </label>
           <textarea name="result" id="result" rows="10" cols="40"></textarea>
-
+          <label class="switch" for="clear">
+            <input type="checkbox" name="clear" id="clearandreplace">
+            Append file to currently used data rather than replace data completely (ie double major and want to add two course degree requirement files)
+          </label>
           <input type="button" id="import" value="Import" title="Load the file into the software, including changes made in edit area">
           <input type="button" id="cancelload" value="Close File Loader">
         </form>
@@ -87,6 +92,10 @@
         <button type="button" id="completion" name="completion">Incomplete</button>
         <button type="button" id="nodeinfo" name="info">info</button>
         <button type="button" id="closeeditnode" name="close">close</button>
+      </div>
+      <!-- Form for clearing some data -->
+      <div class="clear-data-div">
+        
       </div>
     </main>
   </body>
