@@ -766,11 +766,12 @@ showNodeBtn.addEventListener('click', function() {
   // TODO: view node information
 });
 const closeNodeBtn = document.querySelector("#closeeditnode");
-closeNodeBtn.addEventListener("click", function() {
+closeNodeBtn.addEventListener("click", closeNodeOptions);
+function closeNodeOptions() {
   lastCodeClicked = "";
-  lastNodeTypeClicked = null;
+  lostNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
-});
+}
 // simple bug fix (the typing variable is a god send)
 editNodeBtn.addEventListener('mouseover', function() {
   typing = true;
@@ -1050,7 +1051,47 @@ function makeMap(map, jsonmap) {
 }
 // process json file loaded but append rather than replace
 function processJSONAppend(json) {
-  print("ur mom");
+
+}
+function addMap(map, jsonmap) {
+
+}
+
+// -------------------------------- Clear Data -------------------------------- //
+// some references to the html stuff
+const openClearFormBtn = document.querySelector('#clearbtn');
+const clearDiv = document.querySelector('.clear-data-div');
+const clearLayoutBtn = document.querySelector('#clearlayout');
+const clearCourseworkBtn = document.querySelector('#clearcoursework');
+const closeClearFormBtn = document.querySelector('#closeclearform');
+// ok, let's add some functionality
+// this is really just a lot of very simple buttons, just make stuff empty
+// when you click the button
+openClearFormBtn.addEventListener('click', function() {
+  clearDiv.style.display = 'block';
+});
+closeClearFormBtn.addEventListener('click', closeClearForm);
+function closeClearForm() {
+  clearDiv.style.display = 'none';
+}
+clearLayoutBtn.addEventListener('click', clearLayout);
+clearCourseworkBtn.addEventListener('click', clearCoursework);
+// some helper functions that clear data
+//(putting them here rather than in event in case I want other things to call these)
+function clearLayout() {
+  courseList = [];
+  courseMap.clear();
+  lineList = [];
+  noteList = [];
+  noteMap.clear();
+  subnodeboxesList = [];
+  subnodeboxesMap.clear();
+  closeNodeOptions();
+  closeClearForm();
+}
+function clearCoursework() {
+  completionMap.clear();
+  closeClearForm();
 }
 
 // -------------------------------- Mode Handling -------------------------------- //
