@@ -7,6 +7,7 @@
     <script src="p5/p5.js"></script>
     <!-- defer so it can actually find stuff and not break -->
     <script defer src="javascript/mapview/mapsketch.js"></script>
+    <script defer src="javascript/mapview/helpmenu.js"></script>
     <link rel="stylesheet" href="css/mapview/mapstyle.css">
   </head>
   <body>
@@ -112,6 +113,25 @@
           <button type="button" id="closeclearform"
           title="Close this form">Cancel</button>
         </form>
+      </div>
+      <!-- Help Menu -->
+      <div class="help-menu-div">
+        <div class="help-left-buttons">
+          <!-- Lots of buttons that toggle which help item you are looking at -->
+          <button type="button" class="helpbutton" id="overview">Overview</button>
+          <button type="button" class="helpbutton" id="defaultview">Default View</button>
+          <button type="button" class="helpbutton" id="filedropdown">File Dropdown</button>
+          <button type="button" class="helpbutton" id="editdropdown">Edit Dropdown</button>
+          <button type="button" class="helpbutton" id="viewdropdown">View Dropdown</button>
+          <button type="button" class="helpbutton" id="shortcuts">Shortcuts</button>
+          <button type="button" class="helpbutton" id="advanceduses">Advanced Uses</button>
+          <button type="button" class="helpbutton" id="credits">Credits</button>
+          <button type="button" class="helpbutton" id="closehelp">Close Help</button>
+        </div>
+        <!-- The actual content in the help menu -->
+        <div class="help-right-content">
+          <!-- I think this is most likely going to be filled through js -->
+        </div>
       </div>
     </main>
   </body>

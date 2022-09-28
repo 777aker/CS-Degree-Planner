@@ -233,3 +233,39 @@
   padding 10px 10px;
   gap: 10px;
 }
+
+/* Help Menu Stuff */
+/* Div with the help menu */
+.help-menu-div {
+  position: absolute;
+  display: none;
+  flex-direction: row;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
+  border-radius: 4px;
+  height: 80%;
+  width: 90%;
+  overflow-y: auto;
+  justify-content: flex-start;
+}
+
+.help-left-buttons {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+  margin: 0px 0px;
+}
+
+.helpbutton {
+  padding: 10px 10px;
+}
+
+.help-right-content {
+  flex: 5;
+  border: 2px solid black;
+  margin: 0px 0px;
+}
