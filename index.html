@@ -35,8 +35,17 @@
         <!-- dropdown menu for edit mode options -->
         <div class="edit-dropdown">
           <button class="dropbtn" title="This shows options for editing the course layout">Edit</button>
-          <div id="dropdown-content">
+          <div id="edit-content">
             <!-- all buttons placed here in js are class="editbuttons" -->
+          </div>
+        </div>
+        <!-- dropdown menu for view -->
+        <div class="view-dropdown">
+          <button class="dropbtn" title="Open various functionality">View</button>
+          <div id="view-content">
+            <button id="openhelp" title="Open Help" class="viewbtn">Help</button>
+            <button id="search" title="Search for item in field below" class="viewbtn">Search</button>
+            <input type="text" class="viewbtn" value="" placeholder="Enter Course To Search For">
           </div>
         </div>
       </div>
@@ -44,8 +53,8 @@
       <div class="template-div">
         <form class="template-form">
           <!-- look at js for how to add a template, easier to do there -->
-          <button type="button" id="canceltemplate" name="canceltemplate">Close Templates</button>
         </form>
+        <button type="button" id="canceltemplate" name="canceltemplate">Close Templates</button>
       </div>
       <!-- Form for loading files -->
       <div class="fileloader-div">

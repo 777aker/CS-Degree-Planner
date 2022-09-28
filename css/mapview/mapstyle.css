@@ -21,7 +21,7 @@
 }
 
 /* when you hover edit menu change some child stuff */
-.edit-dropdown:hover #dropdown-content {
+.edit-dropdown:hover #edit-content {
   display: flex;
 }
 
@@ -34,8 +34,8 @@
   font-size: 18px;
 }
 
-/* div holding dropdown content */
-#dropdown-content {
+/* div holding edit content */
+#edit-content {
   display: none;
   flex-direction: column;
 }
@@ -69,6 +69,25 @@
 
 .save-dropdown:hover #save-content {
   display: flex;
+}
+
+.view-dropdown {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#view-content {
+  display: none;
+  flex-direction: column;
+}
+
+.view-dropdown:hover #view-content {
+  display: flex;
+}
+
+.viewbtn {
+  padding: 5px 5px;
 }
 
 /* file form styling */
@@ -141,6 +160,8 @@
   padding: 5px 5px;
   border: 2px solid black;
   border-radius: 4px;
+  text-align: center;
+  padding-bottom: 15px;
 }
 
 /* form for loading templates */
@@ -198,7 +219,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  tranform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   padding: 10px 10px;
   border: 2px solid black;
   border-radius: 4px;

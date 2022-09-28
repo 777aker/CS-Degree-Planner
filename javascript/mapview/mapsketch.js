@@ -105,21 +105,21 @@ function setup() {
 function editMenuSetUp() {
   // uses p5js to make buttons because much easier than actual html nonsense
   // create add course button (made a helper function for this)
-  makeAButtonWithHover('Add Course', addCourse, "editbuttons", "addcoursebtn", "#dropdown-content",
+  makeAButtonWithHover('Add Course', addCourse, "editbuttons", "addcoursebtn", "#edit-content",
   "Opens a form to add a course to the layout");
   // create add note button
   // idk what to tell you about the first being '' and the others being ""
   // ...it's a....convention thing....yea
-  makeAButtonWithHover('Add Note', addNote, "editbuttons", "addnotebtn", "#dropdown-content",
+  makeAButtonWithHover('Add Note', addNote, "editbuttons", "addnotebtn", "#edit-content",
   "Opens a form to add a note to the layout");
   // create draw path button
-  makeAButtonWithHover('Draw Path', drawPath, "editbuttons", "drawbtn", "#dropdown-content",
+  makeAButtonWithHover('Draw Path', drawPath, "editbuttons", "drawbtn", "#edit-content",
   "Toggles ability to draw lines connecting courses and/or notes");
   // create delete button
-  makeAButtonWithHover('Delete Mode', deleteMode, "editbuttons", "deletebtn", "#dropdown-content",
+  makeAButtonWithHover('Delete Mode', deleteMode, "editbuttons", "deletebtn", "#edit-content",
   "Toggles ability to delete lines, courses, or notes by clicking on them");
   // create move button
-  makeAButtonWithHover('Edit Positions', editPositions, "editbuttons", "editbtn", "#dropdown-content",
+  makeAButtonWithHover('Edit Positions', editPositions, "editbuttons", "editbtn", "#edit-content",
   "Allows you to drag courses/notes to new positions");
 }
 
@@ -801,7 +801,7 @@ function openNodeOptions(nodeType, node) {
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;
   // fill in completed
-  changeCompletion(node.code);
+  changeCompletionButtonLook(node.code);
   // we can expect every node to have an x, y, width, height
   editNodesDiv.style.top = node.y - node.height/2 - textLeading() - 5 + 'px';
   editNodesDiv.style.left = node.x - node.width/2 + 'px';
@@ -815,14 +815,17 @@ completionBtn.addEventListener('mouseleave', function() {
   typing = false;
 });
 completionBtn.addEventListener('click', function() {
-  if(completionMap.has(lastCodeClicked)) {
-    completionMap.set(lastCodeClicked, (completionMap.get(lastCodeClicked) + 1) % 4);
-  } else {
-    completionMap.set(lastCodeClicked, 0);
-  }
   changeCompletion(lastCodeClicked);
+  changeCompletionButtonLook(lastCodeClicked);
 });
 function changeCompletion(code) {
+  if(completionMap.has(code)) {
+    completionMap.set(code, (completionMap.get(code) + 1) % 4);
+  } else {
+    completionMap.set(code, 0);
+  }
+}
+function changeCompletionButtonLook(code) {
   if(completionMap.has(code)) {
     switch(completionMap.get(code)) {
       case completions.inprogress:
@@ -1005,9 +1008,52 @@ function saveCourseWork() {
 // process json file loaded (these completely replace current data)
 function processJSON(json) {
   // bug fix need this here
-  lastCodeClicked = "";
-  lastNodeTypeClicked = null;
-  editNodesDiv.style.display = "none";
+  switch(json.fileType) {
+    case "courselayout":
+      clearLayout();
+      processCourseLayout(json);
+      break;
+    case "coursework":
+      clearCoursework();
+      processCoursework(json);
+      break;
+  }
+}
+function processCoursework(json) {
+  let jsonmap = json.completionMap;
+  if(jsonmap !== null && jsonmap !== undefined) {
+    const remap = new Map(Object.entries(jsonmap));
+    remap.forEach((value, key) => {
+      if(completionMap.has(key)) {
+        if(completionMap.get(key) < value || completionMap.get(key) === completions.incomplete)
+          completionMap.set(key, value);
+      } else {
+        completionMap.set(key, value);
+      }
+    });
+  }
+}
+function processCourseLayout(json) {
+  let jsonlist = json.courses;
+  jsonlist.forEach((course) => {
+    pushElement(courseList, courseMap, course);
+  });
+  jsonlist = json.notes;
+  jsonlist.forEach((note) => {
+    pushElement(noteList, noteMap, note);
+  });
+  jsonlist = json.subnodes;
+  jsonlist.forEach((subnode) => {
+    pushElement(subnodeboxesList, subnodeboxesMap, subnode);
+  });
+  jsonlist = json.lines;
+  jsonlist.forEach((line) => {
+    lineList.push(line);
+  });
+}
+// process json file loaded but append rather than replace
+// this may look like a simple addition, but that's because I changed everything else
+function processJSONAppend(json) {
   switch(json.fileType) {
     case "courselayout":
       processCourseLayout(json);
@@ -1016,45 +1062,6 @@ function processJSON(json) {
       processCoursework(json);
       break;
   }
-}
-function processCoursework(json) {
-  makeMap(completionMap, json.completionMap);
-}
-function processCourseLayout(json) {
-  // json stuff
-  let jsonlist = json.courses;
-  // have to do it this way instead of a helper because js is crazy
-  // array = new array - pass by value
-  // array[index] = new thing - pass by reference
-  if(jsonlist !== null && jsonlist !== undefined)
-    courseList = jsonlist;
-  makeMap(courseMap, json.coursemap);
-  jsonlist = json.notes;
-  if(jsonlist !== null && jsonlist !== undefined)
-    noteList = jsonlist;
-  makeMap(noteMap, json.notemap);
-  jsonlist = json.subnodes;
-  if(jsonlist !== null && jsonlist !== undefined)
-    subnodeboxesList = jsonlist;
-  makeMap(subnodeboxesMap, json.subnodemap);
-  if(json.lines !== null && json.lines !== undefined)
-    lineList = json.lines;
-}
-function makeMap(map, jsonmap) {
-  if(jsonmap !== null && jsonmap !== undefined) {
-    const remap = new Map(Object.entries(jsonmap));
-    map.clear();
-    remap.forEach((value, key) => {
-      map.set(key, value);
-    });
-  }
-}
-// process json file loaded but append rather than replace
-function processJSONAppend(json) {
-
-}
-function addMap(map, jsonmap) {
-
 }
 
 // -------------------------------- Clear Data -------------------------------- //
@@ -1149,7 +1156,7 @@ function modeChanger(fmode, color) {
 
 // -------------------------------- Draw Function -------------------------------- //
 // movement speed (like moving the camera / all the courses and stuff)
-let movespeed = 5;
+let movespeed = 10;
 // is the mouse dragging an element (for fixing a weird bug)
 let draggingcourse = -1;
 let draggingnote = -1;
