@@ -1800,6 +1800,17 @@ function keyPressed() {
       lineList.pop();
     lineList.push([]);
   }
+  // nice shortcuts time
+  // enter delete mode
+  if(keyCode === DELETE) {
+    modeChanger(modes.delete, "rgb(200, 0, 0)");
+  }
+  // ESCAPE close all forms and templates and whatever
+
+  // ctrl s save course file
+
+  // ctrl shift s save layout file
+  
 }
 //  key typed event not for special keys use keyPressed for those
 function keyTyped() {
@@ -1815,21 +1826,21 @@ function keyTyped() {
   }
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
-  if(key === 'l') {
+  /*if(key === 'l') {
     print(lineList);
-  }
+  }*/
   // I also wanna see the courselist and courseMap for debuggingc
-  if(key === 'c') {
+  /*if(key === 'c') {
     print(courseList);
     print(courseMap);
-  }
+  }*/
   // and notes
-  if(key === 'n') {
+  /*if(key === 'n') {
     print(noteList);
     print(noteMap);
-  }
+  }*/
   // and subnodes bc these are a pain
-  if(key === 's') {
+  /*if(key === 's') {
     print('====== Printing Subnodes ======');
     courseList.forEach(course => {
       print('---------------');
@@ -1843,15 +1854,46 @@ function keyTyped() {
     });
     print(subnodeboxesList);
     print(subnodeboxesMap);
-  }
+  }*/
   // just subnode list and map
-  if(key === 'S') {
+  /*if(key === 'S') {
     subnodeboxesList.forEach(subnodebox => {
       print(subnodebox.code);
     });
     subnodeboxesMap.forEach((value, key) => {
       print(value + ":" + key)
     });
+  }*/
+  // now time for some shortcuts to use this faster
+  // toggle edit mode
+  if(key === 'e') {
+    modeChanger(modes.edit, "rgb(0, 0, 200)");
+  }
+  // toggle delete mode
+  if(key === 'q') {
+    modeChanger(modes.delete, "rgb(200, 0, 0)");
+  }
+  // toggle draw mode
+  if(key === 'r') {
+    if(mode !== modes.draw)
+      lineList.push([]);
+    modeChanger(modes.draw, "rgb(0, 200, 0)");
+  }
+  // open add a course form
+  if(key === 'c') {
+
+  }
+  // open add a note form
+  if(key === 'g') {
+
+  }
+  // open file loader form
+  if(key === 'x') {
+
+  }
+  // open help menu
+  if(key === 'h') {
+
   }
 }
 
