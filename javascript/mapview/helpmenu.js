@@ -7,9 +7,18 @@
 // display the help menu
 const helpDiv = document.querySelector('.help-menu-div');
 const openHelpBtn = document.querySelector('#openhelp');
+let setupAlready = false;
 openHelpBtn.addEventListener('click', function() {
   helpDiv.style.display = 'flex';
+  if(!setupAlready) {
+    setupButtons();
+    setupAlready = true;
+  }
 });
+const closeHelpBtn = document.querySelector('#closehelp');
+closeHelpBtn.addEventListener('click', function() {
+  helpDiv.style.display = 'none';
+})
 // ok, now let's create a million references
 let buttons = {
   overview: 0,
@@ -23,7 +32,8 @@ let buttons = {
   closehelp: 8
 };
 const buttonsList = document.querySelectorAll('.helpbutton');
-
-function handleButton() {
-
+function setupButtons() {
+  buttonsList.forEach((button, index, array) => {
+    
+  });
 }
