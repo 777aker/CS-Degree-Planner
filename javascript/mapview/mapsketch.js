@@ -1810,7 +1810,7 @@ function keyPressed() {
   // ctrl s save course file
 
   // ctrl shift s save layout file
-  
+
 }
 //  key typed event not for special keys use keyPressed for those
 function keyTyped() {
