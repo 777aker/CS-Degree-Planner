@@ -7,9 +7,15 @@
 // display the help menu
 const helpDiv = document.querySelector('.help-menu-div');
 const openHelpBtn = document.querySelector('#openhelp');
+const defaultViewDiv = document.querySelector('#overviewdiv');
 let setupAlready = false;
 openHelpBtn.addEventListener('click', function() {
   helpDiv.style.display = 'flex';
+  divsList.forEach(tmpdiv => {
+    tmpdiv.style.display = 'none';
+  });
+  defaultViewDiv.style.display = 'flex';
+  typing = true;
   if(!setupAlready) {
     setupButtons();
     setupAlready = true;
@@ -18,22 +24,24 @@ openHelpBtn.addEventListener('click', function() {
 const closeHelpBtn = document.querySelector('#closehelp');
 closeHelpBtn.addEventListener('click', function() {
   helpDiv.style.display = 'none';
+  typing = false;
 })
 // ok, now let's create a million references
-let buttons = {
-  overview: 0,
-  defaultview: 1,
-  filedropdown: 2,
-  editdropdown: 3,
-  viewdropdown: 4,
-  shortcuts: 5,
-  advanceduses: 6,
-  credits: 7,
-  closehelp: 8
-};
+// wait, actually, what if I did this smart and not bad
 const buttonsList = document.querySelectorAll('.helpbutton');
+const divsList = document.querySelectorAll('.helpdivs');
 function setupButtons() {
-  buttonsList.forEach((button, index, array) => {
-    
+  buttonsList.forEach(button => {
+    if(button.id === "closehelp")
+      return;
+    const div = document.querySelector(`#${button.id}div`);
+    button.addEventListener('click', function() {
+      // TODO: change your style here to be toggled on @button
+      // Also turn off everyone else's
+      divsList.forEach(tmpdiv => {
+        tmpdiv.style.display = 'none';
+      });
+      div.style.display = 'flex';
+    });
   });
 }

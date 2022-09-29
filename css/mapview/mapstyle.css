@@ -248,7 +248,6 @@
   border-radius: 4px;
   height: 80%;
   width: 90%;
-  overflow-y: auto;
   justify-content: flex-start;
 }
 
@@ -260,12 +259,23 @@
   margin: 0px 0px;
 }
 
+/* TODO: this is where you edit them and stuff */
 .helpbutton {
   padding: 10px 10px;
 }
 
 .help-right-content {
   flex: 5;
+  display: block;
   border: 2px solid black;
   margin: 0px 0px;
+}
+
+/* the divs stuff time */
+.helpdivs {
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
 }
