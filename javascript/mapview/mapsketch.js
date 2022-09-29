@@ -764,7 +764,22 @@ editNodeBtn.addEventListener('click', function() {
 const showNodeBtn = document.querySelector("#nodeinfo");
 showNodeBtn.addEventListener('click', function() {
   // TODO: view node information
+  if(lastNodeTypeClicked === nodeTypes.course)
+    openCourseHTML(lastCodeClicked);
 });
+function openCourseHTML(code) {
+  if(doesFileExist(`../../coursehtmls/${lastCodeClicked}.html`)) {
+     window.open(`../../coursehtmls/${lastCodeClicked}.html`);
+  } else {
+    window.open(`../../coursehtmls/`);
+  }
+}
+function doesFileExist(path) {
+  let http = new XMLHttpRequest();
+  http.open('HEAD', path, false);
+  http.send();
+  return http.status != 404;
+}
 const closeNodeBtn = document.querySelector("#closeeditnode");
 closeNodeBtn.addEventListener("click", closeNodeOptions);
 function closeNodeOptions() {
@@ -1138,7 +1153,7 @@ function modeChanger(fmode, color) {
     button.style.color = "rgb(0, 0, 0)";
   });
   // if we are in the mode of the button we just pressed then clear mode
-  if(mode === fmode) {
+  if(mode === fmode || fmode === modes.none) {
     mode = modes.none;
   } else {
     mode = fmode;
@@ -1784,117 +1799,6 @@ function mouseReleased() {
   draggingnote = -1;
   subnodecourse = -1;
   subnodenote = -1;
-}
-
-// -------------------------------- Keyboard Events -------------------------------- //
-// special key pressed
-function keyPressed() {
-  // this stupid collapse function thingy doesn't show up for this one
-  // oh, I figured out how to fix it though, hover over the line number then
-  // it'll fix all the stupid little arrows so you can collapse functions
-
-  // if you press enter in drawing mode finish the line and start a new one
-  if(keyCode === ENTER && mode === modes.draw) {
-    // if the line was too short jk, just pop it and start a new one
-    if(lineList[lineList.length - 1].length < 2)
-      lineList.pop();
-    lineList.push([]);
-  }
-  // nice shortcuts time
-  // enter delete mode
-  if(keyCode === DELETE) {
-    modeChanger(modes.delete, "rgb(200, 0, 0)");
-  }
-  // ESCAPE close all forms and templates and whatever
-
-  // ctrl s save course file
-
-  // ctrl shift s save layout file
-
-}
-//  key typed event not for special keys use keyPressed for those
-function keyTyped() {
-  // shouldn't be used because will fill out course forms
-  // nevermind I fixed that with the typing variable
-  // so if typing return
-  if(typing)
-    return;
-  // make the software go fullscreen because that's nice
-  if(key === 'f' || key === 'F') {
-    let fs = fullscreen();
-    fullscreen(!fs);
-  }
-  // I needed a way in drawing mode to see what was going on when debugging
-  // (ironic for a drawing mode)
-  /*if(key === 'l') {
-    print(lineList);
-  }*/
-  // I also wanna see the courselist and courseMap for debuggingc
-  /*if(key === 'c') {
-    print(courseList);
-    print(courseMap);
-  }*/
-  // and notes
-  /*if(key === 'n') {
-    print(noteList);
-    print(noteMap);
-  }*/
-  // and subnodes bc these are a pain
-  /*if(key === 's') {
-    print('====== Printing Subnodes ======');
-    courseList.forEach(course => {
-      print('---------------');
-      print(course.code);
-      print(course.subnodes);
-    });
-    noteList.forEach(note => {
-      print('---------------');
-      print(note.code);
-      print(note.subnodes);
-    });
-    print(subnodeboxesList);
-    print(subnodeboxesMap);
-  }*/
-  // just subnode list and map
-  /*if(key === 'S') {
-    subnodeboxesList.forEach(subnodebox => {
-      print(subnodebox.code);
-    });
-    subnodeboxesMap.forEach((value, key) => {
-      print(value + ":" + key)
-    });
-  }*/
-  // now time for some shortcuts to use this faster
-  // toggle edit mode
-  if(key === 'e') {
-    modeChanger(modes.edit, "rgb(0, 0, 200)");
-  }
-  // toggle delete mode
-  if(key === 'q') {
-    modeChanger(modes.delete, "rgb(200, 0, 0)");
-  }
-  // toggle draw mode
-  if(key === 'r') {
-    if(mode !== modes.draw)
-      lineList.push([]);
-    modeChanger(modes.draw, "rgb(0, 200, 0)");
-  }
-  // open add a course form
-  if(key === 'c') {
-
-  }
-  // open add a note form
-  if(key === 'g') {
-
-  }
-  // open file loader form
-  if(key === 'x') {
-
-  }
-  // open help menu
-  if(key === 'h') {
-
-  }
 }
 
 // -------------------------------- Miscellaneous Events -------------------------------- //

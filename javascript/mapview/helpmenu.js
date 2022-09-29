@@ -9,7 +9,8 @@ const helpDiv = document.querySelector('.help-menu-div');
 const openHelpBtn = document.querySelector('#openhelp');
 const defaultViewDiv = document.querySelector('#overviewdiv');
 let setupAlready = false;
-openHelpBtn.addEventListener('click', function() {
+openHelpBtn.addEventListener('click', openHelp);
+function openHelp() {
   helpDiv.style.display = 'flex';
   divsList.forEach(tmpdiv => {
     tmpdiv.style.display = 'none';
@@ -20,12 +21,13 @@ openHelpBtn.addEventListener('click', function() {
     setupButtons();
     setupAlready = true;
   }
-});
+}
 const closeHelpBtn = document.querySelector('#closehelp');
-closeHelpBtn.addEventListener('click', function() {
+closeHelpBtn.addEventListener('click', closeHelp);
+function closeHelp() {
   helpDiv.style.display = 'none';
   typing = false;
-})
+}
 // ok, now let's create a million references
 // wait, actually, what if I did this smart and not bad
 const buttonsList = document.querySelectorAll('.helpbutton');
