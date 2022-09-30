@@ -768,12 +768,24 @@ showNodeBtn.addEventListener('click', function() {
     openCourseHTML(lastCodeClicked);
 });
 function openCourseHTML(code) {
-  if(doesFileExist(`../../coursehtmls/${lastCodeClicked}.html`)) {
-     window.open(`../../coursehtmls/${lastCodeClicked}.html`);
+  lastWindowOpened = code;
+  print(lastWindowOpened);
+  if(doesFileExist(`../../coursehtmls/${code}.html`)) {
+     window.open(`../../coursehtmls/${code}.html`);
   } else {
-    window.open(`../../coursehtmls/`);
+    let win = window.open(`../../coursehtmls/`);
+    win.addEventListener('load', function() {
+      win.changeCode(code);
+    });
   }
+  /*else {
+    window.open(`https://catalog.colorado.edu/search/?search=${code}`);
+  }*/
+  /*else {
+    window.open(`../../coursehtmls/`);
+  }*/
 }
+let lastWindowOpened = "";
 function doesFileExist(path) {
   let http = new XMLHttpRequest();
   http.open('HEAD', path, false);
