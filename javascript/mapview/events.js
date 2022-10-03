@@ -130,3 +130,36 @@ function keyTyped() {
     clearDiv.style.display = 'block';
   }
 }
+
+// -------------------------------- Mouse Events -------------------------------- //
+// when mouse is pressed do some stuff
+function mousePressed() {
+
+}
+// do a zoom when mouseWheel moved
+function mouseWheel(event) {
+  if(typing)
+    return;
+  zoom += -event.delta / 1000;
+  if(zoom < .2)
+    zoom = .2;
+  if(zoom > 3)
+    zoom = 3;
+}
+// when mouse is released do these things
+function mouseReleased() {
+  // no longer dragging a course
+  draggingcourse = -1;
+  draggingnote = -1;
+  subnodecourse = -1;
+  subnodenote = -1;
+}
+
+// -------------------------------- Miscellaneous Events -------------------------------- //
+// if the window is resized this function is called
+function windowResized() {
+  // resize the canvas to fit the screen
+  resizeCanvas(windowWidth-20, windowHeight-20);
+  // set background color
+  background(220);
+}
