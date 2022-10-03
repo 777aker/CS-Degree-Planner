@@ -6,8 +6,23 @@
     <title>Degree Planner Map View</title>
     <script src="p5/p5.js"></script>
     <!-- defer so it can actually find stuff and not break -->
+    <!-- global variables everything uses first -->
     <script defer src="javascript/mapview/mapsketch.js"></script>
+    <!-- how we throw and deal with errors -->
+    <script defer src="javascript/mapview/error.js"></script>
+    <!-- nice helper functions for convenience -->
+    <script defer src="javascript/mapview/helperfunctions.js"></script>
+    <!-- you won't beleive this based on the name, but this sets up stuff.... crazy -->
+    <script defer src="javascript/mapview/setup.js"></script>
+    <!-- how we add a course to the layout -->
+    <script defer src="javascript/mapview/courseadding.js"></script>
+    <!-- how we add a note to the layout -->
+    
+    <!-- This is where all the help menu stuff is -->
     <script defer src="javascript/mapview/helpmenu.js"></script>
+
+
+    <!-- This one should load last because events should be able to access everything else -->
     <script defer src="javascript/mapview/keyevents.js"></script>
     <link rel="stylesheet" href="css/mapview/mapstyle.css">
   </head>
