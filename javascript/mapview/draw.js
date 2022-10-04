@@ -168,7 +168,7 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
       else
         drawingContext.setLineDash([10, 10]);
       break;
-    case completions.inprogress:
+    case completions.available:
       if(red) {
         grad.addColorStop(0, 'rgba(255, 100, 100, 200)');
         grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
@@ -285,6 +285,21 @@ const courseListHandler = (course, index, arr) => {
       drawMode(course, mouseHovering);
       break;
     default:
+      //TODO: expensive ish? rethink ways to do this
+      if(completionMap.get(course.code) === completions.incomplete) {
+        let available = true;
+        course.prerequisites.forEach(prereqgroup => {
+          let groupcomplete = false;
+          prereqgroup.forEach(prereq => {
+            let prev = completionMap.get(prereq);
+            if(prev === completions.inprogress || prev === completions.complete)
+              groupcomplete = true;
+          });
+          available = available && groupcomplete;
+        });
+        if(available)
+          completionMap.set(course.code, completions.available);
+      }
       if(mouseHovering)
         openNodeOptions(nodeTypes.course, course);
   }
@@ -430,7 +445,7 @@ const noteListHandler = (note, index, arr) => {
 function boxFill(code, mh) {
   switch(completionMap.get(code)) {
     case completions.planned:
-    case completions.inprogress:
+    case completions.available:
       stroke(0, 0, 0);
       if(mh) {
         fill(230, 230, 230);
@@ -470,7 +485,7 @@ function textFill(code) {
       g = 50;
       b = 50;
       break;
-    case completions.inprogress:
+    case completions.available:
       r = 0;
       g = 0;
       b = 0;

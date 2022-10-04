@@ -181,6 +181,19 @@ function createButtonAboveTarget(form, target, id, value, func, title) {
   form.insertBefore(tempbutton, target);
   tempbutton.addEventListener('click', func);
 }
+// now time for some checkboxes
+function createCheckboxes(form, id, value) {
+  let tempcheck = document.createElement("input");
+  tempcheck.setAttribute("type", "checkbox");
+  tempcheck.setAttribute("id", id);
+  tempcheck.setAttribute("name", id);
+  form.appendChild(tempcheck);
+  let templabel = document.createElement("label");
+  templabel.setAttribute("for", id);
+  templabel.innerHTML = value;
+  form.appendChild(templabel);
+  return tempcheck;
+}
 // map and list helper functions
 /* this will help us delete things properly
 basically making these because I had impossible to find bugs because I didn't

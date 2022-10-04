@@ -78,6 +78,7 @@ let completions = {
   inprogress: 1,
   complete: 2,
   incomplete: 3,
+  available: 4,
 };
 let completionMap = new Map();
 

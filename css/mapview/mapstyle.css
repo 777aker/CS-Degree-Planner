@@ -204,13 +204,21 @@
   position: absolute;
   top: 0;
   left: 0;
-  flex-direction: row;
-  gap: 10px;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 5px 5px;
 }
 
-/* edit nodes buttons */
-.edit-nodes-div>button {
-  padding: 5px 5px;
+/* edit nodes form */
+.edit-node-form {
+  
+}
+
+/* the p are really spaced so getting rid of that */
+.edit-node-form>p {
+  margin: 0px 0px;
+  padding: 0px 0px;
 }
 
 /* div holding clear data form */
