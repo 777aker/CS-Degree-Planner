@@ -43,6 +43,10 @@ function setupButtons() {
       divsList.forEach(tmpdiv => {
         tmpdiv.style.display = 'none';
       });
+      buttonsList.forEach(tmpbutton => {
+        tmpbutton.style.background = "rgb(255, 255, 255)";
+      });
+      button.style.background = "rgb(200, 200, 200)";
       div.style.display = 'flex';
     });
   });

@@ -137,10 +137,10 @@ function mousePressed() {
 
 }
 // do a zoom when mouseWheel moved
-function mouseWheel(event) {
+function mouseWheel(delta) {
   if(typing)
     return;
-  zoom += -event.delta / 1000;
+  zoom += -delta / 1000;
   if(zoom < .2)
     zoom = .2;
   if(zoom > 3)
@@ -154,6 +154,18 @@ function mouseReleased() {
   subnodecourse = -1;
   subnodenote = -1;
 }
+// have to disable default zoom because it makes program weird
+document.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if(e.ctrlKey) {
+    mouseWheel((e.deltaX + e.deltaY)*10dd);
+  } else {
+    mouseWheel(e.deltaX + e.deltaY);
+  }
+}, {
+  passive: false
+});
 
 // -------------------------------- Miscellaneous Events -------------------------------- //
 // if the window is resized this function is called
