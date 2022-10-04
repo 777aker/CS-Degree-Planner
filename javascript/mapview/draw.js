@@ -322,7 +322,7 @@ const courseListHandler = (course, index, arr) => {
     }
   } else {
     // subnodes can change in lots of ways, so each frame just check on and update your subnodes
-    updateSubnodes(course, mouseHovering);
+    updateSubnodes(course, mouseHovering, true);
   }
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
   noStroke();
@@ -410,8 +410,11 @@ const noteListHandler = (note, index, arr) => {
       drawMode(note, mouseHovering);
       break;
     default:
-      if(mouseHovering)
+      if(mouseHovering) {
         openNodeOptions(nodeTypes.note, note);
+      } else if(note.code === lastCodeClicked) {
+        closeNodeOptions();
+      }
   }
   if(note.subnodes.length === 0) {
     if(subnodeboxesMap.has(note.code)) {
@@ -419,7 +422,7 @@ const noteListHandler = (note, index, arr) => {
     }
   } else {
     // subnodes can change in lots of ways, so each frame just check on and update your subnodes
-    updateSubnodes(note, mouseHovering);
+    updateSubnodes(note, mouseHovering, false);
   }
   // don't want stroke on text
   noStroke();
@@ -533,7 +536,7 @@ const subnodeHandler = (subnode, ind, arr) => {
   });
 };
 // actually, changed my mind, this is a function that will update a nodes subnodes
-function updateSubnodes(node, mh) {
+function updateSubnodes(node, mh, childrencompletion) {
   // sadly, this should just happen every frame for now since so many things effect this
   // this is the box around this course that holds all the subnodes
   let subnodebox = {
@@ -548,6 +551,8 @@ function updateSubnodes(node, mh) {
   let insetx = node.x - node.width/2 + subnodeinset/2;
   // well subnodebox isn't the box yet, we gotta calculate all it's stuff
   node.subnodes.forEach((sub, ind, ar) => {
+    if(childrencompletion)
+      completionMap.set(sub, completionMap.get(node.code));
     subnodeboxmaker(node, mh, subnodebox, sub, ind, ar, insetx);
   });
   // now we have to update our map and list with our new subnodebox
