@@ -172,6 +172,15 @@ function createFormButtonWithTitle(form, id, value, func, title) {
   form.appendChild(tempbutton);
   tempbutton.addEventListener('click', func);
 }
+function createButtonAboveTarget(form, target, id, value, func, title) {
+  let tempbutton = document.createElement("input");
+  tempbutton.setAttribute("id", id);
+  tempbutton.setAttribute("type", "button");
+  tempbutton.setAttribute("value", value);
+  tempbutton.setAttribute("title", title);
+  form.insertBefore(tempbutton, target);
+  tempbutton.addEventListener('click', func);
+}
 // map and list helper functions
 /* this will help us delete things properly
 basically making these because I had impossible to find bugs because I didn't

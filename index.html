@@ -30,6 +30,8 @@
     <script defer src="javascript/mapview/draw.js"></script>
     <!-- This is where all the help menu stuff is -->
     <script defer src="javascript/mapview/helpmenu.js"></script>
+    <!-- Advanced uses handler -->
+    <script defer src="javascript/mapview/advancedmode.js"></script>
     <!-- This one should load last because events should be able to access everything else -->
     <script defer src="javascript/mapview/events.js"></script>
     <link rel="stylesheet" href="css/mapview/mapstyle.css">
@@ -107,6 +109,7 @@
         <form class="add-course-form">
           <!-- form filled out through javascript -->
         </form>
+        <hr>
         <!-- Need these outside the form so appended nodes go on properly -->
         <button type="button" id="submitcourse" name="submitcourse">Submit Course Form</button><br>
         <br>

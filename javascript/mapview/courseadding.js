@@ -29,6 +29,8 @@ function addCourse() {
   // I'm leaving it though hehehe
   // this is the button to add a group of prerequisites that fulfill the same requirement
   // if you're confused about this next part function submitCourse explains what's happening here a little better
+  const hr = document.createElement('hr');
+  addCourseForm.appendChild(hr);
   createFormButtonWithTitle(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup,
     "This will add a group of prerequisites. Each group should contain prerequisites that fulfill the same requirement");
   // remove a prereq group (does opposite of previous button)
@@ -48,10 +50,6 @@ function editCourse() {
   createFormTextFieldWithValue(addCourseForm, "Course Code:", "coursecode", "Enter Course Code", course.code, false);
   createFormTextFieldWithValue(addCourseForm, "Credit Hours:", "ch", "Enter Credit Hours", course.credits, false);
   createFormTextFieldWithValue(addCourseForm, "Course Name:", "coursename", "Enter Course Name", course.name, false);
-  createFormButtonWithTitle(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup,
-    "This will add a group of prerequisites. Each group should contain prerequisites that fulfill the same requirement");
-  createFormButtonWithTitle(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup,
-    "This will remove the bottommost list of prerequisites");
   // now time for the complicated part of this
   // for each group of prereqs create a div
   if(course.prerequisites !== undefined && course.prerequisites !== null) {
@@ -90,6 +88,10 @@ function editCourse() {
       });
     });
   }
+  createFormButtonWithTitle(addCourseForm, "addprereqgroup", "Add Prerequisite Group", addPrereqGroup,
+    "This will add a group of prerequisites. Each group should contain prerequisites that fulfill the same requirement");
+  createFormButtonWithTitle(addCourseForm, "removeprereqgroup", "Remove Prerequisite Group", removePrereqGroup,
+    "This will remove the bottommost list of prerequisites");
   addCourseDiv.style.display = 'block';
 }
 // remove a prerequisite group
@@ -119,7 +121,8 @@ function addPrereqGroup() {
   // need to put all prereqs in a div so we can get to them easily later
   let groupdiv = document.createElement("div");
   groupdiv.setAttribute("class", "prereqGroupDiv");
-  addCourseForm.appendChild(groupdiv);
+  let addabove = document.querySelector("#addprereqgroup");
+  addCourseForm.insertBefore(groupdiv, addabove);
   // create prerequisite text boxes under div
   // spoiler, further along I get annoyed with typing 5 lines for a stupid text box
   // realized I had a helper just need to change a few things
@@ -132,7 +135,7 @@ function addPrereqGroup() {
   prereqbtn.setAttribute("class", "addPrereqBtn");
   prereqbtn.setAttribute("value", "Add Same Requirement Prerequisite");
   prereqbtn.setAttribute("title", "Add another prerequisite code that fulfills the same requirement");
-  addCourseForm.appendChild(prereqbtn);
+  addCourseForm.insertBefore(prereqbtn, addabove);
   // whenever add prereq button clicked create more prereq fields in that div
   prereqbtn.addEventListener('click', function(){
     // why is it 5 lines to make a text box, should I fix that?...nah I don't want to rn
@@ -145,7 +148,7 @@ function addPrereqGroup() {
   prereqbtn.setAttribute("class", "removePrereqBtn");
   prereqbtn.setAttribute("value", "Remove Prerequisite");
   prereqbtn.setAttribute("title", "Remove most recently added prerequisite code box");
-  addCourseForm.appendChild(prereqbtn);
+  addCourseForm.insertBefore(prereqbtn, addabove);
   // whenever remove is clicked remove the last prerequisite of the group
   // even works if some jerk decides to press the button a million times
   // and there are no prerequisites left

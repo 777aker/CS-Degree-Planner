@@ -17,6 +17,8 @@ function setup() {
   setUpTemplates();
   // go ahead and load CS by default
   openTemplate("Computer-Science-BS-template.json");
+  // hide advanced uses
+  hideUses();
 }
 // set up the buttons for the edit menu
 function editMenuSetUp() {

@@ -81,6 +81,35 @@ function keyTyped() {
       print(value + ":" + key)
     });
   }*/
+  // open help menu
+  if(key === 'h') {
+    openHelp();
+  }
+  // open templates
+  if(key === 't') {
+    templatediv.style.display = 'block';
+  }
+  // open file loader form
+  if(key === 'x') {
+    clearAndReplace.checked = false;
+    fileloader.style.display = 'block';
+  }
+  // shift s save course file
+  if(key === 'S') {
+    saveCourseWork();
+  }
+  // open clear form
+  if(key === 'l') {
+    clearDiv.style.display = 'block';
+  }
+  if(key === 'g') {
+    if(throwError("WARNING: about to enable advanced uses")) {
+      showUses();
+    }
+  }
+  // but first, disable all advanced uses, which is all of these
+  if(!advanceduses)
+    return;
   // now time for some shortcuts to use this faster
   // toggle edit mode
   if(key === 'e') {
@@ -101,33 +130,12 @@ function keyTyped() {
     addCourse();
   }
   // open add a note form
-  if(key === 'g') {
+  if(key === 'n') {
     addNote();
-  }
-  // open file loader form
-  if(key === 'x') {
-    clearAndReplace.checked = false;
-    fileloader.style.display = 'block';
-  }
-  // open help menu
-  if(key === 'h') {
-    openHelp();
-  }
-  // open templates
-  if(key === 't') {
-    templatediv.style.display = 'block';
-  }
-  // shift s save course file
-  if(key === 'S') {
-    saveCourseWork();
   }
   // shift e save layout
   if(key === 'E') {
     saveCourseLayout();
-  }
-  // open clear form
-  if(key === 'l') {
-    clearDiv.style.display = 'block';
   }
 }
 
@@ -156,6 +164,8 @@ function mouseReleased() {
 }
 // have to disable default zoom because it makes program weird
 document.addEventListener('wheel', function(e) {
+  if(typing)
+    return;
   e.preventDefault();
   e.stopPropagation();
   if(e.ctrlKey) {
@@ -164,8 +174,6 @@ document.addEventListener('wheel', function(e) {
     // this confused me a little so writing out logic
     // if wheeldeltaY then if wheeldeltay = -3 deltay trackpad else not
     // if wheeldeltay is false, then use deltamode to check
-    let isTouchPad = e.wheelDeltaY ? e.wheelDeltaY === -3 * e.deltaY : e.deltaMode === 0
-    print(`X:${e.deltaX}, Y:${e.deltaY}`);
     mouseWheel(e.deltaX + e.deltaY);
   }
 }, {
