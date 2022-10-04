@@ -3,6 +3,12 @@
 // actually, it's its own section
 // opens the buttons that allow you to edit the last clicked element
 const editNodesDiv = document.querySelector(".edit-nodes-div");
+editNodesDiv.addEventListener('mouseover', function() {
+  typing = true;
+});
+editNodesDiv.addEventListener('mouseleave', function() {
+  closeNodeOptions();
+});
 const editNodeBtn = document.querySelector("#editnode");
 editNodeBtn.addEventListener('click', function() {
   switch(lastNodeTypeClicked) {
@@ -46,32 +52,12 @@ function doesFileExist(path) {
   http.send();
   return http.status != 404;
 }
-const closeNodeBtn = document.querySelector("#closeeditnode");
-closeNodeBtn.addEventListener("click", closeNodeOptions);
 function closeNodeOptions() {
+  typing = false;
   lastCodeClicked = "";
   lostNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
 }
-// simple bug fix (the typing variable is a god send)
-editNodeBtn.addEventListener('mouseover', function() {
-  typing = true;
-});
-editNodeBtn.addEventListener('mouseleave', function() {
-  typing = false;
-});
-showNodeBtn.addEventListener('mouseover', function() {
-  typing = true;
-});
-showNodeBtn.addEventListener('mouseleave', function() {
-  typing = false;
-});
-closeNodeBtn.addEventListener('mouseover', function() {
-  typing = true;
-});
-closeNodeBtn.addEventListener('mouseleave', function() {
-  typing = false;
-});
 // time to actually show the buttons
 let lastNodeTypeClicked;
 function openNodeOptions(nodeType, node) {
@@ -80,6 +66,10 @@ function openNodeOptions(nodeType, node) {
     return;
   editNodesDiv.style.display = "flex";
   lastNodeTypeClicked = nodeType;
+  if(nodeType === nodeTypes.note)
+    showNodeBtn.style.display = 'none';
+  else
+    showNodeBtn.style.display = 'block';
   lastCodeClicked = node.code;
   // fill in completed
   changeCompletionButtonLook(node.code);

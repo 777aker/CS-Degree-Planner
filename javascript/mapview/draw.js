@@ -285,7 +285,7 @@ const courseListHandler = (course, index, arr) => {
       drawMode(course, mouseHovering);
       break;
     default:
-      if(mouseIsPressed && mouseHovering)
+      if(mouseHovering)
         openNodeOptions(nodeTypes.course, course);
   }
   // if we don't have any subnodes then break and remove us form the subnodes list
@@ -391,7 +391,7 @@ const noteListHandler = (note, index, arr) => {
       drawMode(note, mouseHovering);
       break;
     default:
-      if(mouseIsPressed && mouseHovering)
+      if(mouseHovering)
         openNodeOptions(nodeTypes.note, note);
   }
   if(note.subnodes.length === 0) {
