@@ -159,8 +159,13 @@ document.addEventListener('wheel', function(e) {
   e.preventDefault();
   e.stopPropagation();
   if(e.ctrlKey) {
-    mouseWheel((e.deltaX + e.deltaY)*10dd);
+    mouseWheel((e.deltaX + e.deltaY)*10);
   } else {
+    // this confused me a little so writing out logic
+    // if wheeldeltaY then if wheeldeltay = -3 deltay trackpad else not
+    // if wheeldeltay is false, then use deltamode to check
+    let isTouchPad = e.wheelDeltaY ? e.wheelDeltaY === -3 * e.deltaY : e.deltaMode === 0
+    print(`X:${e.deltaX}, Y:${e.deltaY}`);
     mouseWheel(e.deltaX + e.deltaY);
   }
 }, {
