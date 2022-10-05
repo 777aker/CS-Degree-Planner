@@ -30,10 +30,17 @@ function doesFileExist(path) {
 // form we populate
 const editNodeForm = document.querySelector(".edit-node-form");
 // close everything
+let disabled = false;
 function closeNodeOptions() {
+  if(disabled)
+    return;
   typing = false;
   lastCodeClicked = "";
-  lostNodeTypeClicked = null;
+  lastNodeTypeClicked = null;
+  editNodesDiv.style.display = "none";
+}
+function openEditMenu() {
+  disabled = true;
   editNodesDiv.style.display = "none";
 }
 // time to actually show the buttons
@@ -43,6 +50,7 @@ function openNodeOptions(nodeType, node) {
   if(typing)
     return;
   typing = true;
+  disabled = false;
   editNodesDiv.style.display = "block";
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;

@@ -412,8 +412,6 @@ const noteListHandler = (note, index, arr) => {
     default:
       if(mouseHovering) {
         openNodeOptions(nodeTypes.note, note);
-      } else if(note.code === lastCodeClicked) {
-        closeNodeOptions();
       }
   }
   if(note.subnodes.length === 0) {
@@ -422,7 +420,16 @@ const noteListHandler = (note, index, arr) => {
     }
   } else {
     // subnodes can change in lots of ways, so each frame just check on and update your subnodes
-    updateSubnodes(note, mouseHovering, false, true);
+    updateSubnodes(note, mouseHovering, false, !note.gate);
+  }
+  if(note.gate) {
+    let completion = completions.incomplete;
+    note.connections.forEach(connection => {
+      let subcomp = completionMap.get(connection);
+      if(subcomp > completion)
+        completion = subcomp;
+    });
+    completionMap.set(note.code, completion);
   }
   // don't want stroke on text
   noStroke();

@@ -21,6 +21,7 @@ The title will be bold and the text will be the default font. Both are optional`
   createFormTextArea(addNoteForm, "Note Text:", "notetext",
 `Text of the note (Optional).
 Will need to hit enter if you want line breaks`, true);
+  createCheckboxes(addNoteForm, "gate", "Gate");
   // make it visible
   addNoteDiv.style.display = 'block';
 }
@@ -30,6 +31,7 @@ function editNote() {
   typing = true;
   // clear the form
   addNoteForm.innerHTML = '';
+  openEditMenu();
   // create the labels and inputs for the form
   let tempnote = noteList[noteMap.get(lastCodeClicked)];
   createFormText(addNoteForm,
@@ -39,6 +41,8 @@ The title will be bold and the text will be the default font. Both are optional`
   createFormTextAreaWithValue(addNoteForm, "Note Text:", "notetext",
 `Text of the note (Optional)
 Will need to hit enter if you want line breaks`, tempnote.text, true);
+  let gate = createCheckboxes(addNoteForm, "gate", "Gate");
+  gate.checked = tempnote.gate;
   addNoteForm.querySelector('#notetext').innerHTML = tempnote.text;
   // make it visible
   addNoteDiv.style.display = 'block';
@@ -51,16 +55,20 @@ function submitNote() {
   // get info from form
   const title = addNoteForm.querySelector("#notetitle").value;
   const text = addNoteForm.querySelector("#notetext").value;
+  const gate = addNoteForm.querySelector("#gate").checked;
   // notes behind the scenes need unique identifiers for connecting, drawing, and saving
   // so we are going to make a hash map
   // TODO: hash function may need some work since most notes will have same text
   let hash;
   let tmpsubnodes = [];
+  let connections = [];
   if(noteMap.has(lastCodeClicked)) {
     let tmpnote = noteList[noteMap.get(lastCodeClicked)];
     hash = tmpnote.code;
     tmpsubnodes = tmpnote.subnodes;
+    connections = tmpnote.connections;
   } else {
+    print('dont think it has');
     hash = getHash(title + text + noteList.length);
     while(noteMap.has(hash.toString())) {
       hash += 1;
@@ -99,7 +107,9 @@ function submitNote() {
     y: windowHeight / 2,
     width: width,
     height: height,
-    subnodes: tmpsubnodes
+    subnodes: tmpsubnodes,
+    gate: gate,
+    connections: connections === undefined ? [] : connections
   };
   pushElement(noteList, noteMap, note);
   addNoteForm.innerHTML = '';
