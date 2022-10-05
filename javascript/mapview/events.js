@@ -41,6 +41,12 @@ function keyTyped() {
     let fs = fullscreen();
     fullscreen(!fs);
   }
+  if(key === '[') {
+    noteList.forEach(note => {
+      print(note.gate);
+      print(note.connections);
+    });
+  }
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
   /*if(key === 'l') {

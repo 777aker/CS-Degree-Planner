@@ -121,14 +121,14 @@ function inprogressToggle(tf) {
   if(tf)
     completionMap.set(lastCodeClicked, completions.inprogress);
   else
-    completionMap.set(lastCodeClicked, completions.incomplete);
+    completionMap.set(lastCodeClicked, completions.available);
   updateStyles();
 }
 function completeToggle(tf) {
   if(tf)
     completionMap.set(lastCodeClicked, completions.complete);
   else
-    completionMap.set(lastCodeClicked, completions.incomplete);
+    completionMap.set(lastCodeClicked, completions.available);
   updateStyles();
 }
 // TODO: nothing below this valid

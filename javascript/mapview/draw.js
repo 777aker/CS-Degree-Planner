@@ -322,7 +322,7 @@ const courseListHandler = (course, index, arr) => {
     }
   } else {
     // subnodes can change in lots of ways, so each frame just check on and update your subnodes
-    updateSubnodes(course, mouseHovering, true);
+    updateSubnodes(course, mouseHovering, true, false);
   }
   // we were doing a lot of drawing so just remove the stroke don't want it on the text
   noStroke();
@@ -422,7 +422,7 @@ const noteListHandler = (note, index, arr) => {
     }
   } else {
     // subnodes can change in lots of ways, so each frame just check on and update your subnodes
-    updateSubnodes(note, mouseHovering, false);
+    updateSubnodes(note, mouseHovering, false, true);
   }
   // don't want stroke on text
   noStroke();
@@ -536,7 +536,7 @@ const subnodeHandler = (subnode, ind, arr) => {
   });
 };
 // actually, changed my mind, this is a function that will update a nodes subnodes
-function updateSubnodes(node, mh, childrencompletion) {
+function updateSubnodes(node, mh, childrencompletion, reflectChildren) {
   // sadly, this should just happen every frame for now since so many things effect this
   // this is the box around this course that holds all the subnodes
   let subnodebox = {
@@ -550,11 +550,20 @@ function updateSubnodes(node, mh, childrencompletion) {
   // this is how far in we place lines to subnodes
   let insetx = node.x - node.width/2 + subnodeinset/2;
   // well subnodebox isn't the box yet, we gotta calculate all it's stuff
+  let currentcomp = completions.incomplete;
   node.subnodes.forEach((sub, ind, ar) => {
     if(childrencompletion)
       completionMap.set(sub, completionMap.get(node.code));
+    if(reflectChildren) {
+      let subcomp = completionMap.get(sub);
+      if(subcomp > currentcomp || (completionMap.get(node.code) === undefined && subcomp !== undefined)) {
+        currentcomp = subcomp;
+      }
+    }
     subnodeboxmaker(node, mh, subnodebox, sub, ind, ar, insetx);
   });
+  if(reflectChildren)
+    completionMap.set(node.code, currentcomp);
   // now we have to update our map and list with our new subnodebox
   // replace the one that already exists for this, or if it doesn't make a new one
   pushElementNoPosition(subnodeboxesList, subnodeboxesMap, subnodebox);
@@ -625,6 +634,9 @@ function drawMode(node, mouseHovering) {
   if(lastitem.length == 0) {
     lastitem.push(node.code);
   } else if(lastitem[lastitem.length-1] !== node.code) {
+    if(getNodeType(node.code) === nodeTypes.note) {
+      node.connections.push(lastitem[lastitem.length-1]);
+    }
     lastitem.push(node.code);
     lineList.push([]);
   }

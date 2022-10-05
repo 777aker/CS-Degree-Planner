@@ -73,13 +73,6 @@ function importTextArea() {
 /*
   All of this is course layout stuff
 */
-const saveform = document.querySelector(".fileform");
-saveform.addEventListener('mouseover', function() {
-  typing = true;
-});
-saveform.addEventListener('mouseleave', function() {
-  typing = false;
-});
 const savebutton = document.querySelector("#savebtn");
 savebutton.addEventListener('click', saveCourseLayout);
 const savecourseworkbtn = document.querySelector("#courseworksave");

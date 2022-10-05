@@ -187,10 +187,10 @@ function createCheckboxes(form, id, value) {
   tempcheck.setAttribute("type", "checkbox");
   tempcheck.setAttribute("id", id);
   tempcheck.setAttribute("name", id);
-  form.appendChild(tempcheck);
   let templabel = document.createElement("label");
   templabel.setAttribute("for", id);
   templabel.innerHTML = value;
+  templabel.appendChild(tempcheck);
   form.appendChild(templabel);
   return tempcheck;
 }
@@ -263,4 +263,7 @@ function pushElementNoPosition(list, map, element) {
 }
 function getElement(key) {
   return courseMap.has(key) ? courseList[courseMap.get(key)] : noteList[noteMap.get(key)];
+}
+function getNodeType(key) {
+  return courseMap.has(key) ? nodeTypes.course : nodeTypes.note;
 }

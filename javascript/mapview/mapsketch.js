@@ -74,11 +74,11 @@ let subnodeboxesMap = new Map();
 // this is a separate map because I want to actually save it differently than everything else
 // that way you can just load a completed coursework specifically file
 let completions = {
-  planned: 0,
-  inprogress: 1,
-  complete: 2,
-  incomplete: 3,
-  available: 4,
+  incomplete: 0,
+  available: 1,
+  planned: 2,
+  inprogress: 3,
+  complete: 4,
 };
 let completionMap = new Map();
 
@@ -89,5 +89,19 @@ editdropdwn.addEventListener('mouseover', function() {
   typing = true;
 });
 editdropdwn.addEventListener('mouseleave', function() {
+  typing = false;
+});
+const filedropdown = document.querySelector('.save-dropdown');
+filedropdown.addEventListener('mouseover', function() {
+  typing = true;
+});
+filedropdown.addEventListener('mouseleave', function() {
+  typing = false;
+});
+const viewdropdown = document.querySelector('.view-dropdown');
+viewdropdown.addEventListener('mouseover', function() {
+  typing = true;
+});
+viewdropdown.addEventListener('mouseleave', function() {
   typing = false;
 });
