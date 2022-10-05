@@ -41,37 +41,37 @@
       <div class="menus">
         <!-- dropdown menu for saving options -->
         <div class="save-dropdown">
-          <button class="dropbtn" title="This dropdown allows you to load and save different files this program uses">File</button>
+          <button class="dropbtn" title="Load and save different files">File</button>
           <div id="save-content">
             <form class="fileform">
               <input class="filebtn" type="button" id="savebtn" value="Save Course Layout"
-                title='This will save a json file to your computer containing the course layout currently displayed'>
+                title='Download the current course layout'>
               <input class="filebtn" type="button" id="courseworksave" value="Save Coursework"
-                title='This will save your coursework as a json file usable by this program'>
-              <input class="filebtn" type="button" id="openloader" value="Open File Loader"
-                title='This will open a form allowing you to upload files saved to your computer with this software'>
+                title='Download coursework'>
+              <input class="filebtn" type="button" id="openloader" value="Open File"
+                title='Load json file'>
             </form>
             <!-- to add a template look at template div and js template functions -->
-            <button class="filebtn" id="opentemplates" title='These are preset course layouts that show different degrees and the pertinent courses for those degrees'>
-              Open Template Options
+            <button class="filebtn" id="opentemplates" title='Preset course layouts'>
+              Template Options
             </button>
-            <input class="filebtn" type="button" id="clearbtn" value="Reset Data"
-              title="This will allow you to reset certain aspects of the software">
+            <input class="filebtn" type="button" id="clearbtn" value="Clear Data"
+              title="Clear coursework or layout">
           </div>
         </div>
         <!-- dropdown menu for edit mode options -->
         <div class="edit-dropdown">
-          <button class="dropbtn" title="This shows options for editing the course layout">Edit</button>
+          <button class="dropbtn" title="Edit the course layout">Edit</button>
           <div id="edit-content">
             <!-- all buttons placed here in js are class="editbuttons" -->
           </div>
         </div>
         <!-- dropdown menu for view -->
         <div class="view-dropdown">
-          <button class="dropbtn" title="Open various functionality">View</button>
+          <button class="dropbtn">View</button>
           <div id="view-content">
             <button id="openhelp" title="Open Help" class="viewbtn">Help</button>
-            <button id="search" title="Search for item in field below" class="viewbtn">Search</button>
+            <button id="search" title="Search for a course" class="viewbtn">Search</button>
             <input type="text" class="viewbtn" value="" placeholder="Enter Course To Search For">
           </div>
         </div>

@@ -25,19 +25,19 @@ function editMenuSetUp() {
   // uses p5js to make buttons because much easier than actual html nonsense
   // create add course button (made a helper function for this)
   makeAButtonWithHover('Add Course', addCourse, "editbuttons", "addcoursebtn", "#edit-content",
-  "Opens a form to add a course to the layout");
+  "Add a course to the layout");
   // create add note button
   // idk what to tell you about the first being '' and the others being ""
   // ...it's a....convention thing....yea
   makeAButtonWithHover('Add Note', addNote, "editbuttons", "addnotebtn", "#edit-content",
-  "Opens a form to add a note to the layout");
+  "Add a note to the layout");
   // create draw path button
   makeAButtonWithHover('Draw Path', drawPath, "editbuttons", "drawbtn", "#edit-content",
   "Toggles ability to draw lines connecting courses and/or notes");
   // create delete button
-  makeAButtonWithHover('Delete Mode', deleteMode, "editbuttons", "deletebtn", "#edit-content",
-  "Toggles ability to delete lines, courses, or notes by clicking on them");
+  makeAButtonWithHover('Delete Objects', deleteMode, "editbuttons", "deletebtn", "#edit-content",
+  "Toggles ability to delete lines, courses, or notes");
   // create move button
   makeAButtonWithHover('Edit Positions', editPositions, "editbuttons", "editbtn", "#edit-content",
-  "Allows you to drag courses/notes to new positions");
+  "Toggles ability to move courses/notes to new positions");
 }

@@ -61,7 +61,7 @@ function draw() {
   // draw the lines
   // I love anonymous functions apparently (I use them a lot)
   // for every line that exists this is going to draw them
-  strokeWeight(4);
+  strokeWeight(12);
   stroke(0);
   noFill();
   timep += deltaTime / 25;
@@ -166,7 +166,7 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
       if(node !== undefined && completionMap.get(node.code) === completions.complete)
         drawingContext.setLineDash([0,0]);
       else
-        drawingContext.setLineDash([10, 10]);
+        drawingContext.setLineDash([15, 15]);
       break;
     case completions.inprogress:
       if(red) {
@@ -177,7 +177,7 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
         grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
       }
       drawingContext.strokeStyle = grad;
-      drawingContext.setLineDash([10, 20]);
+      drawingContext.setLineDash([15, 30]);
       break;
     default:
       if(red) {
@@ -188,7 +188,7 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
         grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
       }
       drawingContext.strokeStyle = grad;
-      drawingContext.setLineDash([1, 20]);
+      drawingContext.setLineDash([1, 40]);
   }
 }
 // helper function that handles the first courselist draw
