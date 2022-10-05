@@ -1,0 +1,36 @@
+{
+  "fileType": "courselayout",
+  "courses": [
+    {
+      "code": "CSCI 1300",
+      "credits": "3",
+      "name": "Something crazy",
+      "prerequisites": [],
+      "x": 749,
+      "y": 199,
+      "height": 45,
+      "width": 119.2685546875,
+      "subnodes": []
+    },
+    {
+      "code": "ur mom",
+      "credits": "the code",
+      "name": "hehehehe",
+      "prerequisites": [],
+      "x": 355,
+      "y": 221,
+      "height": 45,
+      "width": 128.5654296875,
+      "subnodes": []
+    }
+  ],
+  "coursemap": {
+    "CSCI 1300": 0,
+    "ur mom": 1
+  },
+  "notes": [],
+  "notemap": {},
+  "subnodes": [],
+  "subnodemap": {},
+  "lines": []
+}
