@@ -54,7 +54,6 @@ const clearAndReplace = document.querySelector("#clearandreplace");
 // once it's an object send it to processJSON to use
 // processJSON does stuff like json.courses so make it a dictionary basically
 function importTextArea() {
-  zoom = 1;
   if(flresult.value === "" || flresult.value === undefined || flresult.value === null) {
     throwError("File Empty");
     return;
@@ -103,6 +102,7 @@ function saveCourseWork() {
 // -------------------------------- JSON Processing -------------------------------- //
 // process json file loaded (these completely replace current data)
 function processJSON(json) {
+  zoom = 1;
   // bug fix need this here
   switch(json.fileType) {
     case "courselayout":
@@ -150,6 +150,7 @@ function processCourseLayout(json) {
 // process json file loaded but append rather than replace
 // this may look like a simple addition, but that's because I changed everything else
 function processJSONAppend(json) {
+  zoom = 1;
   switch(json.fileType) {
     case "courselayout":
       processCourseLayout(json);
