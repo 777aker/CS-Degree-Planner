@@ -51,3 +51,53 @@ function setupButtons() {
     });
   });
 }
+// search time
+const searchbtn = document.querySelector('#search');
+const searchtxt = document.querySelector('#searchtxt');
+searchbtn.addEventListener('click', search);
+function search() {
+  const searchterm = searchtxt.value;
+  let node = getElement(searchterm.toUpperCase());
+  if(node !== undefined) {
+    let changex = width/2 - node.x;
+    let changey = height/2 - node.y;
+    moveEverything(changex, changey);
+    return;
+  }
+  node = searchTitles(searchterm);
+  if(node === undefined) {
+    throwError("Nothing Found");
+    return;
+  }
+  moveEverything(width/2 - node.x, height/2 - node.y);
+}
+function moveEverything(x, y) {
+  noteList.forEach(note => {
+    note.x += x;
+    note.y += y;
+  });
+  courseList.forEach(course => {
+    course.x += x;
+    course.y += y;
+  });
+  zoom = 1;
+}
+function searchTitles(term) {
+  let returns = undefined;
+  term = term.toLowerCase();
+  courseList.forEach(course => {
+    if(returns !== undefined)
+      return;
+    if(course.name.toLowerCase().includes(term))
+      returns = course
+  });
+  if(returns !== undefined)
+    return returns;
+  noteList.forEach(note => {
+    if(returns !== undefined)
+      return;
+    if(note.title.toLowerCase().includes(term))
+      returns = note;
+  });
+  return undefined;
+}

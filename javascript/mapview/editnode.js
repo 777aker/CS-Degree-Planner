@@ -9,18 +9,19 @@ editNodesDiv.addEventListener('mouseleave', function() {
 // deals with opening a new window with the course html page
 function openCourseHTML() {
   code = lastCodeClicked;
+  courseOpened = getElement(lastCodeClicked);
+  print(courseOpened);
   closeNodeOptions();
-  lastWindowOpened = code;
   if(doesFileExist(`../../coursehtmls/${code}.html`)) {
      window.open(`../../coursehtmls/${code}.html`);
   } else {
-    let win = window.open(`../../coursehtmls/`);
-    win.addEventListener('load', function() {
-      win.changeCode(code);
-    });
+    window.open(`../../coursehtmls/`);
   }
 }
-let lastWindowOpened = "";
+function getCourseOpened() {
+  return courseOpened;
+}
+let courseOpened;
 function doesFileExist(path) {
   let http = new XMLHttpRequest();
   http.open('HEAD', path, false);
