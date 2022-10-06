@@ -16,10 +16,10 @@ function openCourseHTML() {
   courseOpened = getElement(lastCodeClicked);
   print(courseOpened);
   closeNodeOptions();
-  if(doesFileExist(`../../coursehtmls/${code}.html`)) {
-     window.open(`../../coursehtmls/${code}.html`);
+  if(doesFileExist(`coursehtmls/${code}.html`)) {
+     window.open(`coursehtmls/${code}.html`);
   } else {
-    window.open(`../../coursehtmls/`);
+    window.open(`coursehtmls/`);
   }
 }
 function getCourseOpened() {
