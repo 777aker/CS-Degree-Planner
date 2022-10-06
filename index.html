@@ -32,6 +32,8 @@
     <script defer src="javascript/mapview/helpmenu.js"></script>
     <!-- Advanced uses handler -->
     <script defer src="javascript/mapview/advancedmode.js"></script>
+    <!-- Time to give a degree requirements placeholder -->
+    <script defer src="javascript/mapview/degreerequirements.js"></script>
     <!-- This one should load last because events should be able to access everything else -->
     <script defer src="javascript/mapview/events.js"></script>
     <link rel="stylesheet" href="css/mapview/mapstyle.css">
@@ -73,6 +75,7 @@
             <button id="openhelp" title="Open Help" class="viewbtn">Help</button>
             <button id="search" title="Search for a course" class="viewbtn">Search</button>
             <input id="searchtxt" type="text" class="viewbtn" value="" placeholder="Enter Course To Search For">
+            <button id="degreq" title="View Degree Requirements" class="viewbtn">Degree Requirements</button>
           </div>
         </div>
       </div>
@@ -187,13 +190,19 @@
           </div>
           <div class="helpdivs" id="advancedusesdiv">
             <h1>Advanced Uses</h1>
-            
+
           </div>
           <div class="helpdivs" id="creditsdiv">
             <h1>Credits</h1>
 
           </div>
         </div>
+      </div>
+      <!-- Degree Requirements -->
+      <div class="degree-requirements">
+        <form class="dr">
+
+        </form>
       </div>
     </main>
   </body>
