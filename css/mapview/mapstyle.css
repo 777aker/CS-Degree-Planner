@@ -21,7 +21,7 @@
 }
 
 /* when you hover edit menu change some child stuff */
-.edit-dropdown:hover #dropdown-content {
+.edit-dropdown:hover #edit-content {
   display: flex;
 }
 
@@ -34,8 +34,8 @@
   font-size: 18px;
 }
 
-/* div holding dropdown content */
-#dropdown-content {
+/* div holding edit content */
+#edit-content {
   display: none;
   flex-direction: column;
 }
@@ -71,6 +71,25 @@
   display: flex;
 }
 
+.view-dropdown {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#view-content {
+  display: none;
+  flex-direction: column;
+}
+
+.view-dropdown:hover #view-content {
+  display: flex;
+}
+
+.viewbtn {
+  padding: 5px 5px;
+}
+
 /* file form styling */
 .fileform {
   display: flex;
@@ -85,6 +104,11 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
+  padding: 10px 10px;
+  border: 2px solid black;
+  border-radius: 4px;
+  height: 80%;
+  overflow-y: auto;
 }
 
 /* form for adding a course */
@@ -113,6 +137,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
+  padding: 10px 10px;
+  border: 2px solid black;
+  border-radius: 4px;
 }
 
 /* add note form */
@@ -130,6 +157,11 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
+  padding: 5px 5px;
+  border: 2px solid black;
+  border-radius: 4px;
+  text-align: center;
+  padding-bottom: 15px;
 }
 
 /* form for loading templates */
@@ -148,6 +180,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
+  padding: 10px 10px;
+  border: 2px solid black;
+  border-radius: 4px;
 }
 
 /* form for loading files */
@@ -169,11 +204,101 @@
   position: absolute;
   top: 0;
   left: 0;
-  flex-direction: row;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 5px 5px;
+  width: 20%;
+}
+
+/* edit nodes form */
+.edit-node-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* the p are really spaced so getting rid of that */
+.edit-node-form>p {
+  margin: 0px 0px;
+  padding: 0px 0px;
+}
+
+/* div holding clear data form */
+.clear-data-div {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 10px;
+  border: 2px solid black;
+  border-radius: 4px;
+  background-color: rgb(255, 255, 255);
+}
+
+/* form for clearing data */
+.clear-data-form {
+  display: flex;
+  flex-direction: column;
+  padding 10px 10px;
   gap: 10px;
 }
 
-/* edit nodes buttons */
-.edit-nodes-div>button {
-  padding: 5px 5px;
+/* Help Menu Stuff */
+/* Div with the help menu */
+.help-menu-div {
+  position: absolute;
+  display: none;
+  flex-direction: row;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
+  border-radius: 4px;
+  height: 80%;
+  width: 90%;
+  justify-content: flex-start;
+}
+
+.help-left-buttons {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+  margin: 0px 0px;
+}
+
+.helpbutton {
+  padding: 15px 10px;
+  background-color: rgb(255, 255, 255);
+  border: none;
+  text-align: center;
+  font-size: 16px;
+}
+
+.helpbutton:hover {
+  background-color: rgb(235, 235, 235) !important;
+}
+
+.help-right-content {
+  flex: 5;
+  display: block;
+  border: 2px solid black;
+  margin: 0px 0px;
+}
+
+/* the divs stuff time */
+.helpdivs {
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  margin: 10px 10px;
+}
+
+/* having hr issues */
+hr {
+  width: 100%;
 }

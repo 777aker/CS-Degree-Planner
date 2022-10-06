@@ -2,11 +2,38 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, initial-scale=1.0">
     <title>Degree Planner Map View</title>
     <script src="p5/p5.js"></script>
     <!-- defer so it can actually find stuff and not break -->
+    <!-- global variables everything uses first -->
     <script defer src="javascript/mapview/mapsketch.js"></script>
+    <!-- how we throw and deal with errors -->
+    <script defer src="javascript/mapview/error.js"></script>
+    <!-- nice helper functions for convenience -->
+    <script defer src="javascript/mapview/helperfunctions.js"></script>
+    <!-- you won't beleive this based on the name, but this sets up stuff.... crazy -->
+    <script defer src="javascript/mapview/setup.js"></script>
+    <!-- how we add a course to the layout -->
+    <script defer src="javascript/mapview/courseadding.js"></script>
+    <!-- how we add a note to the layout -->
+    <script defer src="javascript/mapview/noteadding.js"></script>
+    <!-- node editing -->
+    <script defer src="javascript/mapview/editnode.js"></script>
+    <!-- template handling -->
+    <script defer src="javascript/mapview/templates.js"></script>
+    <!-- File handling -->
+    <script defer src="javascript/mapview/filehandler.js"></script>
+    <!-- mode changer -->
+    <script defer src="javascript/mapview/modehandler.js"></script>
+    <!-- draw loops: this is the stuff that happens every frame -->
+    <script defer src="javascript/mapview/draw.js"></script>
+    <!-- This is where all the help menu stuff is -->
+    <script defer src="javascript/mapview/helpmenu.js"></script>
+    <!-- Advanced uses handler -->
+    <script defer src="javascript/mapview/advancedmode.js"></script>
+    <!-- This one should load last because events should be able to access everything else -->
+    <script defer src="javascript/mapview/events.js"></script>
     <link rel="stylesheet" href="css/mapview/mapstyle.css">
   </head>
   <body>
@@ -14,22 +41,38 @@
       <div class="menus">
         <!-- dropdown menu for saving options -->
         <div class="save-dropdown">
-          <button class="dropbtn">File Menu</button>
+          <button class="dropbtn" title="Load and save different files">File</button>
           <div id="save-content">
             <form class="fileform">
-              <input class="filebtn" type="button" id="savebtn" value="Save Course Layout">
-              <input class="filebtn" type="button" id="courseworksave" value="Save Coursework">
-              <input class="filebtn" type="button" id="openloader" value="Open File Loader">
+              <input class="filebtn" type="button" id="savebtn" value="Save Course Layout"
+                title='Download the current course layout'>
+              <input class="filebtn" type="button" id="courseworksave" value="Save Coursework"
+                title='Download coursework'>
+              <input class="filebtn" type="button" id="openloader" value="Open File"
+                title='Load json file'>
             </form>
             <!-- to add a template look at template div and js template functions -->
-            <button class="filebtn" id="opentemplates">Open Template Options</button>
+            <button class="filebtn" id="opentemplates" title='Preset course layouts'>
+              Template Options
+            </button>
+            <input class="filebtn" type="button" id="clearbtn" value="Clear Data"
+              title="Clear coursework or layout">
           </div>
         </div>
         <!-- dropdown menu for edit mode options -->
         <div class="edit-dropdown">
-          <button class="dropbtn">Edit Menu</button>
-          <div id="dropdown-content">
+          <button class="dropbtn" title="Edit the course layout">Edit</button>
+          <div id="edit-content">
             <!-- all buttons placed here in js are class="editbuttons" -->
+          </div>
+        </div>
+        <!-- dropdown menu for view -->
+        <div class="view-dropdown">
+          <button class="dropbtn">View</button>
+          <div id="view-content">
+            <button id="openhelp" title="Open Help" class="viewbtn">Help</button>
+            <button id="search" title="Search for a course" class="viewbtn">Search</button>
+            <input id="searchtxt" type="text" class="viewbtn" value="" placeholder="Enter Course To Search For">
           </div>
         </div>
       </div>
@@ -37,15 +80,27 @@
       <div class="template-div">
         <form class="template-form">
           <!-- look at js for how to add a template, easier to do there -->
-          <button type="button" id="canceltemplate" name="canceltemplate">Close Templates</button>
         </form>
+        <button type="button" id="canceltemplate" name="canceltemplate">Close Templates</button>
       </div>
       <!-- Form for loading files -->
       <div class="fileloader-div">
         <form class="fileloader-form">
+          <p>
+            Here you can load course layout files, course work files, or any other files
+            created with this software so that you can personalize your experience.
+          </p>
           <input type="file" id="select-files">
-          <textarea id="result" rows="10" cols="40"></textarea>
-          <input type="button" id="import" value="Import">
+          <label for="result">
+            This field shows what the file looks like, and allows you to make edits.
+            You don't have to look at it or do anything with it.
+          </label>
+          <textarea name="result" id="result" rows="10" cols="40"></textarea>
+          <label class="switch" for="clear">
+            <input type="checkbox" name="clear" id="clearandreplace">
+            Append file to currently used data rather than replace data completely (ie double major and want to add two course degree requirement files)
+          </label>
+          <input type="button" id="import" value="Import" title="Load the file into the software, including changes made in edit area">
           <input type="button" id="cancelload" value="Close File Loader">
         </form>
       </div>
@@ -54,8 +109,10 @@
         <form class="add-course-form">
           <!-- form filled out through javascript -->
         </form>
+        <hr>
         <!-- Need these outside the form so appended nodes go on properly -->
         <button type="button" id="submitcourse" name="submitcourse">Submit Course Form</button><br>
+        <br>
         <button type="button" id="cancelcourse" name="cancelcourse">Cancel</button><br>
       </div>
       <!-- Form for adding a note -->
@@ -68,10 +125,72 @@
       </div>
       <!-- Buttons for editing a node -->
       <div class="edit-nodes-div">
-        <button type="button" id="editnode" name="edit">edit</button>
-        <button type="button" id="completion" name="completion">Incomplete</button>
-        <button type="button" id="nodeinfo" name="info">info</button>
-        <button type="button" id="closeeditnode" name="close">close</button>
+        <form class="edit-node-form">
+          <!-- js fill bc easier -->
+        </form>
+      </div>
+      <!-- Form for clearing some data -->
+      <div class="clear-data-div">
+        <form class="clear-data-form">
+          <button type="button" id="clearlayout"
+          title="Clear the courses shown">Clear Course Layout</button>
+          <button type="button" id="clearcoursework"
+          title="Clear course progress">Clear Coursework</button>
+          <button type="button" id="closeclearform"
+          title="Close this form">Cancel</button>
+        </form>
+      </div>
+      <!-- Help Menu -->
+      <div class="help-menu-div">
+        <div class="help-left-buttons">
+          <!-- Lots of buttons that toggle which help item you are looking at -->
+          <button type="button" class="helpbutton" id="overview">Overview</button>
+          <button type="button" class="helpbutton" id="defaultview">Default View</button>
+          <button type="button" class="helpbutton" id="filedropdown">File Dropdown</button>
+          <button type="button" class="helpbutton" id="editdropdown">Edit Dropdown</button>
+          <button type="button" class="helpbutton" id="viewdropdown">View Dropdown</button>
+          <button type="button" class="helpbutton" id="shortcuts">Shortcuts</button>
+          <button type="button" class="helpbutton" id="advanceduses">Advanced Uses</button>
+          <button type="button" class="helpbutton" id="credits">Credits</button>
+          <button type="button" class="helpbutton" id="closehelp">Close Help</button>
+        </div>
+        <!-- The actual content in the help menu -->
+        <div class="help-right-content">
+          <div class="helpdivs" id="overviewdiv">
+            <h1>Overview</h1>
+            <h2>What this is</h2>
+            <p>This is a degree planning software meant to help students
+            navigate the Computer Science Bachelor of Science Degree. <br>
+            Currently, there isn't a great way for students to navigate through
+            and understand the degree. <br>
+            This software aims to remedy that by providing
+            an interactive visual representation of the degree. <br><br>
+            It is still in its early stages of development.</p>
+          </div>
+          <div class="helpdivs" id="defaultviewdiv">
+            <h1>Default View</h1>
+            
+          </div>
+          <div class="helpdivs" id="filedropdowndiv">
+            <h1>File Dropdown</h1>
+          </div>
+          <div class="helpdivs" id="editdropdowndiv">
+            <h1>Edit Dropdown</h1>
+          </div>
+          <div class="helpdivs" id="viewdropdowndiv">
+            <h1>View Dropdown</h1>
+          </div>
+          <div class="helpdivs" id="shortcutsdiv">
+            <h1>Shortcuts</h1>
+          </div>
+          <div class="helpdivs" id="advancedusesdiv">
+            <h1>Advanced Uses</h1>
+          </div>
+          <div class="helpdivs" id="creditsdiv">
+            <h1>Credits</h1>
+
+          </div>
+        </div>
       </div>
     </main>
   </body>
