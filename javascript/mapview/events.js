@@ -49,7 +49,6 @@ function keyTyped() {
   }
   if(key === 'z') {
     zoom = 1;
-    print('zoom?');
   }
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)

@@ -3,6 +3,10 @@
 // actually, it's its own section
 // opens the buttons that allow you to edit the last clicked element
 const editNodesDiv = document.querySelector(".edit-nodes-div");
+let onEditDiv = false;
+editNodesDiv.addEventListener('mouseenter', function() {
+  onEditDiv = true;
+});
 editNodesDiv.addEventListener('mouseleave', function() {
   closeNodeOptions();
 });
@@ -39,6 +43,8 @@ function closeNodeOptions() {
   lastCodeClicked = "";
   lastNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
+  nodeOpened = "";
+  onEditDiv = false;
 }
 function openEditMenu() {
   disabled = true;
@@ -46,6 +52,7 @@ function openEditMenu() {
 }
 // time to actually show the buttons
 let lastNodeTypeClicked;
+let nodeOpened;
 function openNodeOptions(nodeType, node) {
   // if typing don't show them do nothing just exit
   if(typing)
@@ -55,6 +62,7 @@ function openNodeOptions(nodeType, node) {
   editNodesDiv.style.display = "block";
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;
+  nodeOpened = lastCodeClicked;
   // we can expect every node to have an x, y, width, height
   // switch based on node type
   switch(nodeType) {

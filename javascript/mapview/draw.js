@@ -412,6 +412,8 @@ const noteListHandler = (note, index, arr) => {
     default:
       if(mouseHovering) {
         openNodeOptions(nodeTypes.note, note);
+      } else if(!onEditDiv && nodeOpened === note.code) {
+        closeNodeOptions();
       }
   }
   if(note.subnodes.length === 0) {
