@@ -267,3 +267,16 @@ function getElement(key) {
 function getNodeType(key) {
   return courseMap.has(key) ? nodeTypes.course : nodeTypes.note;
 }
+// moves everything
+function moveEverything(x, y, rezoom) {
+  noteList.forEach(note => {
+    note.x += x;
+    note.y += y;
+  });
+  courseList.forEach(course => {
+    course.x += x;
+    course.y += y;
+  });
+  if(rezoom)
+    zoom = 1;
+}

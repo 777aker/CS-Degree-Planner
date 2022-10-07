@@ -173,17 +173,26 @@ function mouseReleased() {
 }
 // have to disable default zoom because it makes program weird
 document.addEventListener('wheel', function(e) {
+  //print(`X:${e.deltaX}, Y:${e.deltaY}, CTRL:${e.ctrlKey}`);
+  // this confused me a little so writing out logic
+  // if wheeldeltaY then if wheeldeltay = -3 deltay trackpad else not
+  // if wheeldeltay is false, then use deltamode to check
+  let isTouchPad = e.wheelDeltaY ? e.wheelDeltaY === -3 * e.deltaY : e.deltaMode === 0
   if(typing)
     return;
   e.preventDefault();
   e.stopPropagation();
-  if(e.ctrlKey) {
-    mouseWheel((e.deltaX + e.deltaY)*10);
+  if(!isTouchPad) {
+    if(e.deltaY !== -e.wheelDeltaY)
+      mouseWheel(e.deltaX + e.deltaY);
+    else
+      moveEverything(-e.deltaX, -e.deltaY, false);
   } else {
-    // this confused me a little so writing out logic
-    // if wheeldeltaY then if wheeldeltay = -3 deltay trackpad else not
-    // if wheeldeltay is false, then use deltamode to check
-    mouseWheel(e.deltaX + e.deltaY);
+    if(e.ctrlKey) {
+      mouseWheel((e.deltaX + e.deltaY)*20);
+    } else {
+      moveEverything(-e.deltaX, -e.deltaY, false);
+    }
   }
 }, {
   passive: false

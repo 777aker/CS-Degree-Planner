@@ -11,6 +11,14 @@ function hideUses() {
   });
 }
 
+function rehideUses() {
+  mode = modes.none;
+  advanceduses = false;
+  hiddenUses.forEach(element => {
+    element[0].style.display = 'none';
+  })
+}
+
 function showUses() {
   advanceduses = true;
   hiddenUses.forEach(element => {

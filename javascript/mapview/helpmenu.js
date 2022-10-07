@@ -61,7 +61,7 @@ function search() {
   if(node !== undefined) {
     let changex = width/2 - node.x;
     let changey = height/2 - node.y;
-    moveEverything(changex, changey);
+    moveEverything(changex, changey, true);
     return;
   }
   node = searchTitles(searchterm);
@@ -69,18 +69,7 @@ function search() {
     throwError("Nothing Found");
     return;
   }
-  moveEverything(width/2 - node.x, height/2 - node.y);
-}
-function moveEverything(x, y) {
-  noteList.forEach(note => {
-    note.x += x;
-    note.y += y;
-  });
-  courseList.forEach(course => {
-    course.x += x;
-    course.y += y;
-  });
-  zoom = 1;
+  moveEverything(width/2 - node.x, height/2 - node.y, true);
 }
 function searchTitles(term) {
   let returns = undefined;
@@ -101,3 +90,10 @@ function searchTitles(term) {
   });
   return undefined;
 }
+const advancedCheck = document.querySelector("#advancedcheck");
+advancedCheck.addEventListener('click', function() {
+  if(advancedCheck.checked)
+    showUses();
+  else
+    rehideUses();
+});
