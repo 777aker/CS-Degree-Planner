@@ -34,9 +34,30 @@ const buttonsList = document.querySelectorAll('.helpbutton');
 const divsList = document.querySelectorAll('.helpdivs');
 function setupButtons() {
   buttonsList.forEach(button => {
+    switch(button.id) {
+      case "closehelp":
+        return;
+      case "advanceduses":
+        button.addEventListener('click', function() {
+          // TODO: change your style here to be toggled on @button
+          // Also turn off everyone else's
+          divsList.forEach(tmpdiv => {
+            tmpdiv.style.display = 'none';
+          });
+          buttonsList.forEach(tmpbutton => {
+            tmpbutton.style.background = "rgb(255, 255, 255)";
+          });
+          button.style.background = "rgb(200, 200, 200)";
+          document.querySelector("#advancedcheck").checked = advanceduses;
+          div.style.display = 'flex';
+        });
+    }
     if(button.id === "closehelp")
       return;
     const div = document.querySelector(`#${button.id}div`);
+    if(button.id === "advanceduses") {
+
+    }
     button.addEventListener('click', function() {
       // TODO: change your style here to be toggled on @button
       // Also turn off everyone else's

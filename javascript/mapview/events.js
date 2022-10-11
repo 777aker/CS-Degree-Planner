@@ -36,11 +36,6 @@ function keyTyped() {
   // so if typing return
   if(typing)
     return;
-  // make the software go fullscreen because that's nice
-  if(key === 'f' || key === 'F') {
-    let fs = fullscreen();
-    fullscreen(!fs);
-  }
   if(key === '[') {
     noteList.forEach(note => {
       print(note.gate);
@@ -112,8 +107,10 @@ function keyTyped() {
     clearDiv.style.display = 'block';
   }
   if(key === 'g') {
-    if(throwError("WARNING: about to enable advanced uses")) {
+    if(!advanceduses && throwError("WARNING: about to enable advanced uses")) {
       showUses();
+    } else {
+      rehideUses();
     }
   }
   // but first, disable all advanced uses, which is all of these

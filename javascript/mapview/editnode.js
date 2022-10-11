@@ -14,7 +14,6 @@ editNodesDiv.addEventListener('mouseleave', function() {
 function openCourseHTML() {
   code = lastCodeClicked;
   courseOpened = getElement(lastCodeClicked);
-  print(courseOpened);
   closeNodeOptions();
   if(doesFileExist(`coursehtmls/${code}.html`)) {
      window.open(`coursehtmls/${code}.html`);
@@ -55,7 +54,7 @@ let lastNodeTypeClicked;
 let nodeOpened;
 function openNodeOptions(nodeType, node) {
   // if typing don't show them do nothing just exit
-  if(typing)
+  if(typing || (nodeType === nodeTypes.note && advanceduses === false))
     return;
   typing = true;
   disabled = false;
@@ -68,17 +67,14 @@ function openNodeOptions(nodeType, node) {
   switch(nodeType) {
     case nodeTypes.note:
       editNodeForm.innerHTML = "";
-      createFormText(editNodeForm, "Note Title: " + node.title, false);
-      createFormText(editNodeForm, "Note Text: " + node.text, false);
-      //TOOD: put if it is an or or and gate here
-      if(advanceduses) {
-        createFormButtonWithTitle(editNodeForm, "editnodebtn", "Edit Note", editNote,
+      createFormButtonWithTitle(editNodeForm, "editnodebtn", "Edit Note", editNote,
         "Allows you to edit this notes information");
-      }
+      editNodesDiv.style.width = '10%';
       updateStyles();
       break;
     case nodeTypes.course:
       editNodeForm.innerHTML = "";
+      editNodesDiv.style.width = '30%';
       createFormText(editNodeForm, "Course Code: " + node.code, false);
       createFormText(editNodeForm, "Credit Hours: " + node.credits, false);
       createFormText(editNodeForm, "Course Name: " + node.name, false);

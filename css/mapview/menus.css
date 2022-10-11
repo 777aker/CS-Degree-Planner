@@ -1,0 +1,98 @@
+/* div containing all the menus in the top left */
+.menus {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  left: 2%;
+  top: 2%;
+  align-items: flex-start;
+}
+
+/* div holding the edit menu */
+.edit-dropdown {
+  /*
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* when you hover edit menu change some child stuff */
+.edit-dropdown:hover #edit-content {
+  display: flex;
+}
+
+.edit-dropdown:hover .dropbtn {
+
+}
+
+/* dropdown button styles */
+.dropbtn {
+  font-size: 18px;
+}
+
+/* div holding edit content */
+#edit-content {
+  display: none;
+  flex-direction: column;
+}
+
+/* style for the buttons within the edit menu */
+.editbuttons {
+    padding: 5px 5px;
+}
+
+/* when hovering over an edit button do some stuff */
+.editbuttons:hover {
+
+}
+
+/* some stuff for the file dropdown */
+.save-dropdown {
+  /*
+  position: absolute;
+  right: 2%;
+  bottom: 2%;
+  */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#save-content {
+  display: none;
+  flex-direction: column;
+}
+
+.save-dropdown:hover #save-content {
+  display: flex;
+}
+
+/* file form styling */
+.fileform {
+  display: flex;
+  flex-direction: column;
+}
+
+/* and finally the view dropdown */
+.view-dropdown {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#view-content {
+  display: none;
+  flex-direction: column;
+}
+
+.view-dropdown:hover #view-content {
+  display: flex;
+}
+
+.viewbtn {
+  padding: 5px 5px;
+}

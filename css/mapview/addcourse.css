@@ -1,0 +1,32 @@
+/* add course container */
+.add-course-div {
+  position: absolute;
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  padding: 10px 10px;
+  border: 2px solid black;
+  border-radius: 4px;
+  height: 80%;
+  overflow-y: auto;
+}
+
+/* form for adding a course */
+.add-course-form {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+  gap: 5px;
+}
+
+.add-course-form>input {
+  margin-bottom: 10px;
+}
+
+/* prereq group divs */
+.prereqGroupDiv {
+  display: flex;
+  flex-wrap: wrap;
+}

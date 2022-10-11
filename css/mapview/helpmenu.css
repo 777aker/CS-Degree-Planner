@@ -1,0 +1,69 @@
+/* Help Menu Stuff */
+/* Div with the help menu */
+.help-menu-div {
+  position: absolute;
+  display: none;
+  flex-direction: row;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
+  border-radius: 4px;
+  height: 80%;
+  width: 90%;
+  justify-content: flex-start;
+}
+
+.help-left-buttons {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+  margin: 0px 0px;
+}
+
+.helpbutton {
+  padding: 15px 10px;
+  background-color: rgb(255, 255, 255);
+  border: none;
+  text-align: center;
+  font-size: 16px;
+}
+
+.helpbutton:hover {
+  background-color: rgb(235, 235, 235) !important;
+}
+
+.help-right-content {
+  flex: 5;
+  display: block;
+  border: 2px solid black;
+  margin: 0px 0px;
+  padding-bottom: 5px;
+}
+
+/* the divs stuff time */
+.helpdivs {
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  margin: 10px 10px;
+}
+
+img {
+  width: 60%;
+  height: auto;
+}
+
+/* having hr issues */
+hr {
+  width: 100%;
+}
+
+#defaultviewvideo {
+  width: 60%;
+  height: auto;
+}
