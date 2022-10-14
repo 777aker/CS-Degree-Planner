@@ -11,6 +11,10 @@ let subnodenote = -1;
 let xy = [0, 0];
 // also a global variable for zoom
 let zoom = 1;
+let mxzoom = 0;
+let myzoom = 0;
+let calcMouseX;
+let calcMouseY;
 // global variable for dragging
 let mouseOutsideWindow = false;
 // keeping track of time
@@ -21,10 +25,16 @@ function draw() {
   // set background color
   background(220);
   // time for zooming
+  translate(mxzoom, myzoom);
+  scale(zoom);
+  calcMouseX = (mouseX - mxzoom) / zoom;
+  calcMouseY = (mouseY - myzoom) / zoom;
+  /*
   translate(mouseX, mouseY);
   scale(zoom);
   translate(-mouseX, -mouseY);
-  translate();
+  */
+  //translate();
   // if the user is holding a key down move everything around
   xy = [0, 0];
   if(!typing) {
@@ -40,8 +50,8 @@ function draw() {
   // dragging time
   if(mouseIsPressed && mode === modes.none && !typing) {
     document.body.style.cursor = "all-scroll";
-    xy[0] += mouseX - pmouseX;
-    xy[1] += mouseY - pmouseY;
+    xy[0] += (mouseX - pmouseX) / zoom;
+    xy[1] += (mouseY - pmouseY) / zoom;
   } else {
     document.body.style.cursor = "auto";
   }
@@ -95,8 +105,8 @@ function draw() {
         break;
     }
     if(node !== null && node !== undefined) {
-      editNodesDiv.style.top = (node.y - node.height/2 - textLeading() - 5 - mouseY)*zoom + mouseY + 'px';
-      editNodesDiv.style.left = (node.x - node.width/2 - mouseX)*zoom + mouseX + 'px';
+      editNodesDiv.style.top = (node.y - myzoom)/zoom + (node.height/2)*zoom + 'px';
+      editNodesDiv.style.left = (node.x - mxzoom)/zoom - (node.width/2)*zoom + 'px';
     }
   }
 }
@@ -117,8 +127,8 @@ const lineListHandler = (ln, index, lines) => {
   let node2 = undefined;
   if(mode === modes.draw && index === lines.length-1) {
     p2 = {
-      x: mouseX,
-      y: mouseY
+      x: calcMouseX,
+      y: calcMouseY
     };
   } else {
     node2 = getElement(ln[1]);
@@ -134,7 +144,7 @@ const lineListHandler = (ln, index, lines) => {
     // if mouse pressed also delete it
     // AAAHHHH, PAST ME MADE THIS ALREADY!!!!!!
     // yaaaayyyyyyyyy
-    if(lineTest(20, p1.x, p1.y, p2.x, p2.y, mouseX, mouseY)) {
+    if(lineTest(20, p1.x, p1.y, p2.x, p2.y, calcMouseX, calcMouseY)) {
       if(mouseIsPressed && !typing) {
         lines.splice(index, 1);
         return;
@@ -210,7 +220,7 @@ const courseListHandler = (course, index, arr) => {
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2)) {
+  if(mouseHovering || (calcMouseX > course.x - course.width/2 && calcMouseX < course.x + course.width/2 && calcMouseY > course.y - course.height/2 && calcMouseY < course.y + course.height/2)) {
     mouseHovering = true;
   }
   // draw the rectangle around our course
@@ -250,8 +260,8 @@ const courseListHandler = (course, index, arr) => {
       if(subnodenote === -1 && subnodecourse === -1) {
         // if this is the course we are dragging then move it to the mouse
         if(draggingcourse === index) {
-          course.x = mouseX;
-          course.y = mouseY;
+          course.x = calcMouseX;
+          course.y = calcMouseY;
           // else if we are hovering and the mouse is pressed and there isn't a subnodecourse then make this the subnode course
         } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
           // so before we actually make this a subnode, we have to check and make sure it is not
@@ -350,7 +360,7 @@ const noteListHandler = (note, index, arr) => {
   // check if dragging this box
   let mouseHovering = draggingnote === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2)) {
+  if(mouseHovering || (calcMouseX > note.x - note.width/2 && calcMouseX < note.x + note.width/2 && calcMouseY > note.y - note.height/2 & calcMouseY < note.y + note.height/2)) {
     mouseHovering = true;
   }
   // draw rect around note
@@ -379,8 +389,8 @@ const noteListHandler = (note, index, arr) => {
       // but I could combine this function? eh, eh, seems risky for no reward
       if(subnodenote === -1 && subnodecourse === -1) {
         if(draggingnote === index) {
-          note.x = mouseX;
-          note.y = mouseY;
+          note.x = calcMouseX;
+          note.y = calcMouseY;
         } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
           // so before we actually make this a subnode, we have to check and make sure it is not
           // a subnode of what we are trying to make a subnode of it because then we get a weird

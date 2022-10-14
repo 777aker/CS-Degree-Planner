@@ -2,7 +2,7 @@
 // p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
-  let cnv = createCanvas(windowWidth-20, windowHeight-20);
+  cnv = createCanvas(windowWidth-20, windowHeight-20);
   cnv.mouseOut(function () {
     mouseOutsideWindow = true;
   });
@@ -19,6 +19,9 @@ function setup() {
   openTemplate("Computer-Science-BS-template.json");
   // hide advanced uses
   hideUses();
+  // set up the new mouseX that lets you zoom
+  calcMouseX = mouseX;
+  calcMouseY = mouseY;
 }
 // set up the buttons for the edit menu
 function editMenuSetUp() {

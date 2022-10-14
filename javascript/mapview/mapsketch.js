@@ -81,7 +81,6 @@ let completions = {
   complete: 4,
 };
 let completionMap = new Map();
-
 // -------------------------------- Miscellaneous Menu -------------------------------- //
 // quick bug fix
 const editdropdwn = document.querySelector('.edit-dropdown');
