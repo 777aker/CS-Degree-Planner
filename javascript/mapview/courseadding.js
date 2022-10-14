@@ -4,6 +4,9 @@ const addCourseDiv = document.querySelector('.add-course-div');
 addCourseDiv.addEventListener('mouseover', function() {
   typing = true;
 });
+addCourseDiv.addEventListener('mouseleave', function() {
+  typing = false;
+});
 const addCourseForm = document.querySelector('.add-course-form');
 // function called when user presses add course button in the edit menu
 function addCourse() {

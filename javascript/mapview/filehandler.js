@@ -5,6 +5,9 @@ const fileloader = document.querySelector('.fileloader-div');
 fileloader.addEventListener('mouseover', function() {
   typing = true;
 });
+fileloader.addEventListener('mouseleave', function() {
+  typing = false;
+});
 // form for file loader
 const fileform = document.querySelector('.fileloader-form');
 // file input
@@ -77,6 +80,8 @@ const savebutton = document.querySelector("#savebtn");
 savebutton.addEventListener('click', saveCourseLayout);
 const savecourseworkbtn = document.querySelector("#courseworksave");
 savecourseworkbtn.addEventListener('click', saveCourseWork);
+const saveAllBtn = document.querySelector("#saveboth");
+saveAllBtn.addEventListener('click', saveAll);
 //const savetext = document.querySelector("#savetxt");
 // this takes the courselist and linelist we have for everything and saves
 // them to a json file
@@ -98,6 +103,19 @@ function saveCourseWork() {
   json.completionMap = Object.fromEntries(completionMap);
   saveJSON(json, "Coursework");
 }
+function saveAll() {
+  let json = {};
+  json.fileType = "all";
+  json.courses = courseList;
+  json.coursemap = Object.fromEntries(courseMap);
+  json.notes = noteList;
+  json.notemap = Object.fromEntries(noteMap);
+  json.subnodes = subnodeboxesList;
+  json.subnodemap = Object.fromEntries(subnodeboxesMap);
+  json.lines = lineList;
+  json.completionMap = Object.fromEntries(completionMap);
+  saveJSON(json, "Layout and Coursework");
+}
 
 // -------------------------------- JSON Processing -------------------------------- //
 // process json file loaded (these completely replace current data)
@@ -111,6 +129,12 @@ function processJSON(json) {
       break;
     case "coursework":
       clearCoursework();
+      processCoursework(json);
+      break;
+    case "all":
+      clearLayout();
+      clearCoursework();
+      processCourseLayout(json);
       processCoursework(json);
       break;
   }
@@ -156,6 +180,10 @@ function processJSONAppend(json) {
       processCourseLayout(json);
       break;
     case "coursework":
+      processCoursework(json);
+      break;
+    case "all":
+      processCourseLayout(json);
       processCoursework(json);
       break;
   }

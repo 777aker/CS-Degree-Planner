@@ -38,11 +38,12 @@ function draw() {
       xy[0] -= movespeed / zoom;
   }
   // dragging time
-  if(mouseIsPressed) {
-    if(mouseButton === CENTER) {
-      xy[0] += mouseX - pmouseX;
-      xy[1] += mouseY - pmouseY;
-    }
+  if(mouseIsPressed && mode === modes.none && !typing) {
+    document.body.style.cursor = "all-scroll";
+    xy[0] += mouseX - pmouseX;
+    xy[1] += mouseY - pmouseY;
+  } else {
+    document.body.style.cursor = "auto";
   }
   /* I thought this would be a nice feature but I don't actually like it
   REMOVED: if you want mouse dragging edge of screen can use this
@@ -293,7 +294,7 @@ const courseListHandler = (course, index, arr) => {
           let groupcomplete = false;
           prereqgroup.forEach(prereq => {
             let prev = completionMap.get(prereq);
-            if(prev === completions.inprogress || prev === completions.complete)
+            if(prev === completions.inprogress || prev === completions.complete || !courseMap.has(prereq))
               groupcomplete = true;
           });
           available = available && groupcomplete;
@@ -306,6 +307,8 @@ const courseListHandler = (course, index, arr) => {
       }
       if(mouseHovering)
         openNodeOptions(nodeTypes.course, course);
+      else if(!onEditDiv && nodeOpened === course.code)
+        closeNodeOptions();
   }
   // if we don't have any subnodes then break and remove us form the subnodes list
   if(course.subnodes.length === 0) {

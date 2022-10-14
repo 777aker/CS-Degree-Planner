@@ -7,6 +7,9 @@ const templatediv = document.querySelector('.template-div');
 templatediv.addEventListener('mouseover', function() {
   typing = true;
 });
+templatediv.addEventListener('mouseleave', function() {
+  typing = false;
+});
 // this button shows templates when pressed
 const showtemplates = document.querySelector("#opentemplates");
 showtemplates.addEventListener('click', function() {

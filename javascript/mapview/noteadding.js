@@ -7,6 +7,9 @@ const addNoteDiv = document.querySelector('.add-note-div');
 addNoteDiv.addEventListener('mouseover', function() {
   typing = true;
 });
+addNoteDiv.addEventListener('mouseleave', function() {
+  typing = false;
+});
 const addNoteForm = document.querySelector('.add-note-form');
 function addNote() {
   // set typing to true so certain events aren't triggered

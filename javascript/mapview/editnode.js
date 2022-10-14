@@ -38,12 +38,12 @@ let disabled = false;
 function closeNodeOptions() {
   if(disabled)
     return;
-  typing = false;
   lastCodeClicked = "";
   lastNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
   nodeOpened = "";
   onEditDiv = false;
+  currentNodeOpen = false;
 }
 function openEditMenu() {
   disabled = true;
@@ -52,12 +52,13 @@ function openEditMenu() {
 // time to actually show the buttons
 let lastNodeTypeClicked;
 let nodeOpened;
+let currentNodeOpen = false;
 function openNodeOptions(nodeType, node) {
   // if typing don't show them do nothing just exit
-  if(typing || (nodeType === nodeTypes.note && advanceduses === false))
+  if(typing || currentNodeOpen || (nodeType === nodeTypes.note && advanceduses === false))
     return;
-  typing = true;
   disabled = false;
+  currentNodeOpen = true;
   editNodesDiv.style.display = "block";
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;

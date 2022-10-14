@@ -6,6 +6,12 @@
 // I could split everything into smaller files
 // display the help menu
 const helpDiv = document.querySelector('.help-menu-div');
+helpDiv.addEventListener('mouseover', function() {
+  typing = true;
+});
+helpDiv.addEventListener('mouseleave', function() {
+  typing = false;
+});
 const openHelpBtn = document.querySelector('#openhelp');
 const defaultViewDiv = document.querySelector('#overviewdiv');
 let setupAlready = false;
