@@ -21,6 +21,13 @@ function openHelp() {
   divsList.forEach(tmpdiv => {
     tmpdiv.style.display = 'none';
   });
+  buttonsList.forEach(tmpbutton => {
+    if(tmpbutton.id === "overview") {
+      tmpbutton.style.background = "rgb(200, 200, 200)";
+    } else {
+      tmpbutton.style.background = "rgb(255, 255, 255)";
+    }
+  });
   defaultViewDiv.style.display = 'flex';
   typing = true;
   if(!setupAlready) {
@@ -61,9 +68,6 @@ function setupButtons() {
     if(button.id === "closehelp")
       return;
     const div = document.querySelector(`#${button.id}div`);
-    if(button.id === "advanceduses") {
-
-    }
     button.addEventListener('click', function() {
       // TODO: change your style here to be toggled on @button
       // Also turn off everyone else's
@@ -78,49 +82,3 @@ function setupButtons() {
     });
   });
 }
-// search time
-const searchbtn = document.querySelector('#search');
-const searchtxt = document.querySelector('#searchtxt');
-searchbtn.addEventListener('click', search);
-function search() {
-  const searchterm = searchtxt.value;
-  let node = getElement(searchterm.toUpperCase());
-  if(node !== undefined) {
-    let changex = width/2 - node.x;
-    let changey = height/2 - node.y;
-    moveEverything(changex, changey, true);
-    return;
-  }
-  node = searchTitles(searchterm);
-  if(node === undefined) {
-    throwError("Nothing Found");
-    return;
-  }
-  moveEverything(width/2 - node.x, height/2 - node.y, true);
-}
-function searchTitles(term) {
-  let returns = undefined;
-  term = term.toLowerCase();
-  courseList.forEach(course => {
-    if(returns !== undefined)
-      return;
-    if(course.name.toLowerCase().includes(term))
-      returns = course
-  });
-  if(returns !== undefined)
-    return returns;
-  noteList.forEach(note => {
-    if(returns !== undefined)
-      return;
-    if(note.title.toLowerCase().includes(term))
-      returns = note;
-  });
-  return undefined;
-}
-const advancedCheck = document.querySelector("#advancedcheck");
-advancedCheck.addEventListener('click', function() {
-  if(advancedCheck.checked)
-    showUses();
-  else
-    rehideUses();
-});

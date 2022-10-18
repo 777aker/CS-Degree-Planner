@@ -74,6 +74,7 @@ let subnodeboxesMap = new Map();
 // this is a separate map because I want to actually save it differently than everything else
 // that way you can just load a completed coursework specifically file
 let completions = {
+  find: -1,
   incomplete: 0,
   available: 1,
   planned: 2,

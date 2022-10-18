@@ -49,8 +49,9 @@ function editCourse() {
   // luckily, hopefully, we can use some stuff we've already created
   typing = true;
   addCourseForm.innerHTML = '';
-  openEditMenu();
+  //gopenEditMenu();
   let course = courseList[courseMap.get(lastCodeClicked)];
+  closeNodeOptions();
   createFormTextFieldWithValue(addCourseForm, "Course Code:", "coursecode", "Enter Course Code", course.code, false);
   createFormTextFieldWithValue(addCourseForm, "Credit Hours:", "ch", "Enter Credit Hours", course.credits, false);
   createFormTextFieldWithValue(addCourseForm, "Course Name:", "coursename", "Enter Course Name", course.name, false);

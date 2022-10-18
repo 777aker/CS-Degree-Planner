@@ -80,7 +80,7 @@ function openNodeOptions(nodeType, node) {
       createFormText(editNodeForm, "Credit Hours: " + node.credits, false);
       createFormText(editNodeForm, "Course Name: " + node.name, false);
       let completion = completionMap.get(node.code);
-      if(completion !== completions.incomplete) {
+      if(completion !== completions.incomplete && completion !== completions.find) {
         const inprogresscheck = createCheckboxes(editNodeForm, "progresscheck", "In Progress");
         const completecheck = createCheckboxes(editNodeForm, "completecheck", "Complete");
         inprogresscheck.addEventListener('click', function() {
@@ -99,6 +99,14 @@ function openNodeOptions(nodeType, node) {
           case completions.complete:
             completecheck.checked = true;
             break;
+        }
+      } else {
+        if(pathfinding === node.code) {
+          createFormButtonWithTitle(editNodeForm, "closepath", "Close Path to Course", closePath,
+          "Closes the path to this Course");
+        } else {
+          createFormButtonWithTitle(editNodeForm, "showpath", "Show Path to Course", showPath,
+          "Shows the courses you need to complete in order to take this course");
         }
       }
       createFormButtonWithTitle(editNodeForm, "opencoursepage", "Open Course Page", openCourseHTML,
@@ -144,6 +152,21 @@ function completeToggle(tf) {
   else
     completionMap.set(lastCodeClicked, completions.available);
   updateStyles();
+}
+// time to figure out how we show a path to a course
+let pathfinding;
+function showPath() {
+  closePath();
+  pathfinding = lastCodeClicked;
+  completionMap.set(lastCodeClicked, completions.find);
+  closeNodeOptions();
+}
+function closePath() {
+  completionMap.forEach((value, key) => {
+    if(value === completions.find) {
+      completionMap.set(key, completions.incomplete);
+    }
+  });
 }
 // TODO: nothing below this valid
 /*

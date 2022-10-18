@@ -198,6 +198,20 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
       drawingContext.strokeStyle = grad;
       drawingContext.setLineDash([15, 30]);
       break;
+    case completions.find:
+      if(node !== undefined && completionMap.get(node.code) === completions.find) {
+        let factor = sin(millis()/500)*40;
+        if(red) {
+          grad.addColorStop(0, `rgba(${235+factor}, 0, 0, 255)`);
+          grad.addColorStop(1, `rgba(${220+factor}, ${180+factor}, ${180+factor}, 50)`);
+        } else {
+          grad.addColorStop(0, `rgba(${100+factor}, ${100+factor}, ${100+factor}, 255)`);
+          grad.addColorStop(1, `rgba(${200+factor}, ${200+factor}, ${200+factor}, 50)`);
+        }
+        drawingContext.strokeStyle = grad;
+        drawingContext.setLineDash([1,40]);
+        break;
+      }
     default:
       if(red) {
         grad.addColorStop(0, 'rgba(200, 100, 100, 255)');
@@ -306,8 +320,22 @@ const courseListHandler = (course, index, arr) => {
     default:
       //TODO: expensive ish? rethink ways to do this
       let completion = completionMap.get(course.code);
-      if(completion === completions.incomplete || completion === undefined || completion === completions.available) {
-        let available = true;
+      if(completion === completions.find) {
+        course.prerequisites.forEach(prereqgroup => {
+          let groupcomplete = false;
+          prereqgroup.forEach(prereq => {
+            if(completionMap.get(prereq) >= completions.inprogress) {
+              groupcomplete = true;
+            }
+          });
+          if(!groupcomplete) {
+            prereqgroup.forEach(prereq => {
+              completionMap.set(prereq, completions.find);
+            });
+          }
+        });
+      } else if(completion === completions.incomplete || completion === undefined || completion === completions.available) {
+        /*let available = true;
         course.prerequisites.forEach(prereqgroup => {
           let groupcomplete = false;
           prereqgroup.forEach(prereq => {
@@ -316,8 +344,8 @@ const courseListHandler = (course, index, arr) => {
               groupcomplete = true;
           });
           available = available && groupcomplete;
-        });
-        if(available) {
+        });*/
+        if(checkAvailable(course)) {
           completionMap.set(course.code, completions.available);
         } else {
           completionMap.set(course.code, completions.incomplete);
@@ -481,6 +509,13 @@ const noteListHandler = (note, index, arr) => {
 // helper function that determines boxfill
 function boxFill(code, mh) {
   switch(completionMap.get(code)) {
+    case completions.find:
+      stroke(0, 0, 0);
+      let factor = 235 + sin(millis()/500)*20;
+      if(mh)
+        factor -= 25;
+      fill(factor, factor, factor);
+      break;
     case completions.available:
     case completions.inprogress:
       stroke(0, 0, 0);

@@ -120,6 +120,8 @@ function submitNote() {
   lastCodeClicked = "";
   lastNodeTypeClicked = null;
   typing = false;
+  disabled = false;
+  closeNodeOptions();
 }
 // cancel adding a note
 const cancelnotebtn = document.querySelector("#cancelnote");

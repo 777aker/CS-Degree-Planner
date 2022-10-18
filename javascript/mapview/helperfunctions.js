@@ -280,3 +280,21 @@ function moveEverything(x, y, rezoom) {
   if(rezoom)
     zoom = 1;
 }
+// helper function to check availability of a node
+function checkAvailable(node) {
+  let available = true;
+  node.prerequisites.forEach(prereqgroup => {
+    let groupcomplete = false;
+    let inmap = false;
+    prereqgroup.forEach(prereq => {
+      if(!courseMap.has(prereq))
+        return;
+      inmap = true;
+      if(completionMap.get(prereq) >= completions.inprogress)
+        groupcomplete = true;
+    });
+    if(groupcomplete === false && inmap === true)
+      available = false;
+  });
+  return available;
+}
