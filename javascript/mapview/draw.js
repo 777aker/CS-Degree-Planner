@@ -105,8 +105,16 @@ function draw() {
         break;
     }
     if(node !== null && node !== undefined) {
-      editNodesDiv.style.top = (node.y - myzoom)/zoom + (node.height/2)*zoom + 'px';
-      editNodesDiv.style.left = (node.x - mxzoom)/zoom - (node.width/2)*zoom + 'px';
+      let posx = (node.x*zoom+mxzoom)-(node.width/2*zoom);
+      let posy = (node.y*zoom+myzoom)+(node.height/2*zoom);
+      //strokeWeight(5);
+      //stroke(255, 0, 0);
+      //line(0, 0, (posx-mxzoom)/zoom, (posy-myzoom)/zoom);
+      //point(posx, posy);
+      //print(posx);
+      //print(posy);
+      editNodesDiv.style.left = posx + 'px';
+      editNodesDiv.style.top = posy + 'px';
     }
   }
 }

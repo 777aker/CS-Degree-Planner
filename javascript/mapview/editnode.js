@@ -59,7 +59,7 @@ function openNodeOptions(nodeType, node) {
     return;
   disabled = false;
   currentNodeOpen = true;
-  editNodesDiv.style.display = "block";
+  editNodesDiv.style.display = "inline-block";
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;
   nodeOpened = lastCodeClicked;
