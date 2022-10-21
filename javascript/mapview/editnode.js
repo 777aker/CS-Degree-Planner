@@ -156,17 +156,23 @@ function completeToggle(tf) {
 // time to figure out how we show a path to a course
 let pathfinding;
 function showPath() {
-  closePath();
-  pathfinding = lastCodeClicked;
-  completionMap.set(lastCodeClicked, completions.find);
-  closeNodeOptions();
-}
-function closePath() {
   completionMap.forEach((value, key) => {
     if(value === completions.find) {
       completionMap.set(key, completions.incomplete);
     }
   });
+  pathfinding = lastCodeClicked;
+  completionMap.set(lastCodeClicked, completions.find);
+  closeNodeOptions();
+}
+function closePath() {
+  pathfinding = "";
+  completionMap.forEach((value, key) => {
+    if(value === completions.find) {
+      completionMap.set(key, completions.incomplete);
+    }
+  });
+  closeNodeOptions();
 }
 // TODO: nothing below this valid
 /*

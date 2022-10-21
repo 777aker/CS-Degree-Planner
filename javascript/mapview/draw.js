@@ -174,7 +174,13 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
   let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
   switch(completionMap.get(code)) {
     case completions.complete:
-      if(red) {
+      if(node !== undefined && completionMap.get(node.code) === completions.find) {
+        let factor = sin(millis()/425)*60;
+        let color1 = 195+factor;
+        let color2 = 60+factor;
+        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
+        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
+      } else if(red) {
         grad.addColorStop(0, 'rgba(255, 0, 0, 255)');
         grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
       } else {
@@ -188,7 +194,13 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
         drawingContext.setLineDash([15, 15]);
       break;
     case completions.inprogress:
-      if(red) {
+      if(node !== undefined && completionMap.get(node.code) === completions.find) {
+        let factor = sin(millis()/425)*60;
+        let color1 = 195+factor;
+        let color2 = 60+factor;
+        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
+        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
+      } else if(red) {
         grad.addColorStop(0, 'rgba(255, 100, 100, 200)');
         grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
       } else {
@@ -198,22 +210,14 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
       drawingContext.strokeStyle = grad;
       drawingContext.setLineDash([15, 30]);
       break;
-    case completions.find:
-      if(node !== undefined && completionMap.get(node.code) === completions.find) {
-        let factor = sin(millis()/500)*40;
-        if(red) {
-          grad.addColorStop(0, `rgba(${235+factor}, 0, 0, 255)`);
-          grad.addColorStop(1, `rgba(${220+factor}, ${180+factor}, ${180+factor}, 50)`);
-        } else {
-          grad.addColorStop(0, `rgba(${100+factor}, ${100+factor}, ${100+factor}, 255)`);
-          grad.addColorStop(1, `rgba(${200+factor}, ${200+factor}, ${200+factor}, 50)`);
-        }
-        drawingContext.strokeStyle = grad;
-        drawingContext.setLineDash([1,40]);
-        break;
-      }
     default:
-      if(red) {
+      if(node !== undefined && completionMap.get(node.code) === completions.find) {
+        let factor = sin(millis()/425)*60;
+        let color1 = 195+factor;
+        let color2 = 60+factor;
+        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
+        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
+      } else if(red) {
         grad.addColorStop(0, 'rgba(200, 100, 100, 255)');
         grad.addColorStop(1, 'rgba(255, 200, 200, 50)');
       } else {
@@ -324,7 +328,7 @@ const courseListHandler = (course, index, arr) => {
         course.prerequisites.forEach(prereqgroup => {
           let groupcomplete = false;
           prereqgroup.forEach(prereq => {
-            if(completionMap.get(prereq) >= completions.inprogress) {
+            if(completionMap.get(prereq) >= completions.available) {
               groupcomplete = true;
             }
           });
@@ -474,7 +478,7 @@ const noteListHandler = (note, index, arr) => {
     updateSubnodes(note, mouseHovering, false, !note.gate);
   }
   if(note.gate) {
-    let completion = completions.incomplete;
+    let completion = completions.find;
     note.connections.forEach(connection => {
       let subcomp = completionMap.get(connection);
       if(subcomp > completion)
@@ -615,7 +619,7 @@ function updateSubnodes(node, mh, childrencompletion, reflectChildren) {
   // this is how far in we place lines to subnodes
   let insetx = node.x - node.width/2 + subnodeinset/2;
   // well subnodebox isn't the box yet, we gotta calculate all it's stuff
-  let currentcomp = completions.incomplete;
+  let currentcomp = completions.find;
   node.subnodes.forEach((sub, ind, ar) => {
     if(childrencompletion)
       completionMap.set(sub, completionMap.get(node.code));
