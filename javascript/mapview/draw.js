@@ -60,8 +60,12 @@ function draw() {
       }
       break;
     case modes.draw:
-      if() {
-
+      if(mouseIsPressed && !typing) {
+        document.body.style.cursor = "grabbing";
+      } else if(hoveringOverSomething) {
+        document.body.style.cursor = "grab";
+      } else {
+        document.body.style.cursor = "auto";
       }
       break;
     case modes.edit:
