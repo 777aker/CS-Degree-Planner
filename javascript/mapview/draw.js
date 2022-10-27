@@ -19,6 +19,8 @@ let calcMouseY;
 let mouseOutsideWindow = false;
 // keeping track of time
 let timep = 0;
+// keeping track of if we are hovering over anything so we can change cursor
+let hoveringOverSomething = false;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
@@ -47,14 +49,37 @@ function draw() {
     if(keyIsDown(68) || keyIsDown(RIGHT_ARROW))
       xy[0] -= movespeed / zoom;
   }
-  // dragging time
-  if(mouseIsPressed && mode === modes.none && !typing) {
-    document.body.style.cursor = "all-scroll";
-    xy[0] += (mouseX - pmouseX) / zoom;
-    xy[1] += (mouseY - pmouseY) / zoom;
-  } else {
-    document.body.style.cursor = "auto";
+  switch(mode) {
+    case modes.none:
+      if(mouseIsPressed && !typing) {
+        document.body.style.cursor = "all-scroll";
+        xy[0] += (mouseX - pmouseX) / zoom;
+        xy[1] += (mouseY - pmouseY) / zoom;
+      } else {
+        document.body.style.cursor = "auto";
+      }
+      break;
+    case modes.draw:
+      if() {
+
+      }
+      break;
+    case modes.edit:
+
+      break;
+    case modes.delete:
+      if(hoveringOverSomething) {
+        document.body.style.cursor = "crosshair";
+      } else if(mouseIsPressed && !typing) {
+        document.body.style.cursor = "all-scroll";
+        xy[0] += (mouseX - pmouseX) / zoom;
+        xy[1] += (mouseY - pmouseY) / zoom;
+      } else {
+        document.body.style.cursor = "auto";
+      }
+      break;
   }
+  hoveringOverSomething = false;
   /* I thought this would be a nice feature but I don't actually like it
   REMOVED: if you want mouse dragging edge of screen can use this
   if(!typing && focused && !mouseOutsideWindow) {
@@ -153,6 +178,7 @@ const lineListHandler = (ln, index, lines) => {
     // AAAHHHH, PAST ME MADE THIS ALREADY!!!!!!
     // yaaaayyyyyyyyy
     if(lineTest(20, p1.x, p1.y, p2.x, p2.y, calcMouseX, calcMouseY)) {
+      hoveringOverSomething = true;
       if(mouseIsPressed && !typing) {
         lines.splice(index, 1);
         return;
@@ -247,6 +273,7 @@ const courseListHandler = (course, index, arr) => {
   let mouseHovering = draggingcourse === index;
   // intersecting course check
   if(mouseHovering || (calcMouseX > course.x - course.width/2 && calcMouseX < course.x + course.width/2 && calcMouseY > course.y - course.height/2 && calcMouseY < course.y + course.height/2)) {
+    hoveringOverSomething = true;
     mouseHovering = true;
   }
   // draw the rectangle around our course
@@ -401,6 +428,7 @@ const noteListHandler = (note, index, arr) => {
   let mouseHovering = draggingnote === index;
   // intersecting course check
   if(mouseHovering || (calcMouseX > note.x - note.width/2 && calcMouseX < note.x + note.width/2 && calcMouseY > note.y - note.height/2 & calcMouseY < note.y + note.height/2)) {
+    hoveringOverSomething = true;
     mouseHovering = true;
   }
   // draw rect around note
