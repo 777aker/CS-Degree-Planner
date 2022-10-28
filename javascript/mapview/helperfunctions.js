@@ -298,3 +298,10 @@ function checkAvailable(node) {
   });
   return available;
 }
+// do a cross product
+// I somehow manage to need this everytime I make something
+// wait? convex hull hello? this is a weird cross product
+// idk what this is why they call it cross?
+function cross3(v1, v2, v3) {
+  return (v1.x - v3.x) * (v2.y - v3.y) - (v1.y - v3.y) * (v2.x - v3.x);
+}

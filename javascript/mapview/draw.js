@@ -126,6 +126,8 @@ function draw() {
   noteList.forEach(noteListHandler);
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
+  // do the convex hull time
+  doTheConvexHull();
   // move edit buttons around with nodes
   if(lastCodeClicked !== "" && lastNodeTypeClicked !== null) {
     let node = null;

@@ -58,3 +58,44 @@ function closeRequirements() {
   typing = false;
   degreqDiv.style.display = 'none';
 }
+// ok, let's do the convex hull
+function doTheConvexHull() {
+  let points = [];
+  degreeRequirements.foundations.forEach(coursecode => {
+    points.push({
+      x: getElement(coursecode).x,
+      y: getElement(coursecode).y
+    });
+  });
+  points.sort(function(p1, p2) {
+    return p1.x == p2.x ? p1.y - p2.y : p1.x - p2.x;
+  });
+  let lower = [];
+  for(let i = 0; i < points.length; i++) {
+    while(lower.length >= 2 &&
+      cross3(lower[lower.length - 2], lower[lower.length - 1], points[i]) <= 0) {
+        lower.pop();
+      }
+      lower.push(points[i]);
+  }
+  let upper = [];
+  for(let i = points.length - 1; i >= 0; i--) {
+    while(upper.length >= 2 &&
+      cross3(upper[upper.length-2], upper[upper.length - 1], points[i]) <= 0) {
+        upper.pop();
+    }
+    upper.push(points[i]);
+  }
+  upper.pop();
+  lower.pop();
+  let convexHull = lower.concat(upper);
+
+  beginShape();
+  for(let i = 0; i < convexHull.length; i++) {
+    fill(0, 0, 0, 100);
+    text(i, convexHull[i].x, convexHull[i].y);
+    fill(255, 255, 255, 50/zoom);
+    curveVertex(convexHull[i].x, convexHull[i].y);
+  }
+  endShape(CLOSE);
+}
