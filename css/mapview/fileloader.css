@@ -1,19 +1,25 @@
-/* tmp degree reqs */
-.degree-requirements {
+/* div holding load files form */
+.fileloader-div {
   display: none;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
+  padding: 10px 10px;
   border: 2px solid black;
   border-radius: 4px;
-  padding: 10px 10px;
 }
 
-.dr {
+/* form for loading files */
+.fileloader-form {
   display: flex;
   flex-direction: column;
-  padding 10px 10px;
+  padding: 10px 10px;
   gap: 10px;
+}
+
+/* File loading buttons need some thickness */
+.filebtn {
+  padding: 5px 5px;
 }

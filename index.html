@@ -30,13 +30,24 @@
     <script defer src="javascript/mapview/draw.js"></script>
     <!-- This is where all the help menu stuff is -->
     <script defer src="javascript/mapview/helpmenu.js"></script>
+    <!-- Search stuff -->
+    <script defer src="javascript/mapview/search.js"></script>
     <!-- Advanced uses handler -->
     <script defer src="javascript/mapview/advancedmode.js"></script>
     <!-- Time to give a degree requirements placeholder -->
     <script defer src="javascript/mapview/degreerequirements.js"></script>
     <!-- This one should load last because events should be able to access everything else -->
     <script defer src="javascript/mapview/events.js"></script>
+    <!-- all the style sheets -->
+    <link rel="stylesheet" href="css/mapview/addcourse.css">
+    <link rel="stylesheet" href="css/mapview/addnote.css">
+    <link rel="stylesheet" href="css/mapview/cleardata.css">
+    <link rel="stylesheet" href="css/mapview/editnodes.css">
+    <link rel="stylesheet" href="css/mapview/fileloader.css">
+    <link rel="stylesheet" href="css/mapview/helpmenu.css">
     <link rel="stylesheet" href="css/mapview/mapstyle.css">
+    <link rel="stylesheet" href="css/mapview/menus.css">
+    <link rel="stylesheet" href="css/mapview/templates.css">
   </head>
   <body>
     <main>
@@ -50,6 +61,8 @@
                 title='Download the current course layout'>
               <input class="filebtn" type="button" id="courseworksave" value="Save Coursework"
                 title='Download coursework'>
+              <input class="filebtn" type="button" id="saveboth" value="Save All"
+                title="Save coursework and course layout into one file">
               <input class="filebtn" type="button" id="openloader" value="Open File"
                 title='Load json file'>
             </form>
@@ -76,6 +89,7 @@
             <button id="search" title="Search for a course" class="viewbtn">Search</button>
             <input id="searchtxt" type="text" class="viewbtn" value="" placeholder="Enter Course To Search For">
             <button id="degreq" title="View Degree Requirements" class="viewbtn">Degree Requirements</button>
+            <button class="viewbtn" onclick="location.href='APItesting'">API testing</button>
           </div>
         </div>
       </div>

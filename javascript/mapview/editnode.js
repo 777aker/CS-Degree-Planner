@@ -14,7 +14,6 @@ editNodesDiv.addEventListener('mouseleave', function() {
 function openCourseHTML() {
   code = lastCodeClicked;
   courseOpened = getElement(lastCodeClicked);
-  print(courseOpened);
   closeNodeOptions();
   if(doesFileExist(`coursehtmls/${code}.html`)) {
      window.open(`coursehtmls/${code}.html`);
@@ -39,12 +38,12 @@ let disabled = false;
 function closeNodeOptions() {
   if(disabled)
     return;
-  typing = false;
   lastCodeClicked = "";
   lastNodeTypeClicked = null;
   editNodesDiv.style.display = "none";
   nodeOpened = "";
   onEditDiv = false;
+  currentNodeOpen = false;
 }
 function openEditMenu() {
   disabled = true;
@@ -53,13 +52,14 @@ function openEditMenu() {
 // time to actually show the buttons
 let lastNodeTypeClicked;
 let nodeOpened;
+let currentNodeOpen = false;
 function openNodeOptions(nodeType, node) {
   // if typing don't show them do nothing just exit
-  if(typing)
+  if(typing || currentNodeOpen || (nodeType === nodeTypes.note && advanceduses === false))
     return;
-  typing = true;
   disabled = false;
-  editNodesDiv.style.display = "block";
+  currentNodeOpen = true;
+  editNodesDiv.style.display = "inline-block";
   lastNodeTypeClicked = nodeType;
   lastCodeClicked = node.code;
   nodeOpened = lastCodeClicked;
@@ -68,22 +68,19 @@ function openNodeOptions(nodeType, node) {
   switch(nodeType) {
     case nodeTypes.note:
       editNodeForm.innerHTML = "";
-      createFormText(editNodeForm, "Note Title: " + node.title, false);
-      createFormText(editNodeForm, "Note Text: " + node.text, false);
-      //TOOD: put if it is an or or and gate here
-      if(advanceduses) {
-        createFormButtonWithTitle(editNodeForm, "editnodebtn", "Edit Note", editNote,
+      createFormButtonWithTitle(editNodeForm, "editnodebtn", "Edit Note", editNote,
         "Allows you to edit this notes information");
-      }
+      editNodesDiv.style.width = '10%';
       updateStyles();
       break;
     case nodeTypes.course:
       editNodeForm.innerHTML = "";
+      editNodesDiv.style.width = '30%';
       createFormText(editNodeForm, "Course Code: " + node.code, false);
       createFormText(editNodeForm, "Credit Hours: " + node.credits, false);
       createFormText(editNodeForm, "Course Name: " + node.name, false);
       let completion = completionMap.get(node.code);
-      if(completion !== completions.incomplete) {
+      if(completion !== completions.incomplete && completion !== completions.find) {
         const inprogresscheck = createCheckboxes(editNodeForm, "progresscheck", "In Progress");
         const completecheck = createCheckboxes(editNodeForm, "completecheck", "Complete");
         inprogresscheck.addEventListener('click', function() {
@@ -102,6 +99,14 @@ function openNodeOptions(nodeType, node) {
           case completions.complete:
             completecheck.checked = true;
             break;
+        }
+      } else {
+        if(pathfinding === node.code) {
+          createFormButtonWithTitle(editNodeForm, "closepath", "Close Path to Course", closePath,
+          "Closes the path to this Course");
+        } else {
+          createFormButtonWithTitle(editNodeForm, "showpath", "Show Path to Course", showPath,
+          "Shows the courses you need to complete in order to take this course");
         }
       }
       createFormButtonWithTitle(editNodeForm, "opencoursepage", "Open Course Page", openCourseHTML,
@@ -147,6 +152,27 @@ function completeToggle(tf) {
   else
     completionMap.set(lastCodeClicked, completions.available);
   updateStyles();
+}
+// time to figure out how we show a path to a course
+let pathfinding;
+function showPath() {
+  completionMap.forEach((value, key) => {
+    if(value === completions.find) {
+      completionMap.set(key, completions.incomplete);
+    }
+  });
+  pathfinding = lastCodeClicked;
+  completionMap.set(lastCodeClicked, completions.find);
+  closeNodeOptions();
+}
+function closePath() {
+  pathfinding = "";
+  completionMap.forEach((value, key) => {
+    if(value === completions.find) {
+      completionMap.set(key, completions.incomplete);
+    }
+  });
+  closeNodeOptions();
 }
 // TODO: nothing below this valid
 /*

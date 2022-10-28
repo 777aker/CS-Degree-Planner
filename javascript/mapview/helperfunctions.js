@@ -280,3 +280,28 @@ function moveEverything(x, y, rezoom) {
   if(rezoom)
     zoom = 1;
 }
+// helper function to check availability of a node
+function checkAvailable(node) {
+  let available = true;
+  node.prerequisites.forEach(prereqgroup => {
+    let groupcomplete = false;
+    let inmap = false;
+    prereqgroup.forEach(prereq => {
+      if(!courseMap.has(prereq))
+        return;
+      inmap = true;
+      if(completionMap.get(prereq) >= completions.inprogress)
+        groupcomplete = true;
+    });
+    if(groupcomplete === false && inmap === true)
+      available = false;
+  });
+  return available;
+}
+// do a cross product
+// I somehow manage to need this everytime I make something
+// wait? convex hull hello? this is a weird cross product
+// idk what this is why they call it cross?
+function cross3(v1, v2, v3) {
+  return (v1.x - v3.x) * (v2.y - v3.y) - (v1.y - v3.y) * (v2.x - v3.x);
+}

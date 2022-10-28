@@ -1,19 +1,19 @@
-/* tmp degree reqs */
-.degree-requirements {
+/* add note container */
+.add-note-div {
   display: none;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
+  padding: 10px 10px;
   border: 2px solid black;
   border-radius: 4px;
-  padding: 10px 10px;
 }
 
-.dr {
+/* add note form */
+.add-note-form {
   display: flex;
   flex-direction: column;
-  padding 10px 10px;
-  gap: 10px;
+  padding-bottom: 10px;
 }

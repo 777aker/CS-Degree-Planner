@@ -36,11 +36,6 @@ function keyTyped() {
   // so if typing return
   if(typing)
     return;
-  // make the software go fullscreen because that's nice
-  if(key === 'f' || key === 'F') {
-    let fs = fullscreen();
-    fullscreen(!fs);
-  }
   if(key === '[') {
     noteList.forEach(note => {
       print(note.gate);
@@ -49,6 +44,8 @@ function keyTyped() {
   }
   if(key === 'z') {
     zoom = 1;
+    mxzoom = 0;
+    myzoom = 0;
   }
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
@@ -112,8 +109,10 @@ function keyTyped() {
     clearDiv.style.display = 'block';
   }
   if(key === 'g') {
-    if(throwError("WARNING: about to enable advanced uses")) {
+    if(!advanceduses && throwError("WARNING: about to enable advanced uses")) {
       showUses();
+    } else {
+      rehideUses();
     }
   }
   // but first, disable all advanced uses, which is all of these
@@ -157,11 +156,16 @@ function mousePressed() {
 function mouseWheel(delta) {
   if(typing)
     return;
-  zoom += -delta / 1000;
-  if(zoom < .2)
-    zoom = .2;
-  if(zoom > 3)
-    zoom = 3;
+  let tmpzoom = delta > 0 ? 0.05 : -0.05;
+  let wx = (mouseX - mxzoom) / (width * zoom);
+  let wy = (mouseY - myzoom) / (height * zoom);
+  zoom += tmpzoom;
+  if(zoom < .2 || zoom > 3) {
+    zoom -= tmpzoom;
+    return;
+  }
+  mxzoom -= wx * width * tmpzoom;
+  myzoom -= wy * height * tmpzoom;
 }
 // when mouse is released do these things
 function mouseReleased() {
@@ -181,7 +185,17 @@ document.addEventListener('wheel', function(e) {
     return;
   e.preventDefault();
   e.stopPropagation();
+  // in an attempt to make it good, it was overcomplicated and impossible to use
+  // simple is better
+  if(!isNaN(e.wheelDeltaY)) {
+    mouseWheel(e.wheelDeltaY);
+  }
+  /* this is a nonsense complicated way to do this don't
+  mouseWheel((e.deltaY / abs(e.deltaY)) * 100);
+
   let isTouchPad = e.wheelDeltaY ? e.wheelDeltaY === -3 * e.deltaY : e.deltaMode === 0
+  print(isTouchPad);
+  print(e.ctrlKey);
   if(!isTouchPad) {
     if(e.deltaY !== -e.wheelDeltaY)
       mouseWheel(e.deltaX + e.deltaY);
@@ -194,6 +208,7 @@ document.addEventListener('wheel', function(e) {
       moveEverything(-e.deltaX, -e.deltaY, false);
     }
   }
+  */
 }, {
   passive: false
 });

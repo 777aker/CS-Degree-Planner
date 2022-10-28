@@ -11,20 +11,32 @@ let subnodenote = -1;
 let xy = [0, 0];
 // also a global variable for zoom
 let zoom = 1;
+let mxzoom = 0;
+let myzoom = 0;
+let calcMouseX;
+let calcMouseY;
 // global variable for dragging
 let mouseOutsideWindow = false;
 // keeping track of time
 let timep = 0;
+// keeping track of if we are hovering over anything so we can change cursor
+let hoveringOverSomething = false;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
   // set background color
   background(220);
   // time for zooming
+  translate(mxzoom, myzoom);
+  scale(zoom);
+  calcMouseX = (mouseX - mxzoom) / zoom;
+  calcMouseY = (mouseY - myzoom) / zoom;
+  /*
   translate(mouseX, mouseY);
   scale(zoom);
   translate(-mouseX, -mouseY);
-  translate();
+  */
+  //translate();
   // if the user is holding a key down move everything around
   xy = [0, 0];
   if(!typing) {
@@ -37,13 +49,47 @@ function draw() {
     if(keyIsDown(68) || keyIsDown(RIGHT_ARROW))
       xy[0] -= movespeed / zoom;
   }
-  // dragging time
-  if(mouseIsPressed) {
-    if(mouseButton === CENTER) {
-      xy[0] += mouseX - pmouseX;
-      xy[1] += mouseY - pmouseY;
-    }
+  switch(mode) {
+    case modes.none:
+      if(mouseIsPressed && !typing) {
+        moveEverything();
+      } else {
+        document.body.style.cursor = "auto";
+      }
+      break;
+    case modes.draw:
+      if(hoveringOverSomething) {
+        document.body.style.cursor = "alias";
+      } else if(mouseIsPressed && !typing) {
+        moveEverything();
+      } else {
+        document.body.style.cursor = "auto";
+      }
+      break;
+    case modes.edit:
+      if(draggingnote !== -1 || draggingcourse !== -1) {
+        document.body.style.cursor = "grabbing";
+      } else if(hoveringOverSomething) {
+        document.body.style.cursor = "grab";
+      } else if(mouseIsPressed && !typing) {
+        moveEverything();
+      } else {
+        document.body.style.cursor = "auto";
+      }
+      break;
+    case modes.delete:
+      if(hoveringOverSomething) {
+        document.body.style.cursor = "crosshair";
+      } else if(mouseIsPressed && !typing) {
+        document.body.style.cursor = "all-scroll";
+        xy[0] += (mouseX - pmouseX) / zoom;
+        xy[1] += (mouseY - pmouseY) / zoom;
+      } else {
+        document.body.style.cursor = "auto";
+      }
+      break;
   }
+  hoveringOverSomething = false;
   /* I thought this would be a nice feature but I don't actually like it
   REMOVED: if you want mouse dragging edge of screen can use this
   if(!typing && focused && !mouseOutsideWindow) {
@@ -82,6 +128,8 @@ function draw() {
   noteList.forEach(noteListHandler);
   // loop that goes through and does everything we want for each course
   courseList.forEach(courseListHandler);
+  // do the convex hull time
+  doTheConvexHull();
   // move edit buttons around with nodes
   if(lastCodeClicked !== "" && lastNodeTypeClicked !== null) {
     let node = null;
@@ -94,10 +142,23 @@ function draw() {
         break;
     }
     if(node !== null && node !== undefined) {
-      editNodesDiv.style.top = (node.y - node.height/2 - textLeading() - 5 - mouseY)*zoom + mouseY + 'px';
-      editNodesDiv.style.left = (node.x - node.width/2 - mouseX)*zoom + mouseX + 'px';
+      let posx = (node.x*zoom+mxzoom)-(node.width/2*zoom);
+      let posy = (node.y*zoom+myzoom)+(node.height/2*zoom);
+      //strokeWeight(5);
+      //stroke(255, 0, 0);
+      //line(0, 0, (posx-mxzoom)/zoom, (posy-myzoom)/zoom);
+      //point(posx, posy);
+      //print(posx);
+      //print(posy);
+      editNodesDiv.style.left = posx + 'px';
+      editNodesDiv.style.top = posy + 'px';
     }
   }
+}
+function moveEverything() {
+  document.body.style.cursor = "all-scroll";
+  xy[0] += (mouseX - pmouseX) / zoom;
+  xy[1] += (mouseY - pmouseY) / zoom;
 }
 
 // -------------------------------- Draw For Loops -------------------------------- //
@@ -116,8 +177,8 @@ const lineListHandler = (ln, index, lines) => {
   let node2 = undefined;
   if(mode === modes.draw && index === lines.length-1) {
     p2 = {
-      x: mouseX,
-      y: mouseY
+      x: calcMouseX,
+      y: calcMouseY
     };
   } else {
     node2 = getElement(ln[1]);
@@ -133,7 +194,8 @@ const lineListHandler = (ln, index, lines) => {
     // if mouse pressed also delete it
     // AAAHHHH, PAST ME MADE THIS ALREADY!!!!!!
     // yaaaayyyyyyyyy
-    if(lineTest(20, p1.x, p1.y, p2.x, p2.y, mouseX, mouseY)) {
+    if(lineTest(20, p1.x, p1.y, p2.x, p2.y, calcMouseX, calcMouseY)) {
+      hoveringOverSomething = true;
       if(mouseIsPressed && !typing) {
         lines.splice(index, 1);
         return;
@@ -155,7 +217,13 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
   let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
   switch(completionMap.get(code)) {
     case completions.complete:
-      if(red) {
+      if(node !== undefined && completionMap.get(node.code) === completions.find) {
+        let factor = sin(millis()/425)*60;
+        let color1 = 195+factor;
+        let color2 = 60+factor;
+        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
+        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
+      } else if(red) {
         grad.addColorStop(0, 'rgba(255, 0, 0, 255)');
         grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
       } else {
@@ -169,7 +237,13 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
         drawingContext.setLineDash([15, 15]);
       break;
     case completions.inprogress:
-      if(red) {
+      if(node !== undefined && completionMap.get(node.code) === completions.find) {
+        let factor = sin(millis()/425)*60;
+        let color1 = 195+factor;
+        let color2 = 60+factor;
+        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
+        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
+      } else if(red) {
         grad.addColorStop(0, 'rgba(255, 100, 100, 200)');
         grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
       } else {
@@ -180,7 +254,13 @@ function lineGradient(code, node, red, x1, y1, x2, y2) {
       drawingContext.setLineDash([15, 30]);
       break;
     default:
-      if(red) {
+      if(node !== undefined && completionMap.get(node.code) === completions.find) {
+        let factor = sin(millis()/425)*60;
+        let color1 = 195+factor;
+        let color2 = 60+factor;
+        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
+        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
+      } else if(red) {
         grad.addColorStop(0, 'rgba(200, 100, 100, 255)');
         grad.addColorStop(1, 'rgba(255, 200, 200, 50)');
       } else {
@@ -209,7 +289,8 @@ const courseListHandler = (course, index, arr) => {
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > course.x - course.width/2 && mouseX < course.x + course.width/2 && mouseY > course.y - course.height/2 && mouseY < course.y + course.height/2)) {
+  if(mouseHovering || (calcMouseX > course.x - course.width/2 && calcMouseX < course.x + course.width/2 && calcMouseY > course.y - course.height/2 && calcMouseY < course.y + course.height/2)) {
+    hoveringOverSomething = true;
     mouseHovering = true;
   }
   // draw the rectangle around our course
@@ -249,8 +330,8 @@ const courseListHandler = (course, index, arr) => {
       if(subnodenote === -1 && subnodecourse === -1) {
         // if this is the course we are dragging then move it to the mouse
         if(draggingcourse === index) {
-          course.x = mouseX;
-          course.y = mouseY;
+          course.x = calcMouseX;
+          course.y = calcMouseY;
           // else if we are hovering and the mouse is pressed and there isn't a subnodecourse then make this the subnode course
         } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
           // so before we actually make this a subnode, we have to check and make sure it is not
@@ -287,18 +368,32 @@ const courseListHandler = (course, index, arr) => {
     default:
       //TODO: expensive ish? rethink ways to do this
       let completion = completionMap.get(course.code);
-      if(completion === completions.incomplete || completion === undefined || completion === completions.available) {
-        let available = true;
+      if(completion === completions.find) {
+        course.prerequisites.forEach(prereqgroup => {
+          let groupcomplete = false;
+          prereqgroup.forEach(prereq => {
+            if(completionMap.get(prereq) >= completions.available) {
+              groupcomplete = true;
+            }
+          });
+          if(!groupcomplete) {
+            prereqgroup.forEach(prereq => {
+              completionMap.set(prereq, completions.find);
+            });
+          }
+        });
+      } else if(completion === completions.incomplete || completion === undefined || completion === completions.available) {
+        /*let available = true;
         course.prerequisites.forEach(prereqgroup => {
           let groupcomplete = false;
           prereqgroup.forEach(prereq => {
             let prev = completionMap.get(prereq);
-            if(prev === completions.inprogress || prev === completions.complete)
+            if(prev === completions.inprogress || prev === completions.complete || !courseMap.has(prereq))
               groupcomplete = true;
           });
           available = available && groupcomplete;
-        });
-        if(available) {
+        });*/
+        if(checkAvailable(course)) {
           completionMap.set(course.code, completions.available);
         } else {
           completionMap.set(course.code, completions.incomplete);
@@ -306,6 +401,8 @@ const courseListHandler = (course, index, arr) => {
       }
       if(mouseHovering)
         openNodeOptions(nodeTypes.course, course);
+      else if(!onEditDiv && nodeOpened === course.code)
+        closeNodeOptions();
   }
   // if we don't have any subnodes then break and remove us form the subnodes list
   if(course.subnodes.length === 0) {
@@ -347,7 +444,8 @@ const noteListHandler = (note, index, arr) => {
   // check if dragging this box
   let mouseHovering = draggingnote === index;
   // intersecting course check
-  if(mouseHovering || (mouseX > note.x - note.width/2 && mouseX < note.x + note.width/2 && mouseY > note.y - note.height/2 & mouseY < note.y + note.height/2)) {
+  if(mouseHovering || (calcMouseX > note.x - note.width/2 && calcMouseX < note.x + note.width/2 && calcMouseY > note.y - note.height/2 & calcMouseY < note.y + note.height/2)) {
+    hoveringOverSomething = true;
     mouseHovering = true;
   }
   // draw rect around note
@@ -376,8 +474,8 @@ const noteListHandler = (note, index, arr) => {
       // but I could combine this function? eh, eh, seems risky for no reward
       if(subnodenote === -1 && subnodecourse === -1) {
         if(draggingnote === index) {
-          note.x = mouseX;
-          note.y = mouseY;
+          note.x = calcMouseX;
+          note.y = calcMouseY;
         } else if(mouseHovering && mouseIsPressed && subnodecourse === -1 && subnodenote === -1) {
           // so before we actually make this a subnode, we have to check and make sure it is not
           // a subnode of what we are trying to make a subnode of it because then we get a weird
@@ -425,7 +523,7 @@ const noteListHandler = (note, index, arr) => {
     updateSubnodes(note, mouseHovering, false, !note.gate);
   }
   if(note.gate) {
-    let completion = completions.incomplete;
+    let completion = completions.find;
     note.connections.forEach(connection => {
       let subcomp = completionMap.get(connection);
       if(subcomp > completion)
@@ -460,6 +558,13 @@ const noteListHandler = (note, index, arr) => {
 // helper function that determines boxfill
 function boxFill(code, mh) {
   switch(completionMap.get(code)) {
+    case completions.find:
+      stroke(0, 0, 0);
+      let factor = 235 + sin(millis()/500)*20;
+      if(mh)
+        factor -= 25;
+      fill(factor, factor, factor);
+      break;
     case completions.available:
     case completions.inprogress:
       stroke(0, 0, 0);
@@ -559,7 +664,7 @@ function updateSubnodes(node, mh, childrencompletion, reflectChildren) {
   // this is how far in we place lines to subnodes
   let insetx = node.x - node.width/2 + subnodeinset/2;
   // well subnodebox isn't the box yet, we gotta calculate all it's stuff
-  let currentcomp = completions.incomplete;
+  let currentcomp = completions.find;
   node.subnodes.forEach((sub, ind, ar) => {
     if(childrencompletion)
       completionMap.set(sub, completionMap.get(node.code));
