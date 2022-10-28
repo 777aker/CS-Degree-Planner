@@ -60,16 +60,20 @@ function draw() {
       }
       break;
     case modes.draw:
-      if(mouseIsPressed && !typing) {
+      if(hoveringOverSomething) {
+        document.body.style.cursor = "alias";
+      } else {
+        document.body.style.cursor = "auto";
+      }
+      break;
+    case modes.edit:
+      if(draggingnote !== -1 || draggingcourse !== -1) {
         document.body.style.cursor = "grabbing";
       } else if(hoveringOverSomething) {
         document.body.style.cursor = "grab";
       } else {
         document.body.style.cursor = "auto";
       }
-      break;
-    case modes.edit:
-
       break;
     case modes.delete:
       if(hoveringOverSomething) {
