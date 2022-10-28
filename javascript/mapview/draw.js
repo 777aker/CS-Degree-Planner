@@ -52,9 +52,7 @@ function draw() {
   switch(mode) {
     case modes.none:
       if(mouseIsPressed && !typing) {
-        document.body.style.cursor = "all-scroll";
-        xy[0] += (mouseX - pmouseX) / zoom;
-        xy[1] += (mouseY - pmouseY) / zoom;
+        moveEverything();
       } else {
         document.body.style.cursor = "auto";
       }
@@ -62,6 +60,8 @@ function draw() {
     case modes.draw:
       if(hoveringOverSomething) {
         document.body.style.cursor = "alias";
+      } else if(mouseIsPressed && !typing) {
+        moveEverything();
       } else {
         document.body.style.cursor = "auto";
       }
@@ -71,6 +71,8 @@ function draw() {
         document.body.style.cursor = "grabbing";
       } else if(hoveringOverSomething) {
         document.body.style.cursor = "grab";
+      } else if(mouseIsPressed && !typing) {
+        moveEverything();
       } else {
         document.body.style.cursor = "auto";
       }
@@ -152,6 +154,11 @@ function draw() {
       editNodesDiv.style.top = posy + 'px';
     }
   }
+}
+function moveEverything() {
+  document.body.style.cursor = "all-scroll";
+  xy[0] += (mouseX - pmouseX) / zoom;
+  xy[1] += (mouseY - pmouseY) / zoom;
 }
 
 // -------------------------------- Draw For Loops -------------------------------- //

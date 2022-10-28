@@ -60,8 +60,12 @@ function closeRequirements() {
 }
 // ok, let's do the convex hull
 function doTheConvexHull() {
+  convexHull(degreeRequirements.foundations);
+  convexHull(degreeRequirements.discrete);
+}
+function convexHull(courses) {
   let points = [];
-  degreeRequirements.foundations.forEach(coursecode => {
+  courses.forEach(coursecode => {
     points.push({
       x: getElement(coursecode).x,
       y: getElement(coursecode).y
@@ -86,14 +90,13 @@ function doTheConvexHull() {
     }
     upper.push(points[i]);
   }
-  upper.pop();
   lower.pop();
+  upper.pop();
   let convexHull = lower.concat(upper);
-
+  convexHull.push(convexHull[0]);
+  convexHull.push(convexHull[1]);
   beginShape();
   for(let i = 0; i < convexHull.length; i++) {
-    fill(0, 0, 0, 100);
-    text(i, convexHull[i].x, convexHull[i].y);
     fill(255, 255, 255, 50/zoom);
     curveVertex(convexHull[i].x, convexHull[i].y);
   }
