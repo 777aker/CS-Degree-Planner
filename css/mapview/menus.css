@@ -32,6 +32,11 @@
 /* dropdown button styles */
 .dropbtn {
   font-size: 150%;
+  background-color: rgb(142, 68, 173);
+}
+
+.dropbtn:hover {
+  background-color: rgb(122, 48, 153);
 }
 
 /* div holding edit content */
@@ -43,6 +48,7 @@
 /* style for the buttons within the edit menu */
 .editbuttons {
     padding: 5px 5px;
+    /*background-color: rgb(155, 89, 182);*/
 }
 
 /* when hovering over an edit button do some stuff */
@@ -71,6 +77,12 @@
   display: flex;
 }
 
+/* File loading buttons need some thickness */
+.filebtn {
+  padding: 5px 5px;
+  /*background-color: rgb(155, 89, 182);*/
+}
+
 /* file form styling */
 .fileform {
   display: flex;
@@ -95,4 +107,5 @@
 
 .viewbtn {
   padding: 5px 5px;
+  /*background-color: rgb(155, 89, 182);*/
 }

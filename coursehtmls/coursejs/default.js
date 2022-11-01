@@ -10,6 +10,14 @@ function setup() {
   codeCredits.innerHTML = `${pageCourse.code} - ${pageCourse.credits} credit hours`;
   catalogRef.setAttribute("href", `https://catalog.colorado.edu/search/?search=${pageCourse.code}`);
   //tryRetrieveInfo(`https://catalog.colorado.edu/search/?search=${pageCourse.code}`);
+  /* search classes?? classes.colorado.edu
+  id='crit-keyword' -> can enter course code or course name into this input
+  id='search-button' -> button that searches for classes
+  let searchCatalog = createElement('button', 'Course Search');
+  searchCatalog.addEventListener('click', function() {
+
+  });
+  */
 }
 /* attempt at retrieving course catalog info
 function tryRetrieveInfo(path) {

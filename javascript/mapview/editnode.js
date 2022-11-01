@@ -123,20 +123,20 @@ function openNodeOptions(nodeType, node) {
 function updateStyles() {
   switch(completionMap.get(lastCodeClicked)) {
     case completions.inprogress:
-      editNodesDiv.style.background = "rgb(255, 255, 255)";
+      editNodesDiv.style.background = "rgb(52, 152, 219)";
       editNodesDiv.style.color = "rgb(0, 0, 0)";
       break;
     case completions.complete:
-      editNodesDiv.style.background = "rgb(0, 0, 0)";
-      editNodesDiv.style.color = "rgb(255, 255, 255)";
+      editNodesDiv.style.background = "rgb(39, 174, 96)";
+      editNodesDiv.style.color = "rgb(0, 0, 0)";
       break;
     case completions.available:
-      editNodesDiv.style.background = "rgb(255, 255, 255)";
+      editNodesDiv.style.background = "rgb(241, 196, 15)";
       editNodesDiv.style.color = "rgb(0, 0, 0)";
       break;
     default:
-      editNodesDiv.style.background = "rgb(225, 225, 225)";
-      editNodesDiv.style.color = "rgb(100, 100, 100)";
+      editNodesDiv.style.background = "rgb(127, 140, 141)";
+      editNodesDiv.style.color = "rgb(0, 0, 0)";
   }
 }
 function inprogressToggle(tf) {

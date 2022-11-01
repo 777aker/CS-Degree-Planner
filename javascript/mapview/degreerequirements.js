@@ -66,9 +66,24 @@ function doTheConvexHull() {
 function convexHull(courses) {
   let points = [];
   courses.forEach(coursecode => {
+    let course = getElement(coursecode);
+    if(course === null || course === undefined)
+      return;
     points.push({
-      x: getElement(coursecode).x,
-      y: getElement(coursecode).y
+      x: course.x-course.width/2,
+      y: course.y+course.height/2
+    });
+    points.push({
+      x: course.x+course.width/2,
+      y: course.y+course.height/2
+    });
+    points.push({
+      x: course.x+course.width/2,
+      y: course.y-course.height/2
+    });
+    points.push({
+      x: course.x-course.width/2,
+      y: course.y-course.height/2
     });
   });
   points.sort(function(p1, p2) {
@@ -93,12 +108,13 @@ function convexHull(courses) {
   lower.pop();
   upper.pop();
   let convexHull = lower.concat(upper);
-  convexHull.push(convexHull[0]);
-  convexHull.push(convexHull[1]);
+  //convexHull.push(convexHull[0]);
+  //convexHull.push(convexHull[1]);
   beginShape();
   for(let i = 0; i < convexHull.length; i++) {
     fill(255, 255, 255, 50/zoom);
-    curveVertex(convexHull[i].x, convexHull[i].y);
+    //curveVertex(convexHull[i].x, convexHull[i].y);
+    vertex(convexHull[i].x, convexHull[i].y);
   }
   endShape(CLOSE);
 }

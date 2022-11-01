@@ -35,8 +35,6 @@ function openHelp() {
     setupAlready = true;
   }
 }
-const closeHelpBtn = document.querySelector('#closehelp');
-closeHelpBtn.addEventListener('click', closeHelp);
 function closeHelp() {
   helpDiv.style.display = 'none';
   typing = false;
@@ -49,8 +47,10 @@ function setupButtons() {
   buttonsList.forEach(button => {
     switch(button.id) {
       case "closehelp":
+        button.addEventListener('click', closeHelp);
         return;
       case "advanceduses":
+        let advancedCheck = document.querySelector('#advancedcheck');
         button.addEventListener('click', function() {
           // TODO: change your style here to be toggled on @button
           // Also turn off everyone else's
@@ -61,8 +61,19 @@ function setupButtons() {
             tmpbutton.style.background = "rgb(255, 255, 255)";
           });
           button.style.background = "rgb(200, 200, 200)";
-          document.querySelector("#advancedcheck").checked = advanceduses;
+          advancedCheck.checked = advanceduses;
           div.style.display = 'flex';
+        });
+        advancedCheck.addEventListener('click', function() {
+          if(advancedCheck.checked) {
+            if(throwError('Warning: about to enable advanced uses')) {
+              showUses();
+            } else {
+                advancedCheck.checked = false;
+            }
+          } else {
+            rehideUses();
+          }
         });
     }
     if(button.id === "closehelp")

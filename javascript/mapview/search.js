@@ -41,10 +41,3 @@ function searchTitles(term) {
   });
   return undefined;
 }
-const advancedCheck = document.querySelector("#advancedcheck");
-advancedCheck.addEventListener('click', function() {
-  if(advancedCheck.checked)
-    showUses();
-  else
-    rehideUses();
-});

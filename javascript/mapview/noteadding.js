@@ -37,6 +37,7 @@ function editNote() {
   openEditMenu();
   // create the labels and inputs for the form
   let tempnote = noteList[noteMap.get(lastCodeClicked)];
+  //closeNodeOptions();
   createFormText(addNoteForm,
 `This allows you to create notes for explanations, organization, or whatever is helpful.
 The title will be bold and the text will be the default font. Both are optional`);
@@ -71,7 +72,7 @@ function submitNote() {
     tmpsubnodes = tmpnote.subnodes;
     connections = tmpnote.connections;
   } else {
-    print('dont think it has');
+    print('Does not have that note. noteadding.js Line 75')
     hash = getHash(title + text + noteList.length);
     while(noteMap.has(hash.toString())) {
       hash += 1;
@@ -127,6 +128,8 @@ function submitNote() {
 const cancelnotebtn = document.querySelector("#cancelnote");
 cancelnotebtn.addEventListener('click', cancelNote);
 function cancelNote() {
+  disabled = false;
+  closeNodeOptions();
   addNoteDiv.style.display = 'none';
   addNoteForm.innerHTML = '';
   lastCodeClicked = "";

@@ -3,12 +3,26 @@
   <head>
     <meta charset="utf-8">
     <title>Testing APIs</title>
+    <script async defer src="https://accounts.google.com/gsi/client"></script>
     <script src="../p5/p5.js"></script>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="testing.js"></script>
+    <script defer src="testing.js"></script>
   </head>
   <body>
-    <button onclick="authenticate().then(loadClient)">authorize and load</button>
-    <button onclick="execute()">execute</button>
+    <div id="g_id_onload"
+      data-client_id=""
+      data-context="signin"
+      data-ux_mode="popup"
+      data-callback="handleCredentialsResponse"
+      data-login_uri="http://localhost:3000"
+      data-itp_support="true">
+    </div>
+    <div class="g_id_signin"
+      data-type="standard"
+      data-shape="rectangular"
+      data-theme="outline"
+      data-text="signin_with"
+      data-size="large"
+      data-logo_alignment="left">
+    </div>
   </body>
 </html>

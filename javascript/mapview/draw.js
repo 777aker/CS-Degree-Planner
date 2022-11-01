@@ -25,7 +25,7 @@ let hoveringOverSomething = false;
 // where most of the real meat happens
 function draw() {
   // set background color
-  background(220);
+  background(52, 73, 94);
   // time for zooming
   translate(mxzoom, myzoom);
   scale(zoom);
@@ -52,7 +52,7 @@ function draw() {
   switch(mode) {
     case modes.none:
       if(mouseIsPressed && !typing) {
-        moveEverything();
+        moveEverythingMouse();
       } else {
         document.body.style.cursor = "auto";
       }
@@ -61,7 +61,7 @@ function draw() {
       if(hoveringOverSomething) {
         document.body.style.cursor = "alias";
       } else if(mouseIsPressed && !typing) {
-        moveEverything();
+        moveEverythingMouse();
       } else {
         document.body.style.cursor = "auto";
       }
@@ -72,7 +72,7 @@ function draw() {
       } else if(hoveringOverSomething) {
         document.body.style.cursor = "grab";
       } else if(mouseIsPressed && !typing) {
-        moveEverything();
+        moveEverythingMouse();
       } else {
         document.body.style.cursor = "auto";
       }
@@ -155,7 +155,7 @@ function draw() {
     }
   }
 }
-function moveEverything() {
+function moveEverythingMouse() {
   document.body.style.cursor = "all-scroll";
   xy[0] += (mouseX - pmouseX) / zoom;
   xy[1] += (mouseY - pmouseY) / zoom;
@@ -213,62 +213,78 @@ const lineListHandler = (ln, index, lines) => {
   line(p1.x, p1.y, p2.x, p2.y);
 };
 // helper function that draws gradients and stuff
-function lineGradient(code, node, red, x1, y1, x2, y2) {
+function lineGradient(code1, node2, red, x1, y1, x2, y2) {
   let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
-  switch(completionMap.get(code)) {
+  drawingContext.strokeStyle = grad;
+  if(red) {
+    grad.addColorStop(0, 'rgb(231, 76, 60)');
+    grad.addColorStop(1, 'rgb(231, 76, 60)');
+    if(node2 !== undefined && completionMap.get(node2.code) === completions.complete) {
+      drawingContext.setLineDash([0,0]);
+      return;
+    }
+    switch(completionMap.get(code1)) {
+      case completions.complete:
+        drawingContext.setLineDash([15,15]);
+        break;
+      case completions.inprogress:
+        drawingContext.setLineDash([15, 30]);
+        break;
+      case completions.available:
+        drawingContext.setLineDash([1,40]);
+        break;
+      case completions.find:
+        drawingContext.setLineDash([1,40]);
+        break;
+      default:g
+        drawingContext.setLineDash([1,40]);
+        break;
+    }
+    return;
+  }
+  switch(completionMap.get(code1)) {
     case completions.complete:
-      if(node !== undefined && completionMap.get(node.code) === completions.find) {
-        let factor = sin(millis()/425)*60;
-        let color1 = 195+factor;
-        let color2 = 60+factor;
-        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
-        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
-      } else if(red) {
-        grad.addColorStop(0, 'rgba(255, 0, 0, 255)');
-        grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
-      } else {
-        grad.addColorStop(0, 'rgba(0, 0, 0, 255)');
-        grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
-      }
-      drawingContext.strokeStyle = grad;
-      if(node !== undefined && completionMap.get(node.code) === completions.complete)
-        drawingContext.setLineDash([0,0]);
-      else
-        drawingContext.setLineDash([15, 15]);
+      grad.addColorStop(0, 'rgb(39, 174, 96)');
+      drawingContext.setLineDash([15,15]);
       break;
     case completions.inprogress:
-      if(node !== undefined && completionMap.get(node.code) === completions.find) {
-        let factor = sin(millis()/425)*60;
-        let color1 = 195+factor;
-        let color2 = 60+factor;
-        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
-        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
-      } else if(red) {
-        grad.addColorStop(0, 'rgba(255, 100, 100, 200)');
-        grad.addColorStop(1, 'rgba(240, 200, 200, 50)');
-      } else {
-        grad.addColorStop(0, 'rgba(100, 100, 100, 200)');
-        grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
-      }
-      drawingContext.strokeStyle = grad;
+      grad.addColorStop(0, 'rgb(52, 152, 219)');
       drawingContext.setLineDash([15, 30]);
       break;
+    case completions.available:
+      grad.addColorStop(0, 'rgb(241, 196, 15)');
+      drawingContext.setLineDash([1,40]);
+      break;
+    case completions.find:
+      grad.addColorStop(0, 'rgb(243, 156, 18)');
+      drawingContext.setLineDash([1,40]);
+      break;
     default:
-      if(node !== undefined && completionMap.get(node.code) === completions.find) {
-        let factor = sin(millis()/425)*60;
-        let color1 = 195+factor;
-        let color2 = 60+factor;
-        grad.addColorStop(0, `rgba(${color1},${color1},${color1},255)`);
-        grad.addColorStop(1, `rgba(${color2},${color2},${color2},255)`);
-      } else if(red) {
-        grad.addColorStop(0, 'rgba(200, 100, 100, 255)');
-        grad.addColorStop(1, 'rgba(255, 200, 200, 50)');
-      } else {
-        grad.addColorStop(0, 'rgba(100, 100, 100, 255)');
-        grad.addColorStop(1, 'rgba(200, 200, 200, 50)');
-      }
-      drawingContext.strokeStyle = grad;
-      drawingContext.setLineDash([1, 40]);
+      grad.addColorStop(0, 'rgb(127, 140, 141)');
+      drawingContext.setLineDash([1,40]);
+      break;
+  }
+  if(node2 === undefined) {
+    grad.addColorStop(1, 'rgb(127, 140, 141)');
+    return;
+  }
+  switch(completionMap.get(node2.code)) {
+    case completions.complete:
+      grad.addColorStop(1, 'rgb(39, 174, 96)');
+      drawingContext.setLineDash([0,0]);
+      break;
+    case completions.inprogress:
+      grad.addColorStop(1, 'rgb(52, 152, 219)');
+      break;
+    case completions.available:
+      grad.addColorStop(1, 'rgb(241, 196, 15)');
+      break;
+    case completions.find:
+      grad.addColorStop(1, 'rgb(243, 156, 18)');
+      break;
+    default:
+      grad.addColorStop(1, 'rgb(127, 140, 141)');
+      break;
   }
 }
 // helper function that handles the first courselist draw
@@ -369,19 +385,29 @@ const courseListHandler = (course, index, arr) => {
       //TODO: expensive ish? rethink ways to do this
       let completion = completionMap.get(course.code);
       if(completion === completions.find) {
-        course.prerequisites.forEach(prereqgroup => {
-          let groupcomplete = false;
-          prereqgroup.forEach(prereq => {
-            if(completionMap.get(prereq) >= completions.available) {
-              groupcomplete = true;
-            }
-          });
-          if(!groupcomplete) {
+        if(checkAvailable(course)) {
+          completionMap.set(course.code, completions.available);
+          course.prerequisites.forEach(prereqgroup => {
             prereqgroup.forEach(prereq => {
-              completionMap.set(prereq, completions.find);
+              if(completionMap.get(prereq) === completions.find)
+                completionMap.set(prereq, completions.incomplete);
             });
-          }
-        });
+          });
+        } else {
+          course.prerequisites.forEach(prereqgroup => {
+            let groupcomplete = false;
+            prereqgroup.forEach(prereq => {
+              if(completionMap.get(prereq) >= completions.available) {
+                groupcomplete = true;
+              }
+            });
+            if(!groupcomplete) {
+              prereqgroup.forEach(prereq => {
+                completionMap.set(prereq, completions.find);
+              });
+            }
+            });
+        }
       } else if(completion === completions.incomplete || completion === undefined || completion === completions.available) {
         /*let available = true;
         course.prerequisites.forEach(prereqgroup => {
@@ -557,77 +583,62 @@ const noteListHandler = (note, index, arr) => {
 };
 // helper function that determines boxfill
 function boxFill(code, mh) {
-  switch(completionMap.get(code)) {
-    case completions.find:
-      stroke(0, 0, 0);
-      let factor = 235 + sin(millis()/500)*20;
-      if(mh)
-        factor -= 25;
-      fill(factor, factor, factor);
-      break;
-    case completions.available:
-    case completions.inprogress:
-      stroke(0, 0, 0);
+  stroke(44, 62, 80);
+  switch(mode) {
+    case modes.delete:
       if(mh) {
-        fill(230, 230, 230);
-      } else {
-        fill(255, 255, 255);
+        fill(231, 76, 60);
+        return;
       }
+      break;
+    case modes.edit:
+      if(mh) {
+        fill(26, 188, 156);
+        return;
+      }
+      break;
+    case modes.draw:
+      if(mh) {
+        fill(22, 160, 133);
+        return;
+      }
+      break;
+  }
+  switch(completionMap.get(code)) {
+    case completions.available:
+      if(mh)
+        fill(221, 176, 0);
+      else
+        fill(241, 196, 15);
+      break;
+    case completions.inprogress:
+      if(mh)
+        fill(32, 132, 199);
+      else
+        fill(52, 152, 219);
       break;
     case completions.complete:
-      stroke(0, 0, 0)
-      if(mh) {
-        if(mode === modes.delete) {
-          fill(50, 0, 0);
-        } else {
-          fill(50, 50, 50);
-        }
-      } else {
-        fill(0, 0, 0);
-      }
+      if(mh)
+        fill(19, 154, 76);
+      else
+        fill(39, 174, 96);
+      break;
+    case completions.find:
+      if(mh)
+        fill(223, 136, 0);
+      else
+        fill(243, 156, 18);
       break;
     default:
-      stroke(245, 245, 245);
-      if(mh) {
-        fill(215, 215, 215)
-      } else {
-        fill(225, 225, 225);
-      }
+      if(mh)
+        fill(107, 120, 121);
+      else
+        fill(127, 140, 141);
       break;
   }
 }
 function textFill(code) {
-  let r = 100;
-  let g = 100;
-  let b = 100;
-  switch(completionMap.get(code)) {
-    case completions.available:
-      r = 50;
-      g = 50;
-      b = 50;
-      break;
-    case completions.inprogress:
-      r = 0;
-      g = 0;
-      b = 0;
-      break;
-    case completions.complete:
-      r = 255;
-      g = 255;
-      b = 255;
-  }
-  switch(mode) {
-    case modes.delete:
-      r += 125;
-      break;
-    case modes.edit:
-      b += 125;
-      break;
-    case modes.draw:
-      g += 125;
-      break;
-  }
-  fill(r, g, b, 255);
+  fill(0, 0, 0, 255);
 }
 // some variables for drawing a nice box
 // spacing around the subnodes
