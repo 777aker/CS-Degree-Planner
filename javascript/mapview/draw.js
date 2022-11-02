@@ -236,7 +236,7 @@ function lineGradient(code1, node2, red, x1, y1, x2, y2) {
       case completions.find:
         drawingContext.setLineDash([1,40]);
         break;
-      default:g
+      default:
         drawingContext.setLineDash([1,40]);
         break;
     }

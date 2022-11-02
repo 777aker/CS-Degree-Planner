@@ -1,4 +1,7 @@
 function handleCredentialsResponse(response) {
-  let payload = response.payload;
-  print(payload.name);
+  print(response);
+}
+
+function print(stuff) {
+  console.log(stuff);
 }
