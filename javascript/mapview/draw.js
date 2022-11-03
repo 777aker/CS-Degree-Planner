@@ -452,7 +452,7 @@ const courseListHandler = (course, index, arr) => {
   // draw course code, credit hours, and name to the screen
   textAlign(CENTER, TOP);
   textStyle(BOLD);
-  textFill(course.code);
+  textFill(course.code, mouseHovering);
   text(course.code + "-" + course.credits, course.x, course.y - course.height/2 + boxpadding.y/2);
   textStyle(NORMAL);
   text(course.name, course.x, course.y - course.height/2 + boxpadding.y/2 + textLeading());
@@ -561,7 +561,7 @@ const noteListHandler = (note, index, arr) => {
   noStroke();
   // finally draw the text
   // if it doesn't have a title center text
-  textFill(note.code);
+  textFill(note.code, mouseHovering);
   if(note.title === '') {
     textStyle(NORMAL);
     textAlign(LEFT, CENTER);
@@ -637,8 +637,29 @@ function boxFill(code, mh) {
       break;
   }
 }
-function textFill(code) {
-  fill(0, 0, 0, 255);
+function textFill(code, mh) {
+  switch(mode) {
+    case modes.delete:
+      if(mh)
+        fill(0, 0, 0, 255);
+      else
+        fill(192, 57, 43);
+      break;
+    case modes.edit:
+      if(mh)
+        fill(0, 0, 0, 255);
+      else
+        fill(26, 188, 156);
+      break;
+    case modes.draw:
+      if(mh)
+        fill(0, 0, 0, 255);
+      else
+        fill(22, 160, 133);
+      break;
+    default:
+      fill(0, 0, 0, 255);
+  }
 }
 // some variables for drawing a nice box
 // spacing around the subnodes
