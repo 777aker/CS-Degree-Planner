@@ -717,8 +717,10 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
       let position = subnodeboxesMap.get(subnode.code);
       let dsub = subnodeboxesList[position];
       // change the subnodes position to be under the current node
-      subnode.x = subnodebox.x + subnode.width/2 + subnodeinset + subnodepadding;
-      subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading + subnodepadding;
+      if(xy[0] === 0 && xy[1] === 0) {
+        subnode.x = subnodebox.x + subnode.width/2 + subnodeinset + subnodepadding;
+        subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading + subnodepadding;
+      }
       // figure out our subnodebox size
       subnodebox.height += dsub.height + subnodeleading + subnodepadding*2;
       let width = dsub.width + subnodeinset + subnodepadding*2;
@@ -734,8 +736,10 @@ function subnodeboxmaker(node, mouseHovering, subnodebox, fsub, sindex, sarr, in
     // the subnode doesn't have subnodes so we can do some different stuff
     } else {
       // move our subnode to under us
-      subnode.x = subnodebox.x + subnode.width/2 + subnodeinset;
-      subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading;
+      if(xy[0] === 0 && xy[1] === 0) {
+        subnode.x = subnodebox.x + subnode.width/2 + subnodeinset;
+        subnode.y = subnodebox.height + subnodebox.y + subnode.height/2 + subnodeleading;
+      }
       // calculate our subnodebox size
       subnodebox.height += subnode.height + subnodeleading;
       if(subnodebox.width < subnode.width + subnodeinset)
