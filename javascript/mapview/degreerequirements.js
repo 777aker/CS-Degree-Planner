@@ -4,7 +4,9 @@ let degreeRequirements = {
   foundations: ['CSCI 1300', 'CSCI 2270', 'CSCI 2400', 'CSCI 3308', 'CSCI 3155', 'CSCI 3104'],
   calculus1: ['APPM 1350', 'MATH 1300'],
   calculus2: ['MATH 2300', 'APPM 1360'],
-  discrete: ['MATH 2001', 'CSCI 2824', 'ECEN 2703', 'APPM 3170']
+  discrete: ['MATH 2001', 'CSCI 2824', 'ECEN 2703', 'APPM 3170'],
+  core: ['CSCI 3002', 'CSCI 3202', 'CSCI 3287', 'CSCI 3302', 'CSCI 3403', 'CSCI 3434', 'CSCI 3656', 'CSCI 3753', 'CSCI 4022', 'CSCI 4273', 'CSCI 4448'],
+  linear: ['CSCI 2820', 'MATH 2130', 'APPM 3310']
 };
 const degreqDiv = document.querySelector('.degree-requirements');
 const drform = document.querySelector('.dr');
@@ -53,6 +55,22 @@ function checkRequirementsHelperOne(list) {
       met = true;
   });
   return met;
+}
+function checkRequirementsHelperNumber(list, amount) {
+  let number = 0;
+  list.forEach(code => {
+    if(completionMap.get(code) === completions.complete)
+      number += 1
+  });
+  return number >= amount;
+}
+function checkRequirementsHelperCredits(list, amount) {
+  let credits = 0;
+  list.forEach(code => {
+    if(completionMap.get(code) === completions.complete)
+      credits += getElement(code).credits;
+  });
+  return credits >= amount;
 }
 function closeRequirements() {
   typing = false;

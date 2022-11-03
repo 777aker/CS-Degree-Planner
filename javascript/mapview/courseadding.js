@@ -51,7 +51,8 @@ function editCourse() {
   addCourseForm.innerHTML = '';
   //gopenEditMenu();
   let course = courseList[courseMap.get(lastCodeClicked)];
-  closeNodeOptions();
+  openEditMenu();
+  //closeNodeOptions();
   createFormTextFieldWithValue(addCourseForm, "Course Code:", "coursecode", "Enter Course Code", course.code, false);
   createFormTextFieldWithValue(addCourseForm, "Credit Hours:", "ch", "Enter Credit Hours", course.credits, false);
   createFormTextFieldWithValue(addCourseForm, "Course Name:", "coursename", "Enter Course Name", course.name, false);
@@ -232,6 +233,8 @@ function submitCourse() {
   lastCodeClicked = "";
   lastNodeTypeClicked = null;
   typing = false;
+  disabled = false;
+  closeNodeOptions();
 }
 // set up the cancel button for add course form
 const cancelcoursebtn = document.querySelector("#cancelcourse");
@@ -245,4 +248,6 @@ function cancelCourse() {
   lastCodeClicked = "";
   lastNodeTypeClicked = null;
   typing = false;
+  disabled = false;
+  closeNodeOptions();
 }

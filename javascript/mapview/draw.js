@@ -356,13 +356,15 @@ const courseListHandler = (course, index, arr) => {
           let test = false;
           if(draggingnote !== -1) {
             noteList[draggingnote].subnodes.forEach((subnode) => {
-              if(subnode.code === course.code)
+              if(subnode === course.code) {
                 test = true;
+              }
             });
           } else if(draggingcourse !== -1) {
             courseList[draggingcourse].subnodes.forEach((subnode) => {
-              if(subnode.code === course.code)
+              if(subnode === course.code) {
                 test = true;
+              }
             });
           }
           if(!test) {
@@ -509,13 +511,15 @@ const noteListHandler = (note, index, arr) => {
           let test = false;
           if(draggingnote !== -1) {
             noteList[draggingnote].subnodes.forEach((subnode) => {
-              if(subnode.code === note.code)
+              if(subnode === note.code) {
                 test = true;
+              }
             });
           } else if(draggingcourse !== -1) {
             courseList[draggingcourse].subnodes.forEach((subnode) => {
-              if(subnode.code === note.code)
+              if(subnode === note.code) {
                 test = true;
+              }
             });
           }
           if(!test) {
