@@ -79,6 +79,17 @@ function openNodeOptions(nodeType, node) {
       createFormText(editNodeForm, "Course Code: " + node.code, false);
       createFormText(editNodeForm, "Credit Hours: " + node.credits, false);
       createFormText(editNodeForm, "Course Name: " + node.name, false);
+      createFormText(editNodeForm, "Prerequisites:", false);
+      node.prerequisites.forEach((array) => {
+        let str = "";
+        array.forEach((code, ind, len) => {
+          if(ind !== 0)
+            str += " or " + code;
+          else
+            str += code;
+        });
+        createFormText(editNodeForm, str, false);
+      });
       let completion = completionMap.get(node.code);
       if(completion !== completions.incomplete && completion !== completions.find) {
         const inprogresscheck = createCheckboxes(editNodeForm, "progresscheck", "In Progress");

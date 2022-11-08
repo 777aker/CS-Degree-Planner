@@ -21,6 +21,8 @@ let mouseOutsideWindow = false;
 let timep = 0;
 // keeping track of if we are hovering over anything so we can change cursor
 let hoveringOverSomething = false;
+// how round edges of rectangles are
+let rectRoundness = 20;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
@@ -312,7 +314,7 @@ const courseListHandler = (course, index, arr) => {
   // draw the rectangle around our course
   boxFill(course.code, mouseHovering);
   rectMode(CENTER);
-  rect(course.x, course.y, course.width, course.height);
+  rect(course.x, course.y, course.width, course.height, rectRoundness);
   // in different modes do some different things
   switch(mode) {
     case modes.delete:
@@ -465,7 +467,7 @@ const noteListHandler = (note, index, arr) => {
   // draw rect around note
   rectMode(CENTER);
   boxFill(note.code, mouseHovering);
-  rect(note.x, note.y, note.width, note.height);
+  rect(note.x, note.y, note.width, note.height, rectRoundness);
   switch(mode) {
     case modes.delete:
       if(typing)
@@ -652,7 +654,7 @@ const subnodeHandler = (subnode, ind, arr) => {
     return;
   }
   boxFill(subnode.code, false);
-  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
+  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2, rectRoundness);
   subnode.lines.forEach((ln) => {
     line(ln[0], ln[1], ln[2], ln[3]);
   });
