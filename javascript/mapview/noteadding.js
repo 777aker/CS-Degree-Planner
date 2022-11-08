@@ -66,7 +66,7 @@ function submitNote() {
   let hash;
   let tmpsubnodes = [];
   let connections = [];
-  if(noteMap.has(lastCodeClicked)) {
+  if(hasElement(lastCodeClicked)) {
     let tmpnote = noteList[noteMap.get(lastCodeClicked)];
     hash = tmpnote.code;
     tmpsubnodes = tmpnote.subnodes;
@@ -74,7 +74,7 @@ function submitNote() {
   } else {
     print('Does not have that note. noteadding.js Line 75')
     hash = getHash(title + text + noteList.length);
-    while(noteMap.has(hash.toString())) {
+    while(hasElement(hash.toString())) {
       hash += 1;
       hash |= 0;
     }
@@ -123,6 +123,7 @@ function submitNote() {
   typing = false;
   disabled = false;
   closeNodeOptions();
+  return false;
 }
 // cancel adding a note
 const cancelnotebtn = document.querySelector("#cancelnote");

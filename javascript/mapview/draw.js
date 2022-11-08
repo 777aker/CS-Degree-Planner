@@ -559,6 +559,8 @@ const noteListHandler = (note, index, arr) => {
       if(subcomp > completion)
         completion = subcomp;
     });
+    if(note.connections.length === 0)
+      completion = completions.incomplete;
     completionMap.set(note.code, completion);
   }
   // don't want stroke on text

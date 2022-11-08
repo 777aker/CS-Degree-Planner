@@ -264,6 +264,9 @@ function pushElementNoPosition(list, map, element) {
 function getElement(key) {
   return courseMap.has(key) ? courseList[courseMap.get(key)] : noteList[noteMap.get(key)];
 }
+function hasElement(key) {
+  return courseMap.has(key) || noteMap.has(key);
+}
 function getNodeType(key) {
   return courseMap.has(key) ? nodeTypes.course : nodeTypes.note;
 }
