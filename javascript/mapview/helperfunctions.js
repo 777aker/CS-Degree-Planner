@@ -264,6 +264,9 @@ function pushElementNoPosition(list, map, element) {
 function getElement(key) {
   return courseMap.has(key) ? courseList[courseMap.get(key)] : noteList[noteMap.get(key)];
 }
+function hasElement(key) {
+  return courseMap.has(key) || noteMap.has(key);
+}
 function getNodeType(key) {
   return courseMap.has(key) ? nodeTypes.course : nodeTypes.note;
 }
@@ -304,4 +307,27 @@ function checkAvailable(node) {
 // idk what this is why they call it cross?
 function cross3(v1, v2, v3) {
   return (v1.x - v3.x) * (v2.y - v3.y) - (v1.y - v3.y) * (v2.x - v3.x);
+}
+// this is a helper function for testing if you are a subnode of something
+// ie: is test a subnode of node
+function isSubnode(test, node) {
+  // since we'll be getting random elements need to make sure exists
+  if(node === undefined)
+    return false;
+  // foreach loops don't return all the way out here so need a variable
+  let ret = false;
+  // safety check
+  if(test.code === node.code)
+    ret = true;
+  // go through all the nodes subnodes
+  node.subnodes.forEach((subnode) => {
+    // if one of your subnodes is our test return true
+    if(subnode === test.code)
+      ret = true;
+    // for every subnode node has, make sure none of their
+    // subnodes also contain test
+    if(isSubnode(test, getElement(subnode)))
+        ret = true;
+  });
+  return ret;
 }

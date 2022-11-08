@@ -21,6 +21,8 @@ let mouseOutsideWindow = false;
 let timep = 0;
 // keeping track of if we are hovering over anything so we can change cursor
 let hoveringOverSomething = false;
+// how round edges of rectangles are
+let rectRoundness = 20;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
@@ -312,7 +314,7 @@ const courseListHandler = (course, index, arr) => {
   // draw the rectangle around our course
   boxFill(course.code, mouseHovering);
   rectMode(CENTER);
-  rect(course.x, course.y, course.width, course.height);
+  rect(course.x, course.y, course.width, course.height, rectRoundness);
   // in different modes do some different things
   switch(mode) {
     case modes.delete:
@@ -353,21 +355,7 @@ const courseListHandler = (course, index, arr) => {
           // so before we actually make this a subnode, we have to check and make sure it is not
           // a subnode of what we are trying to make a subnode of it because then we get a weird
           // they're both subnodes of each other which doesn't make sense
-          let test = false;
-          if(draggingnote !== -1) {
-            noteList[draggingnote].subnodes.forEach((subnode) => {
-              if(subnode === course.code) {
-                test = true;
-              }
-            });
-          } else if(draggingcourse !== -1) {
-            courseList[draggingcourse].subnodes.forEach((subnode) => {
-              if(subnode === course.code) {
-                test = true;
-              }
-            });
-          }
-          if(!test) {
+          if(!isSubnode(course, draggingnote !== -1 ? noteList[draggingnote] : courseList[draggingcourse])) {
             // put what we are dragging into the subnodes for this course
             course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
             subnodecourse = index;
@@ -479,7 +467,7 @@ const noteListHandler = (note, index, arr) => {
   // draw rect around note
   rectMode(CENTER);
   boxFill(note.code, mouseHovering);
-  rect(note.x, note.y, note.width, note.height);
+  rect(note.x, note.y, note.width, note.height, rectRoundness);
   switch(mode) {
     case modes.delete:
       if(typing)
@@ -508,21 +496,7 @@ const noteListHandler = (note, index, arr) => {
           // so before we actually make this a subnode, we have to check and make sure it is not
           // a subnode of what we are trying to make a subnode of it because then we get a weird
           // they're both subnodes of each other which doesn't make sense
-          let test = false;
-          if(draggingnote !== -1) {
-            noteList[draggingnote].subnodes.forEach((subnode) => {
-              if(subnode === note.code) {
-                test = true;
-              }
-            });
-          } else if(draggingcourse !== -1) {
-            courseList[draggingcourse].subnodes.forEach((subnode) => {
-              if(subnode === note.code) {
-                test = true;
-              }
-            });
-          }
-          if(!test) {
+          if(!isSubnode(note, draggingnote !== -1 ? noteList[draggingnote] : courseList[draggingcourse])) {
             // put what we are dragging into the subnodes for this course
             note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
             subnodenote = index;
@@ -553,7 +527,7 @@ const noteListHandler = (note, index, arr) => {
     updateSubnodes(note, mouseHovering, false, !note.gate);
   }
   if(note.gate) {
-    let completion = completions.find;
+    let completion = completions.incomplete;
     note.connections.forEach(connection => {
       let subcomp = completionMap.get(connection);
       if(subcomp > completion)
@@ -680,7 +654,7 @@ const subnodeHandler = (subnode, ind, arr) => {
     return;
   }
   boxFill(subnode.code, false);
-  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2);
+  rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2, rectRoundness);
   subnode.lines.forEach((ln) => {
     line(ln[0], ln[1], ln[2], ln[3]);
   });
@@ -700,7 +674,7 @@ function updateSubnodes(node, mh, childrencompletion, reflectChildren) {
   // this is how far in we place lines to subnodes
   let insetx = node.x - node.width/2 + subnodeinset/2;
   // well subnodebox isn't the box yet, we gotta calculate all it's stuff
-  let currentcomp = completions.find;
+  let currentcomp = completions.incomplete;
   node.subnodes.forEach((sub, ind, ar) => {
     if(childrencompletion)
       completionMap.set(sub, completionMap.get(node.code));
@@ -712,6 +686,8 @@ function updateSubnodes(node, mh, childrencompletion, reflectChildren) {
     }
     subnodeboxmaker(node, mh, subnodebox, sub, ind, ar, insetx);
   });
+  if(node.subnodes.length === 0)
+    currentcomp = completions.incomplete;
   if(reflectChildren)
     completionMap.set(node.code, currentcomp);
   // now we have to update our map and list with our new subnodebox
