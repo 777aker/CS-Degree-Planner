@@ -353,21 +353,7 @@ const courseListHandler = (course, index, arr) => {
           // so before we actually make this a subnode, we have to check and make sure it is not
           // a subnode of what we are trying to make a subnode of it because then we get a weird
           // they're both subnodes of each other which doesn't make sense
-          let test = false;
-          if(draggingnote !== -1) {
-            noteList[draggingnote].subnodes.forEach((subnode) => {
-              if(subnode === course.code) {
-                test = true;
-              }
-            });
-          } else if(draggingcourse !== -1) {
-            courseList[draggingcourse].subnodes.forEach((subnode) => {
-              if(subnode === course.code) {
-                test = true;
-              }
-            });
-          }
-          if(!test) {
+          if(!isSubnode(course, draggingnote !== -1 ? noteList[draggingnote] : courseList[draggingcourse])) {
             // put what we are dragging into the subnodes for this course
             course.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
             subnodecourse = index;
@@ -508,21 +494,7 @@ const noteListHandler = (note, index, arr) => {
           // so before we actually make this a subnode, we have to check and make sure it is not
           // a subnode of what we are trying to make a subnode of it because then we get a weird
           // they're both subnodes of each other which doesn't make sense
-          let test = false;
-          if(draggingnote !== -1) {
-            noteList[draggingnote].subnodes.forEach((subnode) => {
-              if(subnode === note.code) {
-                test = true;
-              }
-            });
-          } else if(draggingcourse !== -1) {
-            courseList[draggingcourse].subnodes.forEach((subnode) => {
-              if(subnode === note.code) {
-                test = true;
-              }
-            });
-          }
-          if(!test) {
+          if(!isSubnode(note, draggingnote !== -1 ? noteList[draggingnote] : courseList[draggingcourse])) {
             // put what we are dragging into the subnodes for this course
             note.subnodes.push(draggingcourse === -1 ? noteList[draggingnote].code : courseList[draggingcourse].code);
             subnodenote = index;
@@ -553,14 +525,12 @@ const noteListHandler = (note, index, arr) => {
     updateSubnodes(note, mouseHovering, false, !note.gate);
   }
   if(note.gate) {
-    let completion = completions.find;
+    let completion = completions.incomplete;
     note.connections.forEach(connection => {
       let subcomp = completionMap.get(connection);
       if(subcomp > completion)
         completion = subcomp;
     });
-    if(note.connections.length === 0)
-      completion = completions.incomplete;
     completionMap.set(note.code, completion);
   }
   // don't want stroke on text
@@ -702,7 +672,7 @@ function updateSubnodes(node, mh, childrencompletion, reflectChildren) {
   // this is how far in we place lines to subnodes
   let insetx = node.x - node.width/2 + subnodeinset/2;
   // well subnodebox isn't the box yet, we gotta calculate all it's stuff
-  let currentcomp = completions.find;
+  let currentcomp = completions.incomplete;
   node.subnodes.forEach((sub, ind, ar) => {
     if(childrencompletion)
       completionMap.set(sub, completionMap.get(node.code));
@@ -714,6 +684,8 @@ function updateSubnodes(node, mh, childrencompletion, reflectChildren) {
     }
     subnodeboxmaker(node, mh, subnodebox, sub, ind, ar, insetx);
   });
+  if(node.subnodes.length === 0)
+    currentcomp = completions.incomplete;
   if(reflectChildren)
     completionMap.set(node.code, currentcomp);
   // now we have to update our map and list with our new subnodebox
