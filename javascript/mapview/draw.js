@@ -219,8 +219,8 @@ function lineGradient(code1, node2, red, x1, y1, x2, y2) {
   let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
   drawingContext.strokeStyle = grad;
   if(red) {
-    grad.addColorStop(0, 'rgb(231, 76, 60)');
-    grad.addColorStop(1, 'rgb(231, 76, 60)');
+    grad.addColorStop(0, colors.delete);
+    grad.addColorStop(1, colors.delete);
     if(node2 !== undefined && completionMap.get(node2.code) === completions.complete) {
       drawingContext.setLineDash([0,0]);
       return;
@@ -246,46 +246,46 @@ function lineGradient(code1, node2, red, x1, y1, x2, y2) {
   }
   switch(completionMap.get(code1)) {
     case completions.complete:
-      grad.addColorStop(0, 'rgb(39, 174, 96)');
+      grad.addColorStop(0, colors.complete);
       drawingContext.setLineDash([15,15]);
       break;
     case completions.inprogress:
-      grad.addColorStop(0, 'rgb(52, 152, 219)');
+      grad.addColorStop(0, colors.inprogress);
       drawingContext.setLineDash([15, 30]);
       break;
     case completions.available:
-      grad.addColorStop(0, 'rgb(241, 196, 15)');
+      grad.addColorStop(0, colors.available);
       drawingContext.setLineDash([1,40]);
       break;
     case completions.find:
-      grad.addColorStop(0, 'rgb(243, 156, 18)');
+      grad.addColorStop(0, colors.find);
       drawingContext.setLineDash([1,40]);
       break;
     default:
-      grad.addColorStop(0, 'rgb(127, 140, 141)');
+      grad.addColorStop(0, colors.incomplete);
       drawingContext.setLineDash([1,40]);
       break;
   }
   if(node2 === undefined) {
-    grad.addColorStop(1, 'rgb(127, 140, 141)');
+    grad.addColorStop(1, colors.incomplete);
     return;
   }
   switch(completionMap.get(node2.code)) {
     case completions.complete:
-      grad.addColorStop(1, 'rgb(39, 174, 96)');
+      grad.addColorStop(1, colors.complete);
       drawingContext.setLineDash([0,0]);
       break;
     case completions.inprogress:
-      grad.addColorStop(1, 'rgb(52, 152, 219)');
+      grad.addColorStop(1, colors.inprogress);
       break;
     case completions.available:
-      grad.addColorStop(1, 'rgb(241, 196, 15)');
+      grad.addColorStop(1, colors.available);
       break;
     case completions.find:
-      grad.addColorStop(1, 'rgb(243, 156, 18)');
+      grad.addColorStop(1, colors.find);
       break;
     default:
-      grad.addColorStop(1, 'rgb(127, 140, 141)');
+      grad.addColorStop(1, colors.incomplete);
       break;
   }
 }
@@ -560,84 +560,74 @@ const noteListHandler = (note, index, arr) => {
   }
 };
 // helper function that determines boxfill
+// colors because I'm lazy
+// actually this is just the better way to do this
+colors = {
+  edit: 'rgba(243, 156, 18,1.0)',
+  draw: 'rgba(211, 84, 0,1.0)',
+  delete: 'rgba(192, 57, 43,1.0)',
+
+  available: 'rgba(26, 188, 156,1.0)',
+  availablehover: 'rgba(22, 160, 133,1.0)',
+  inprogress: 'rgba(46, 204, 113,1.0)',
+  inprogresshover: 'rgba(39, 174, 96,1.0)',
+  complete: 'rgba(52, 152, 219,1.0)',
+  completehover: 'rgba(41, 128, 185,1.0)',
+  find: 'rgba(155, 89, 182,1.0)',
+  findhover: 'rgba(142, 68, 173,1.0)',
+  incomplete: 'rgba(149, 165, 166,1.0)',
+  incompletehover: 'rgba(127, 140, 141,1.0)'
+}
 function boxFill(code, mh) {
   stroke(44, 62, 80);
-  switch(mode) {
-    case modes.delete:
-      if(mh) {
-        fill(231, 76, 60);
+  if(mh && mode !== modes.none) {
+    switch(mode) {
+      case modes.delete:
+        fill(colors.delete);
         return;
-      }
-      break;
-    case modes.edit:
-      if(mh) {
-        fill(26, 188, 156);
+      case modes.edit:
+        fill(colors.edit);
         return;
-      }
-      break;
-    case modes.draw:
-      if(mh) {
-        fill(22, 160, 133);
+      case modes.draw:
+        fill(colors.draw);
         return;
-      }
-      break;
+    }
   }
   switch(completionMap.get(code)) {
     case completions.available:
       if(mh)
-        fill(221, 176, 0);
+        fill(colors.availablehover);
       else
-        fill(241, 196, 15);
+        fill(colors.available);
       break;
     case completions.inprogress:
       if(mh)
-        fill(32, 132, 199);
+        fill(colors.inprogresshover);
       else
-        fill(52, 152, 219);
+        fill(colors.inprogress);
       break;
     case completions.complete:
       if(mh)
-        fill(19, 154, 76);
+        fill(colors.completehover);
       else
-        fill(39, 174, 96);
+        fill(colors.complete);
       break;
     case completions.find:
       if(mh)
-        fill(223, 136, 0);
+        fill(colors.findhover);
       else
-        fill(243, 156, 18);
+        fill(colors.find);
       break;
     default:
       if(mh)
-        fill(107, 120, 121);
+        fill(colors.incompletehover);
       else
-        fill(127, 140, 141);
+        fill(colors.incomplete);
       break;
   }
 }
 function textFill(code, mh) {
-  switch(mode) {
-    case modes.delete:
-      if(mh)
-        fill(0, 0, 0, 255);
-      else
-        fill(192, 57, 43);
-      break;
-    case modes.edit:
-      if(mh)
-        fill(0, 0, 0, 255);
-      else
-        fill(26, 188, 156);
-      break;
-    case modes.draw:
-      if(mh)
-        fill(0, 0, 0, 255);
-      else
-        fill(22, 160, 133);
-      break;
-    default:
-      fill(0, 0, 0, 255);
-  }
+  fill(0, 0, 0, 255);
 }
 // some variables for drawing a nice box
 // spacing around the subnodes
