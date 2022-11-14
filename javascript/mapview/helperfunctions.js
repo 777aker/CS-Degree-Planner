@@ -272,6 +272,8 @@ function getNodeType(key) {
 }
 // moves everything
 function moveEverything(x, y, rezoom) {
+  if(rezoom)
+    zoom = 1;
   noteList.forEach(note => {
     note.x += x;
     note.y += y;
@@ -280,8 +282,6 @@ function moveEverything(x, y, rezoom) {
     course.x += x;
     course.y += y;
   });
-  if(rezoom)
-    zoom = 1;
 }
 // helper function to check availability of a node
 function checkAvailable(node) {
