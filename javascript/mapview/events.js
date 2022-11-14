@@ -36,17 +36,83 @@ function keyTyped() {
   // so if typing return
   if(typing)
     return;
-  if(key === '[') {
+  switch(key) {
+    // reset zoom
+    case 'z':
+      zoom = 1;
+      mxzoom = 0;
+      myzoom = 0;
+      break;
+    // open help menu
+    case 'h':
+      openHelp();
+      break;
+    // open templates
+    case 't':
+      templatediv.style.display = 'block';
+      break;
+    // open file loader form
+    case 'x':
+      clearAndReplace.checked = false;
+      fileloader.style.display = 'block';
+      break;
+    // shift s save course file
+    case 'S':
+      saveCourseWork();
+      break;
+    // open clear form
+    case 'l':
+      clearDiv.style.display = 'block';
+      break;
+    // enter advanced uses
+    case 'g':
+      if(!advanceduses && throwError("WARNING: about to enable advanced uses")) {
+        showUses();
+      } else {
+        rehideUses();
+      }
+      break;
+    // testing popups
+    case 'p':
+      popup('testing', '#9b59b6', '#8e44ad');
+      break;
+  }
+  if(!advanceduses)
+    return;
+  switch(key) {
+    // toggle edit mode
+    case 'e':
+      modeChanger(modes.edit, "rgb(0, 0, 200)");
+      break;
+    // toggle delete mode
+    case 'q':
+      modeChanger(modes.delete, "rgb(200, 0, 0)");
+      break;
+    // toggle draw mode
+    case 'r':
+      if(mode !== modes.draw)
+        lineList.push([]);
+      modeChanger(modes.draw, "rgb(0, 200, 0)");
+      break;
+    // open add a course form
+    case 'c':
+      addCourse();
+      break;
+    // open add a note form
+    case 'n':
+      addNote();
+      break;
+    // shift e save layout
+    case 'E':
+      saveCourseLayout();
+      break;
+  }
+  /*if(key === '[') {
     noteList.forEach(note => {
       print(note.gate);
       print(note.connections);
     });
-  }
-  if(key === 'z') {
-    zoom = 1;
-    mxzoom = 0;
-    myzoom = 0;
-  }
+  }*/
   // I needed a way in drawing mode to see what was going on when debugging
   // (ironic for a drawing mode)
   /*if(key === 'l') {
@@ -87,64 +153,6 @@ function keyTyped() {
       print(value + ":" + key)
     });
   }*/
-  // open help menu
-  if(key === 'h') {
-    openHelp();
-  }
-  // open templates
-  if(key === 't') {
-    templatediv.style.display = 'block';
-  }
-  // open file loader form
-  if(key === 'x') {
-    clearAndReplace.checked = false;
-    fileloader.style.display = 'block';
-  }
-  // shift s save course file
-  if(key === 'S') {
-    saveCourseWork();
-  }
-  // open clear form
-  if(key === 'l') {
-    clearDiv.style.display = 'block';
-  }
-  if(key === 'g') {
-    if(!advanceduses && throwError("WARNING: about to enable advanced uses")) {
-      showUses();
-    } else {
-      rehideUses();
-    }
-  }
-  // but first, disable all advanced uses, which is all of these
-  if(!advanceduses)
-    return;
-  // now time for some shortcuts to use this faster
-  // toggle edit mode
-  if(key === 'e') {
-    modeChanger(modes.edit, "rgb(0, 0, 200)");
-  }
-  // toggle delete mode
-  if(key === 'q') {
-    modeChanger(modes.delete, "rgb(200, 0, 0)");
-  }
-  // toggle draw mode
-  if(key === 'r') {
-    if(mode !== modes.draw)
-      lineList.push([]);
-    modeChanger(modes.draw, "rgb(0, 200, 0)");
-  }
-  // open add a course form
-  if(key === 'c') {
-    addCourse();
-  }
-  // open add a note form
-  if(key === 'n') {
-    addNote();
-  }
-  // shift e save layout
-  if(key === 'E') {
-    saveCourseLayout();
-  }
 }
 
 // -------------------------------- Mouse Events -------------------------------- //
