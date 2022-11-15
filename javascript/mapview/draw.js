@@ -560,24 +560,6 @@ const noteListHandler = (note, index, arr) => {
   }
 };
 // helper function that determines boxfill
-// colors because I'm lazy
-// actually this is just the better way to do this
-colors = {
-  edit: 'rgba(243, 156, 18,1.0)',
-  draw: 'rgba(211, 84, 0,1.0)',
-  delete: 'rgba(192, 57, 43,1.0)',
-
-  available: 'rgba(26, 188, 156,1.0)',
-  availablehover: 'rgba(22, 160, 133,1.0)',
-  inprogress: 'rgba(46, 204, 113,1.0)',
-  inprogresshover: 'rgba(39, 174, 96,1.0)',
-  complete: 'rgba(52, 152, 219,1.0)',
-  completehover: 'rgba(41, 128, 185,1.0)',
-  find: 'rgba(155, 89, 182,1.0)',
-  findhover: 'rgba(142, 68, 173,1.0)',
-  incomplete: 'rgba(149, 165, 166,1.0)',
-  incompletehover: 'rgba(127, 140, 141,1.0)'
-}
 function boxFill(code, mh) {
   stroke(44, 62, 80);
   if(mh && mode !== modes.none) {

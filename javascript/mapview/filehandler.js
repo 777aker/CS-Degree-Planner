@@ -57,6 +57,7 @@ const clearAndReplace = document.querySelector("#clearandreplace");
 // once it's an object send it to processJSON to use
 // processJSON does stuff like json.courses so make it a dictionary basically
 function importTextArea() {
+  popup('Loading File<br>', colors.concrete, colors.asbestos);
   if(flresult.value === "" || flresult.value === undefined || flresult.value === null) {
     throwError("File Empty");
     return;

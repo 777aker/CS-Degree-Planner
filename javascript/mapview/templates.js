@@ -39,6 +39,7 @@ function templateButton(form, name, btnclass, btnid, btntitle, url) {
 }
 // helper function that loads a json from the templates
 function openTemplate(url) {
+
   let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/' + url;
   loadJSON(furl, processJSON);
   closeTemplates();

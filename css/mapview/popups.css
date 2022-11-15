@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
   text-align: center;
-  animation: popupanimation 5s ease-out forwards 1;
+  animation: popupanimation 2s ease-out forwards 1;
 }
 
 .popup-inside {
@@ -17,7 +17,8 @@
   height: auto;
   width: 100%;
   overflow: auto;
-  animation: popupanimation 5s ease-out forwards 1;
+  animation: popupanimation 1.5s ease-out forwards 1;
+  font-size: 200%;
 }
 
 @keyframes popupanimation {
@@ -25,15 +26,16 @@
     opacity: 0%;
   }
 
-  40% {
+  10% {
     opacity: 100%;
   }
 
-  60% {
+  50% {
     opacity: 100%;
   }
 
   100% {
     opacity: 0%;
+    visibility: hidden;
   }
 }

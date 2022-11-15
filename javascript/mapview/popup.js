@@ -1,5 +1,5 @@
 function popup(string, color, bgcolor) {
-  print(string);
+  //print(string);
   // delete anything with the popup class
   cleanUpPopUps();
   // create the object

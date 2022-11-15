@@ -73,9 +73,11 @@ function keyTyped() {
       }
       break;
     // testing popups
+    /*
     case 'p':
       popup('testing', '#9b59b6', '#8e44ad');
       break;
+    */
   }
   if(!advanceduses)
     return;

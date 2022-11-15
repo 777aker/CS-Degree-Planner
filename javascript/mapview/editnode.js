@@ -151,17 +151,23 @@ function updateStyles() {
   }
 }
 function inprogressToggle(tf) {
-  if(tf)
+  if(tf) {
     completionMap.set(lastCodeClicked, completions.inprogress);
-  else
+    popup(lastCodeClicked + '<br>In Progress', colors.inprogress, colors.inprogresshover);
+  } else {
     completionMap.set(lastCodeClicked, completions.available);
+    popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
+  }
   updateStyles();
 }
 function completeToggle(tf) {
-  if(tf)
+  if(tf) {
     completionMap.set(lastCodeClicked, completions.complete);
-  else
+    popup(lastCodeClicked + '<br>Complete!', colors.complete, colors.completehover);
+  } else {
     completionMap.set(lastCodeClicked, completions.available);
+    popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
+  }
   updateStyles();
 }
 // time to figure out how we show a path to a course
