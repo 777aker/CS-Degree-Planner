@@ -56,10 +56,6 @@ function keyTyped() {
       clearAndReplace.checked = false;
       fileloader.style.display = 'block';
       break;
-    // shift s save course file
-    case 'S':
-      saveCourseWork();
-      break;
     // open clear form
     case 'l':
       clearDiv.style.display = 'block';
@@ -104,8 +100,8 @@ function keyTyped() {
     case 'n':
       addNote();
       break;
-    // shift e save layout
-    case 'E':
+    // shift S save layout
+    case 'S':
       saveCourseLayout();
       break;
   }
@@ -156,6 +152,13 @@ function keyTyped() {
     });
   }*/
 }
+// control s functionality
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+    e.preventDefault();
+    saveCourseWork();
+  }
+}, false);
 
 // -------------------------------- Mouse Events -------------------------------- //
 // when mouse is pressed do some stuff

@@ -12,15 +12,15 @@ function drawPath() {
   if(mode !== modes.draw)
     lineList.push([]);
   // mode changer helper function
-  modeChanger(modes.draw, "rgb(0, 200, 0)");
+  modeChanger(modes.draw, colors.draw);
 }
 // function called when user presses delete mode button
 function deleteMode() {
-  modeChanger(modes.delete, "rgb(200, 0, 0)");
+  modeChanger(modes.delete, colors.delete);
 }
 // function called when user presses edit positions button
 function editPositions() {
-  modeChanger(modes.edit, "rgb(0, 0, 200)");
+  modeChanger(modes.edit, colors.edit);
 }
 // changing the modes looks very similar for everying so here is a helper
 // especially so we don't miss anything
@@ -68,5 +68,23 @@ function modeChanger(fmode, color) {
         popup('Editing Disabled', colors.concrete, colors.asbestos);
         break;
     }
+  }
+}
+function displayMode() {
+  textSize(32);
+  textAlign(CENTER, TOP);
+  switch(mode) {
+    case modes.edit:
+      fill(colors.edit);
+      text("Position Mode", width/2, 15);
+      break;
+    case modes.draw:
+      fill(colors.draw);
+      text("Line Mode", width/2, 15);
+      break;
+    case modes.delete:
+      fill(colors.delete);
+      text("Delete Mode", width/2, 15);
+      break;
   }
 }

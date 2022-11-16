@@ -156,6 +156,11 @@ function draw() {
       editNodesDiv.style.top = posy + 'px';
     }
   }
+  // everything past here is no longer scaled
+  scale(1/zoom);
+  translate(-mxzoom, -myzoom);
+  // display what mode we are in
+  displayMode();
 }
 function moveEverythingMouse() {
   document.body.style.cursor = "all-scroll";
@@ -443,9 +448,10 @@ const courseListHandler = (course, index, arr) => {
   textAlign(CENTER, TOP);
   textStyle(BOLD);
   textFill(course.code, mouseHovering);
-  text(course.code + "-" + course.credits, course.x, course.y - course.height/2 + boxpadding.y/2);
+  let topline = course.y - course.height/2 + boxpadding.y/2
+  text(course.code + "-" + course.credits, course.x, topline);
   textStyle(NORMAL);
-  text(course.name, course.x, course.y - course.height/2 + boxpadding.y/2 + textLeading());
+  text(course.name, course.x, topline + textLeading());
 };
 // helper function that handles everything for notes
 const noteListHandler = (note, index, arr) => {
