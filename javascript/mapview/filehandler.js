@@ -207,8 +207,14 @@ closeClearFormBtn.addEventListener('click', closeClearForm);
 function closeClearForm() {
   clearDiv.style.display = 'none';
 }
-clearLayoutBtn.addEventListener('click', clearLayout);
-clearCourseworkBtn.addEventListener('click', clearCoursework);
+clearLayoutBtn.addEventListener('click', function() {
+  popup("Clearing Course Layout", colors.delete, colors.deletebg);
+  clearLayout();
+});
+clearCourseworkBtn.addEventListener('click', function() {
+  popup("Clearing Coursework", colors.delete, colors.deletebg);
+  clearCoursework();
+});
 // some helper functions that clear data
 //(putting them here rather than in event in case I want other things to call these)
 function clearLayout() {

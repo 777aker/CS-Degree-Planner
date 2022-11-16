@@ -33,13 +33,13 @@ function templateButton(form, name, btnclass, btnid, btntitle, url) {
   button.parent(form);
   button.attribute("title", btntitle);
   button.mousePressed(() => {
+    popup("Opened Template<br>" + name, colors.concrete, colors.asbestos);
     openTemplate(url);
   });
   return button;
 }
 // helper function that loads a json from the templates
 function openTemplate(url) {
-
   let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/' + url;
   loadJSON(furl, processJSON);
   closeTemplates();

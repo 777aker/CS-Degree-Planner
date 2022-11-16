@@ -66,13 +66,15 @@ function submitNote() {
   let hash;
   let tmpsubnodes = [];
   let connections = [];
+  let popupText = "Added<br>";
   if(hasElement(lastCodeClicked)) {
     let tmpnote = noteList[noteMap.get(lastCodeClicked)];
     hash = tmpnote.code;
     tmpsubnodes = tmpnote.subnodes;
     connections = tmpnote.connections;
+    popupText = "Replaced<br>";
   } else {
-    print('Does not have that note. noteadding.js Line 75')
+    //print('Does not have that note. noteadding.js Line 75')
     hash = getHash(title + text + noteList.length);
     while(hasElement(hash.toString())) {
       hash += 1;
@@ -122,6 +124,11 @@ function submitNote() {
   lastNodeTypeClicked = null;
   typing = false;
   disabled = false;
+  if(hasTitle) {
+    popup(popupText + note.title, colors.concrete, colors.asbestos);
+  } else {
+    popup(popupText + "Note", colors.concrete, colors.asbestos);
+  }
   closeNodeOptions();
   return false;
 }

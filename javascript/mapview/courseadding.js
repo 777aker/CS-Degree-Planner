@@ -223,9 +223,11 @@ function submitCourse() {
   };
   if(courseMap.has(lastCodeClicked)) {
     replaceElement(courseList, courseMap, lastCodeClicked, course);
+    popup("Replaced<br>" + lastCodeClicked, colors.concrete, colors.asbestos);
   } else {
     // helper function that puts things into our course list
     pushElement(courseList, courseMap, course);
+    popup("Added<br>" + course.code, colors.concrete, colors.asbestos);
   }
   // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
