@@ -77,6 +77,7 @@ function closeRequirements() {
   degreqDiv.style.display = 'none';
 }
 // ok, let's do the convex hull
+// this is called by draw every frame
 function doTheConvexHull() {
   convexHull(degreeRequirements.foundations);
   convexHull(degreeRequirements.discrete);

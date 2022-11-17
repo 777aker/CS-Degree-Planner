@@ -1,0 +1,25 @@
+button {
+  background-color: #95a5a6;
+  border: none;
+  color: black;
+  padding: 15px 15px;
+  text-align: center;
+  display: block;
+  font-size: 16px;
+  border-radius: 2px;
+  transition-duration: .4s;
+}
+
+button:hover {
+
+}
+
+input {
+  background-color: #95a5a6;
+  border: none;
+  color: black;
+  padding: 15px 15px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+}

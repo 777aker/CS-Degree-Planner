@@ -263,7 +263,10 @@ function lineGradient(code1, node2, red, x1, y1, x2, y2) {
       drawingContext.setLineDash([1,40]);
       break;
     case completions.find:
-      grad.addColorStop(0, colors.find);
+      if(completionMap.get(node2.code) === completions.find)
+        grad.addColorStop(0, colors.find);
+      else
+        grad.addColorStop(0, colors.incomplete);
       drawingContext.setLineDash([1,40]);
       break;
     default:
