@@ -2,7 +2,7 @@
 // p5js setup function
 function setup() {
   // create the canvas (subtract 20 so no scroll nonsense)
-  cnv = createCanvas(windowWidth-20, windowHeight-20);
+  cnv = createCanvas(windowWidth, windowHeight);
   cnv.mouseOut(function () {
     mouseOutsideWindow = true;
   });

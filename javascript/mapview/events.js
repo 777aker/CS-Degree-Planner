@@ -230,7 +230,7 @@ document.addEventListener('wheel', function(e) {
 // if the window is resized this function is called
 function windowResized() {
   // resize the canvas to fit the screen
-  resizeCanvas(windowWidth-20, windowHeight-20);
+  resizeCanvas(windowWidth, windowHeight);
   // set background color
   background(220);
 }
