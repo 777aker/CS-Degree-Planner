@@ -5,18 +5,27 @@
     <meta charset="utf-8">
     <title>Degree Planner</title>
     <script src="p5/p5.js"></script>
+    <script defer src="javascript/planner/setup.js"></script>
 
     <link rel="stylesheet" href="css/planner/default.css">
     <link rel="stylesheet" href="css/planner/mainstuff.css">
+    <link rel="stylesheet" href="css/planner/activearea.css">
+    <link rel="stylesheet" href="css/planner/coursearea.css">
   </head>
   <body>
     <main>
       <div id="main-holder">
-        <div id="active-area">
-
-        </div>
         <div id="course-area">
-          <button id="degree-selector" type="button" name="button">Select Degree</button>
+          <div class="dropdown">
+            <button id="degree-selector" type="button" name="button">Select Degree</button>
+            <div class="dropdown-content" id='deg-sel'>
+
+            </div>
+          </div>
+        </div>
+
+        <div id="active-area">
+          <button id="go-left" type="button" name="button"><</button>
         </div>
       </div>
     </main>

@@ -1,0 +1,28 @@
+#active-area {
+  flex-grow: 5;
+  background-color: #34495e;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#go-left {
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 80%;
+}
+
+#go-right {
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 80%;
+}
+
+.year {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #95a5a6;
+}
