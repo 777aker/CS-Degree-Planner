@@ -163,7 +163,7 @@ function handleDrop(e) {
       .5 + parseInt(srcstr.substring(5, 9))
       : 0 + parseInt(srcstr.substring(7, 11));
   } else {
-    checksrc = true;
+    checkthis = true;
   }
 
   let thisstr = this.parentElement.textContent;
@@ -184,6 +184,9 @@ function handleDrop(e) {
     thisyear = parseInt(thisstr.substring(7,11));
   }
 
+  coursecomp[dragSrcEl.innerHTML] = thisyear;
+  coursecomp[this.innerHTML] = srcyear;
+
   //print(srcyear);
   //print(thisyear);
 
@@ -192,16 +195,86 @@ function handleDrop(e) {
   // for each prereq
   // check if year saved is before this year being placed
   if(!checksrc) {
-    
+    checksrc = true;
+    courses[dragSrcEl.innerHTML].forEach((prereqgroup) => {
+      let groupcheck = false;
+      prereqgroup.forEach((prereq) => {
+        if(prereq in coursecomp) {
+          //print(thisyear);
+          //print(coursecomp[prereq]);
+          if(coursecomp[prereq] < thisyear)
+            groupcheck = true;
+        }
+      });
+      if(!groupcheck) {
+        //print(prereqgroup);
+        checksrc = false;
+      }
+    });
   }
+  //print(checksrc);
 
   if(!checkthis) {
-
+    checkthis = true;
+    courses[this.innerHTML].forEach((prereqgroup) => {
+      let groupcheck = false;
+      //print(srcyear);
+      //print(coursecomp[prereq]);
+      prereqgroup.forEach((prereq) => {
+        if(prereq in coursecomp) {
+          if(coursecomp[prereq] < srcyear)
+            groupcheck = true;
+        }
+      });
+      if(!groupcheck) {
+        //print(prereqgroup);
+        checkthis = false;
+      }
+    })
   }
+
+  //print("src check: " + checksrc);
+  //print("plant check: " + checkthis);
 
   // if !(check 1 and check 2)
   // throwerror
   // return false
+
+  if(!(checksrc && checkthis)) {
+    if(!checksrc) {
+      print(dragSrcEl.innerHTML + " prereqs not met");
+      courses[dragSrcEl.innerHTML].forEach((prereqgroup) => {
+        print(prereqgroup);
+      });
+    }
+    if(!checkthis) {
+      print(this.innerHTML + " prereqs not met");
+      courses[this.innerHTML].forEach((prereqgroup) => {
+        print(prereqgroup);
+      });
+    }
+    if(dragSrcEl.innerHTML !== '') {
+      //print('yo mama');
+      if(srctmp !== undefined && srctmp !== null)
+        coursecomp[dragSrcEl.innerHTML] = srctmp;
+      //print(srctmp);
+    }
+    if(this.innerHTML !== '') {
+      //print('yo mama');
+      if(thistmp !== undefined && thistmp !== null)
+        coursecomp[this.innerHTML] = thistmp;
+      //print(thistmp);
+    }
+    throwError("Prerequisites not met");
+    return false;
+  } else {
+    if(thisyear !== null && thisyear !== undefined) {
+      coursecomp[dragSrcEl.innerHTML] = thisyear;
+    }
+    if(srcyear !== null && srcyear !== undefined) {
+      coursecomp[this.innerHTML] = srcyear;
+    }
+  }
 
   if(dragSrcEl !== this) {
     if(dragSrcEl.classList.contains('coursedrop')) {
@@ -233,6 +306,10 @@ function handleDrop(e) {
   }
 
   return false;
+}
+
+function throwError(type) {
+  return confirm(type);
 }
 
 function handleMoveStart(e) {
