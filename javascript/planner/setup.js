@@ -80,6 +80,19 @@ function tempDegreeLoader() {
       }
     });
   }
+  let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-template.json';
+  loadJSON(furl, loadCourses);
+}
+
+let courses;
+function loadCourses(jsonp) {
+  let json = jsonp.courses;
+  courses = {};
+  json.forEach((course) => {
+    //print(course);
+    courses[course.code] = course.prerequisites;
+  });
+  //print(courses);
 }
 
 let dragSrcEl;
@@ -115,8 +128,80 @@ function handleDragLeave(e) {
   this.classList.remove('over');
 }
 
+let coursecomp = {};
 function handleDrop(e) {
   e.stopPropagation();
+
+  let srctmp;
+  let thistmp;
+  let checksrc = false;
+  let checkthis = false;
+  if(dragSrcEl.innerHTML !== '') {
+    if(dragSrcEl.innerHTML in coursecomp) {
+      let srctmp = coursecomp[dragSrcEl.innerHTML];
+      delete coursecomp[dragSrcEl.innerHTML];
+    }
+  } else {
+    checksrc = true;
+  }
+  if(this.innerHTML !== '') {
+    if(this.innerHTML in coursecomp) {
+      let thistmp = coursecomp[this.innerHTML];
+      delete coursecomp[this.innerHTML];
+    }
+  } else {
+    checkthis = true;
+  }
+
+  //print('----------------');
+  let srcyear;
+  if(dragSrcEl.classList.contains('coursedrop')) {
+    let srcstr = dragSrcEl.parentElement.textContent;
+    //print(dragSrcEl.parentElement);
+    //print(srcstr);
+    srcyear = srcstr.startsWith('Fall') ?
+      .5 + parseInt(srcstr.substring(5, 9))
+      : 0 + parseInt(srcstr.substring(7, 11));
+  } else {
+    checksrc = true;
+  }
+
+  let thisstr = this.parentElement.textContent;
+  //print(this.parentElement);
+  //print(thisstr);
+  //print(thisstr);
+  //print(thisstr.substring(5, 9));
+  //print(thisstr.substring(7, 11));
+  let thisyear;
+  if(thisstr.startsWith('Fall')) {
+    //print(thisstr.substring(5,9));
+    //print(parseInt(thisstr.substring(5,9)));
+    thisyear = parseInt(thisstr.substring(5,9));
+    thisyear += .5;
+  } else {
+    //print(thisstr.substring(7,11));
+    //print(parseInt(thisstr.substring(7,11)));
+    thisyear = parseInt(thisstr.substring(7,11));
+  }
+
+  //print(srcyear);
+  //print(thisyear);
+
+  // if check is not true do this
+  // for each prereq group
+  // for each prereq
+  // check if year saved is before this year being placed
+  if(!checksrc) {
+    
+  }
+
+  if(!checkthis) {
+
+  }
+
+  // if !(check 1 and check 2)
+  // throwerror
+  // return false
 
   if(dragSrcEl !== this) {
     if(dragSrcEl.classList.contains('coursedrop')) {
