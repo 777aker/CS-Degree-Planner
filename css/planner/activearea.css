@@ -25,4 +25,14 @@
   align-items: center;
   justify-content: center;
   background-color: #95a5a6;
+  gap: 5px;
+  padding: 5px;
+}
+
+.coursedrop {
+  width: 80%;
+  min-height: 30px;
+  background-color: #3498db;
+  padding: 5px;
+  cursor: move;
 }
