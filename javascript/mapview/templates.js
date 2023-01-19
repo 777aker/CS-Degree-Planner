@@ -33,6 +33,7 @@ function templateButton(form, name, btnclass, btnid, btntitle, url) {
   button.parent(form);
   button.attribute("title", btntitle);
   button.mousePressed(() => {
+    popup("Opened Template<br>" + name, colors.concrete, colors.asbestos);
     openTemplate(url);
   });
   return button;

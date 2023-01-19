@@ -272,6 +272,8 @@ function getNodeType(key) {
 }
 // moves everything
 function moveEverything(x, y, rezoom) {
+  if(rezoom)
+    zoom = 1;
   noteList.forEach(note => {
     note.x += x;
     note.y += y;
@@ -280,8 +282,6 @@ function moveEverything(x, y, rezoom) {
     course.x += x;
     course.y += y;
   });
-  if(rezoom)
-    zoom = 1;
 }
 // helper function to check availability of a node
 function checkAvailable(node) {
@@ -330,4 +330,10 @@ function isSubnode(test, node) {
         ret = true;
   });
   return ret;
+}
+// check the distance between two points
+function distance(p1, p2) {
+  //print(p1);
+  //print(p2);
+  return Math.pow(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2), .5);
 }

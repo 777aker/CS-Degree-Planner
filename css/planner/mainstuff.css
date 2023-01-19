@@ -1,0 +1,10 @@
+#main-holder {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  align-items: stretch;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

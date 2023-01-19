@@ -82,6 +82,31 @@ let completions = {
   complete: 4,
 };
 let completionMap = new Map();
+// colors because I'm lazy
+// actually this is just the better way to do this
+colors = {
+  // editing modes colors
+  edit: 'rgba(243, 156, 18,1.0)', // Orange
+  editbg: 'rgba(241, 196, 15,1.0)', // Sun Flower
+  draw: 'rgba(211, 84, 0,1.0)', // Pumpkin
+  drawbg: 'rgba(230, 126, 34,1.0)', // Carrot
+  delete: 'rgba(192, 57, 43,1.0)', // Pomegranate
+  deletebg: 'rgba(231, 76, 60,1.0)', // Alizarin
+  // course completion colors
+  available: 'rgba(26, 188, 156,1.0)', // Turquoise
+  availablehover: 'rgba(22, 160, 133,1.0)', // Green Sea
+  inprogress: 'rgba(46, 204, 113,1.0)', // Emerald
+  inprogresshover: 'rgba(39, 174, 96,1.0)', // Nephritis
+  complete: 'rgba(52, 152, 219,1.0)', // Peter River
+  completehover: 'rgba(41, 128, 185,1.0)', // Belize Hole
+  find: 'rgba(155, 89, 182,1.0)', // Amethyst
+  findhover: 'rgba(142, 68, 173,1.0)', // Wisteria
+  incomplete: 'rgba(149, 165, 166,1.0)', // Concrete
+  incompletehover: 'rgba(127, 140, 141,1.0)', // Asbestos
+  // Actually just the color
+  concrete: 'rgba(149, 165, 166,1.0)',
+  asbestos: 'rgba(127, 140, 141,1.0)',
+}
 // -------------------------------- Miscellaneous Menu -------------------------------- //
 // quick bug fix
 const editdropdwn = document.querySelector('.edit-dropdown');

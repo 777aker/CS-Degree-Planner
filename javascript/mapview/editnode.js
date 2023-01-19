@@ -79,17 +79,20 @@ function openNodeOptions(nodeType, node) {
       createFormText(editNodeForm, "Course Code: " + node.code, false);
       createFormText(editNodeForm, "Credit Hours: " + node.credits, false);
       createFormText(editNodeForm, "Course Name: " + node.name, false);
-      createFormText(editNodeForm, "Prerequisites:", false);
-      node.prerequisites.forEach((array) => {
-        let str = "";
-        array.forEach((code, ind, len) => {
-          if(ind !== 0)
-            str += " or " + code;
-          else
-            str += code;
-        });
-        createFormText(editNodeForm, str, false);
-      });
+      switch(completionMap.get(node.code)) {
+        case completions.available:
+          createFormText(editNodeForm, "Completion: Available to Take", false);
+          break;
+        case completions.inprogress:
+          createFormText(editNodeForm, "Completion: Currently Taking", false);
+          break;
+        case completions.complete:
+          createFormText(editNodeForm, "Completion: Completed!", false);
+          break;
+        default:
+          createFormText(editNodeForm, "Completion: Prerequisites not met", false);
+          break;
+      }
       let completion = completionMap.get(node.code);
       if(completion !== completions.incomplete && completion !== completions.find) {
         const inprogresscheck = createCheckboxes(editNodeForm, "progresscheck", "In Progress");
@@ -120,6 +123,17 @@ function openNodeOptions(nodeType, node) {
           "Shows the courses you need to complete in order to take this course");
         }
       }
+      createFormText(editNodeForm, "Prerequisites:", false);
+      node.prerequisites.forEach((array) => {
+        let str = "";
+        array.forEach((code, ind, len) => {
+          if(ind !== 0)
+            str += " or " + code;
+          else
+            str += code;
+        });
+        createFormText(editNodeForm, str, false);
+      });
       createFormButtonWithTitle(editNodeForm, "opencoursepage", "Open Course Page", openCourseHTML,
       "Opens a new webpage with more information on this course");
       editNodeForm.appendChild(document.createElement('br'));
@@ -134,34 +148,40 @@ function openNodeOptions(nodeType, node) {
 function updateStyles() {
   switch(completionMap.get(lastCodeClicked)) {
     case completions.inprogress:
-      editNodesDiv.style.background = "rgb(52, 152, 219)";
+      editNodesDiv.style.background = colors.inprogress;
       editNodesDiv.style.color = "rgb(0, 0, 0)";
       break;
     case completions.complete:
-      editNodesDiv.style.background = "rgb(39, 174, 96)";
+      editNodesDiv.style.background = colors.complete;
       editNodesDiv.style.color = "rgb(0, 0, 0)";
       break;
     case completions.available:
-      editNodesDiv.style.background = "rgb(241, 196, 15)";
+      editNodesDiv.style.background = colors.available;
       editNodesDiv.style.color = "rgb(0, 0, 0)";
       break;
     default:
-      editNodesDiv.style.background = "rgb(127, 140, 141)";
+      editNodesDiv.style.background = colors.incomplete;
       editNodesDiv.style.color = "rgb(0, 0, 0)";
   }
 }
 function inprogressToggle(tf) {
-  if(tf)
+  if(tf) {
     completionMap.set(lastCodeClicked, completions.inprogress);
-  else
+    popup(lastCodeClicked + '<br>In Progress', colors.inprogress, colors.inprogresshover);
+  } else {
     completionMap.set(lastCodeClicked, completions.available);
+    popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
+  }
   updateStyles();
 }
 function completeToggle(tf) {
-  if(tf)
+  if(tf) {
     completionMap.set(lastCodeClicked, completions.complete);
-  else
+    popup(lastCodeClicked + '<br>Complete!', colors.complete, colors.completehover);
+  } else {
     completionMap.set(lastCodeClicked, completions.available);
+    popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
+  }
   updateStyles();
 }
 // time to figure out how we show a path to a course

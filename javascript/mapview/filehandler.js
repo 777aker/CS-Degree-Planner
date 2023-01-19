@@ -57,6 +57,7 @@ const clearAndReplace = document.querySelector("#clearandreplace");
 // once it's an object send it to processJSON to use
 // processJSON does stuff like json.courses so make it a dictionary basically
 function importTextArea() {
+  popup('Loading File<br>', colors.concrete, colors.asbestos);
   if(flresult.value === "" || flresult.value === undefined || flresult.value === null) {
     throwError("File Empty");
     return;
@@ -206,8 +207,14 @@ closeClearFormBtn.addEventListener('click', closeClearForm);
 function closeClearForm() {
   clearDiv.style.display = 'none';
 }
-clearLayoutBtn.addEventListener('click', clearLayout);
-clearCourseworkBtn.addEventListener('click', clearCoursework);
+clearLayoutBtn.addEventListener('click', function() {
+  popup("Clearing Course Layout", colors.delete, colors.deletebg);
+  clearLayout();
+});
+clearCourseworkBtn.addEventListener('click', function() {
+  popup("Clearing Coursework", colors.delete, colors.deletebg);
+  clearCoursework();
+});
 // some helper functions that clear data
 //(putting them here rather than in event in case I want other things to call these)
 function clearLayout() {

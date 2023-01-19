@@ -223,9 +223,14 @@ function submitCourse() {
   };
   if(courseMap.has(lastCodeClicked)) {
     replaceElement(courseList, courseMap, lastCodeClicked, course);
+    popup("Replaced<br>" + lastCodeClicked, colors.concrete, colors.asbestos);
   } else {
+    // if it already exists throw a warning
+    if(courseMap.has(course.code) && !throwError("WARNING: Course already exists. Are you sure you want to replace it?"))
+      return;
     // helper function that puts things into our course list
     pushElement(courseList, courseMap, course);
+    popup("Added<br>" + course.code, colors.concrete, colors.asbestos);
   }
   // clear and hide the form we're done with it
   addCourseForm.innerHTML = '';
