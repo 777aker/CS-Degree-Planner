@@ -149,7 +149,10 @@ function convexHull(courses) {
     // while lower has more than two points, we check cross to see if we need to remove points
     // basically, if this point is inside of our shape then remove it, if it's not inside our shape
     // then it gets to stay
+    // also when drawing curve vertices if they're too close they act weird so remove close together ones too
     while(lower.length >= 2 && cross3(lower[lower.length - 2], lower[lower.length - 1], points[i]) <= 0) {
+        //print(distance(lower.length-2, lower.length-1));
+        //print(distance(lower[lower.length - 2], lower[lower.length - 1]) <= max_dis);
         lower.pop();
     }
     // put this point into lower
@@ -160,6 +163,7 @@ function convexHull(courses) {
   // this is the same thing as lower except go in reverse
   for(let i = points.length - 1; i >= 0; i--) {
     while(upper.length >= 2 && cross3(upper[upper.length - 2], upper[upper.length - 1], points[i]) <= 0) {
+        //print(distance(upper[upper.length-2],upper[upper.length-1]) <= max_dis);
         upper.pop();
     }
     upper.push(points[i]);
@@ -170,21 +174,47 @@ function convexHull(courses) {
   // remove duplicates (upper and lower get one duplicate each where they meet each other)
   lower.pop();
   upper.pop();
-  // when we now concat the two we have a list of points that define
-  // the outer area of our courses
-  let convexHull = lower.concat(upper);
-  for(let i = 0; i < convexHull.length-1; i++) {
-    if(distance(convexHull[i], convexHull[i+1]) < 20) {
-
+  // so now to get not weird edges we have to do something crazy
+  // check if the end of lower and upper are too close together and if so
+  // we are going to remove one of them but we have to decide carefully
+  // so our shape doesn't go over our course
+  let temp_dis = distance(lower[0], upper[upper.length-1]);
+  if(temp_dis >= 74.5 && temp_dis <= 75.5) {
+    if(lower[0].y < lower[1].y) {
+      upper.splice(upper.length-1, 1);
+    } else {
+      lower.splice(0, 1);
     }
   }
-
+  temp_dis = distance(lower[lower.length-1], upper[0]);
+  if(temp_dis >= 74.5 && temp_dis <= 75.5) {
+    if(upper[0].y < upper[1].y) {
+      lower.splice(lower.length-1, 1);
+    } else {
+      upper.splice(0, 1);
+    }
+  }
+  // when we now concat the two we have a list of points that define
+  // the outer area of our
+  let convexHull = lower.concat(upper);
+  /*
+  if(convexHull.length == 8) {
+    print(distance(convexHull[4], convexHull[5]));
+    print(distance(convexHull[0], convexHull[7]));
+  }
+  */
   // now we actually draw the convex hull
   beginShape();
+  //curveVertex(convexHull[convexHull.length-1].x, convexHull[convexHull.length-1].y);
   for(let i = 0; i < convexHull.length; i++) {
     fill(255, 255, 255, 50/zoom);
     curveVertex(convexHull[i].x, convexHull[i].y);
+    //textSize(32);
+    //text(i, convexHull[i].x, convexHull[i].y);
     //vertex(convexHull[i].x, convexHull[i].y);
   }
+  // if you don't do this you get a gross straight edge
+  curveVertex(convexHull[0].x, convexHull[0].y);
+  curveVertex(convexHull[1].x, convexHull[1].y);
   endShape(CLOSE);
 }
