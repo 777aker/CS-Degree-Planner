@@ -7,7 +7,7 @@ function setup() {
 const activearea = document.querySelector("#active-area");
 // so this gets the year from your computer and populates the active area
 // with the years around you
-// TODO: go-left and go-right button need to actually do something 
+// TODO: go-left and go-right button need to actually do something
 function setupYears() {
   // this is a button that lets us move the years around
   let newbtn = createButton('<');
