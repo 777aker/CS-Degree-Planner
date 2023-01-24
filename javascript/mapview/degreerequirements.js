@@ -10,7 +10,9 @@ let degreeRequirements = {
   calculus2: ['MATH 2300', 'APPM 1360'],
   discrete: ['MATH 2001', 'CSCI 2824', 'ECEN 2703', 'APPM 3170'],
   core: ['CSCI 3002', 'CSCI 3202', 'CSCI 3287', 'CSCI 3302', 'CSCI 3403', 'CSCI 3434', 'CSCI 3656', 'CSCI 3753', 'CSCI 4022', 'CSCI 4273', 'CSCI 4448'],
-  linear: ['CSCI 2820', 'MATH 2130', 'APPM 3310']
+  linear: ['CSCI 2820', 'MATH 2130', 'APPM 3310'],
+  probstat: ['APPM 3570', 'APPM 4570', 'CHEN 3010', 'CSCI 3022', 'CVEN 3227', 'ECEN 3810', 'ECON 3818', 'MATH 3510', 'MATH 4510', 'STAT 3100', 'STAT 4000'],
+  naturalscience: ['PHYS 1110', 'PHYS 1120', 'PHYS 1140', 'CHEN 1201', 'CHEM 1114', 'CHEM 1113', 'EBIO 1210', 'EBIO 1230', 'MCDB 1150', 'MCDB 1161', 'MCDB 1171']
 };
 // get some rerences to the degree requirements areas
 const degreqDiv = document.querySelector('.degree-requirements');
@@ -100,10 +102,19 @@ function closeRequirements() {
 // ok, let's do the convex hull
 // this is called by draw every frame
 function doTheConvexHull() {
+  // draw convexHull for all requirements
+  var keys = Object.keys(degreeRequirements);
+  keys.forEach(function(key) {
+    convexHull(degreeRequirements[key]);
+  });
+  /*
   // draw a convex hull for foundations
   convexHull(degreeRequirements.foundations);
   // draw a convex hull for discrete
   convexHull(degreeRequirements.discrete);
+  // draw for calculus
+  convexHull(degreeRequirements.calculus1);
+  */
 }
 // this is a function that will draw a convex hull around the courses passed
 function convexHull(courses) {
@@ -137,6 +148,8 @@ function convexHull(courses) {
       y: course.y-course.height/2-15
     });
   });
+  if(points.length === 0)
+    return;
   // sort the points
   points.sort(function(p1, p2) {
     // x takes priority over y, so if x is equal sort by greater y, else sort by greater x
@@ -178,7 +191,8 @@ function convexHull(courses) {
   // check if the end of lower and upper are too close together and if so
   // we are going to remove one of them but we have to decide carefully
   // so our shape doesn't go over our course
-  let temp_dis = distance(lower[0], upper[upper.length-1]);
+  let temp_dis = abs(lower[0].y - upper[upper.length-1].y);
+  //let temp_dis = distance(lower[0], upper[upper.length-1]);
   if(temp_dis >= 74.5 && temp_dis <= 75.5) {
     if(lower[0].y < lower[1].y) {
       upper.splice(upper.length-1, 1);
@@ -186,7 +200,8 @@ function convexHull(courses) {
       lower.splice(0, 1);
     }
   }
-  temp_dis = distance(lower[lower.length-1], upper[0]);
+  temp_dis = abs(lower[lower.length-1].y - upper[0].y);
+  //temp_dis = distance(lower[lower.length-1], upper[0]);
   if(temp_dis >= 74.5 && temp_dis <= 75.5) {
     if(upper[0].y < upper[1].y) {
       lower.splice(lower.length-1, 1);

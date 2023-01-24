@@ -173,7 +173,7 @@ function mouseWheel(delta) {
   let wx = (mouseX - mxzoom) / (width * zoom);
   let wy = (mouseY - myzoom) / (height * zoom);
   zoom += tmpzoom;
-  if(zoom < .2 || zoom > 3) {
+  if(zoom < .14 || zoom > 6) {
     zoom -= tmpzoom;
     return;
   }
