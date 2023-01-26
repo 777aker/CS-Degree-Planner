@@ -22,8 +22,6 @@ function setup() {
   // set up the new mouseX that lets you zoom
   calcMouseX = mouseX;
   calcMouseY = mouseY;
-  // find some degree stuff
-  setupDegreeRequirements();
 }
 // set up the buttons for the edit menu
 function editMenuSetUp() {

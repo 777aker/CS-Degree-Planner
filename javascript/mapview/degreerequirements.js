@@ -1,21 +1,3 @@
-// set up some stuff
-let requirement_keys = {}
-function setupDegreeRequirements() {
-  console.log('hey');
-  console.log(noteList);
-  noteList.forEach(note => {
-    console.log(note.title);
-    switch(note.title) {
-      case 'Calculus 1':
-        requirement_keys['Calculus 1'] = note.code;
-        break;
-    }
-  });
-}
-// get a reference to the degree requirements button
-const degreqBtn = document.querySelector("#degreq");
-// when you press the button open degree requirements
-degreqBtn.addEventListener('click', openRequirements);
 // temporarily we are hard coding requirements
 // later I hope to add a way to actually save and load different degrees
 let degreeRequirements = {
@@ -55,76 +37,25 @@ let degree_check = {
   writing: completions.incomplete,
   cs_electives: completions.incomplete
 };
-// get some rerences to the degree requirements areas
-const degreqDiv = document.querySelector('.degree-requirements');
-const drform = document.querySelector('.dr');
-// when they click the button this is called and it sets up and shows some stuff
-function openRequirements() {
-  typing = true;
-  drform.innerHTML = "";
-  // check if requirements are met or not and display differently based on whether they are or not
-  checkRequirements();
-  degreqDiv.style.display = 'block';
-}
 // checks what requirements have and have not been met
 function checkRequirements(key) {
   // create our diclaimer since this is definitely not the final version for degree requirements
   createFormText(drform, "Degree Requirements Design and Functionality WIP", false);
-  switch(key) {
-    case 'calculus1':
-      //console.log(requirement_keys[key]);
-      //console.log(hasElement(requirement_keys[key]));
-      //checkRequirementsHelperOne(degreeRequirements[key], getElement(requirement_keys[key]), key);
-      break;
-  }
+
+
+
+
   // make a button to close the form
   createFormButton(drform, "closereqs", "Close Degree Requirements", closeRequirements);
 }
-// helper that makes sure you've completed every course sent to it
-// you send a list of courses it returns true or false depending on if
-// they are all complete or not
-function checkRequirementsHelperAll(list) {
-  let met = true;
-  list.forEach(code => {
-    if(completionMap.get(code) !== completions.complete)
-      met = false;
-  });
-  return met;
-}
+
 // this just checks and makes sure you've taken one of the courses passed to it
 function checkRequirementsHelperOne(list, node, key) {
   let met = false;
-  list.forEach(code => {
-    let comp = completionMap.get(code)
-    if(comp > completionMap.get(node.code))
-      completionMap.set(node.code, comp);
-  });
-  degree_check[key] = completionMap.get(node.code);
+
   return met;
 }
-// this checks that you've taken a certain number of courses
-function checkRequirementsHelperNumber(list, amount) {
-  let number = 0;
-  list.forEach(code => {
-    if(completionMap.get(code) === completions.complete)
-      number += 1
-  });
-  return number >= amount;
-}
-// this checks that you've met the credit hours
-function checkRequirementsHelperCredits(list, amount) {
-  let credits = 0;
-  list.forEach(code => {
-    if(completionMap.get(code) === completions.complete)
-      credits += getElement(code).credits;
-  });
-  return credits >= amount;
-}
-// close the requirements view box thingy
-function closeRequirements() {
-  typing = false;
-  degreqDiv.style.display = 'none';
-}
+
 // ok, let's do the convex hull
 // this is called by draw every frame
 function doTheConvexHull() {
@@ -247,9 +178,10 @@ function convexHull(courses, completion) {
   */
   // now we actually draw the convex hull
   beginShape();
+  fill(255, 255, 255, 50/zoom);
   //curveVertex(convexHull[convexHull.length-1].x, convexHull[convexHull.length-1].y);
   for(let i = 0; i < convexHull.length; i++) {
-    fill(255, 255, 255, 50/zoom);
+
     curveVertex(convexHull[i].x, convexHull[i].y);
     //textSize(32);
     //text(i, convexHull[i].x, convexHull[i].y);
@@ -260,3 +192,57 @@ function convexHull(courses, completion) {
   curveVertex(convexHull[1].x, convexHull[1].y);
   endShape(CLOSE);
 }
+
+
+// helper that makes sure you've completed every course sent to it
+// you send a list of courses it returns true or false depending on if
+// they are all complete or not
+function checkRequirementsHelperAll(list) {
+  let met = true;
+  list.forEach(code => {
+    if(completionMap.get(code) !== completions.complete)
+      met = false;
+  });
+  return met;
+}
+
+// this checks that you've taken a certain number of courses
+function checkRequirementsHelperNumber(list, amount) {
+  let number = 0;
+  list.forEach(code => {
+    if(completionMap.get(code) === completions.complete)
+      number += 1
+  });
+  return number >= amount;
+}
+// this checks that you've met the credit hours
+function checkRequirementsHelperCredits(list, amount) {
+  let credits = 0;
+  list.forEach(code => {
+    if(completionMap.get(code) === completions.complete)
+      credits += getElement(code).credits;
+  });
+  return credits >= amount;
+}
+
+
+// get some rerences to the degree requirements areas
+const degreqDiv = document.querySelector('.degree-requirements');
+const drform = document.querySelector('.dr');
+// when they click the button this is called and it sets up and shows some stuff
+function openRequirements() {
+  typing = true;
+  drform.innerHTML = "";
+  // check if requirements are met or not and display differently based on whether they are or not
+  checkRequirements();
+  degreqDiv.style.display = 'block';
+}
+// close the requirements view box thingy
+function closeRequirements() {
+  typing = false;
+  degreqDiv.style.display = 'none';
+}
+// get a reference to the degree requirements button
+const degreqBtn = document.querySelector("#degreq");
+// when you press the button open degree requirements
+degreqBtn.addEventListener('click', openRequirements);
