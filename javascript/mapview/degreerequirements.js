@@ -1,3 +1,17 @@
+// set up some stuff
+let requirement_keys = {}
+function setupDegreeRequirements() {
+  console.log('hey');
+  console.log(noteList);
+  noteList.forEach(note => {
+    console.log(note.title);
+    switch(note.title) {
+      case 'Calculus 1':
+        requirement_keys['Calculus 1'] = note.code;
+        break;
+    }
+  });
+}
 // get a reference to the degree requirements button
 const degreqBtn = document.querySelector("#degreq");
 // when you press the button open degree requirements
@@ -26,6 +40,21 @@ let degreeRequirements = {
                  'CSCI 4900', 'APPM 4120', 'MATH 4120', 'APPM 4370', 'ATLS 4120', 'ATLS 4214', 'ATLS 4320', 'ECEN 2350', 'EVEN 4133', 'ECEN 4313', 'INFO 3504',
                  'INFO 4602', 'INFO 4604', 'INFO 4609', 'INFO 4611', 'MATH 4440', 'MCDB 4520']
 };
+let degree_check = {
+  foundations: completions.incomplete,
+  calculus1: completions.incomplete,
+  calculus2: completions.incomplete,
+  discrete: completions.incomplete,
+  core: completions.incomplete,
+  linear: completions.incomplete,
+  probstat: completions.incomplete,
+  naturalscience: completions.incomplete,
+  natural_science_electives: completions.incomplete,
+  logic: completions.incomplete,
+  ethics: completions.incomplete,
+  writing: completions.incomplete,
+  cs_electives: completions.incomplete
+};
 // get some rerences to the degree requirements areas
 const degreqDiv = document.querySelector('.degree-requirements');
 const drform = document.querySelector('.dr');
@@ -38,32 +67,15 @@ function openRequirements() {
   degreqDiv.style.display = 'block';
 }
 // checks what requirements have and have not been met
-function checkRequirements() {
+function checkRequirements(key) {
   // create our diclaimer since this is definitely not the final version for degree requirements
   createFormText(drform, "Degree Requirements Design and Functionality WIP", false);
-  // you need all foundations so check if you've met the foundations
-  if(checkRequirementsHelperAll(degreeRequirements.foundations)) {
-    createFormText(drform, "Foundation Requirement Complete", false);
-  } else {
-    createFormText(drform, "Foundation Requirement Incomplete", false);
-  }
-  // check if you've done any one calc course
-  if(checkRequirementsHelperOne(degreeRequirements.calculus1)) {
-    createFormText(drform, "Calculus 1 Requirement Complete", false);
-  } else {
-    createFormText(drform, "Calculus 1 Requirement Incomplete", false);
-  }
-  // check if you've done any calc 2 courses
-  if(checkRequirementsHelperOne(degreeRequirements.calculus2)) {
-    createFormText(drform, "Calculus 2 Requirement Complete", false);
-  } else {
-    createFormText(drform, "Calculus 2 Requirement Incomplete", false);
-  }
-  // check if you've done discrete
-  if(checkRequirementsHelperOne(degreeRequirements.discrete)) {
-    createFormText(drform, "Discrete Requirement Complete", false);
-  } else {
-    createFormText(drform, "Discrete Requirement Incomplete", false);
+  switch(key) {
+    case 'calculus1':
+      //console.log(requirement_keys[key]);
+      //console.log(hasElement(requirement_keys[key]));
+      //checkRequirementsHelperOne(degreeRequirements[key], getElement(requirement_keys[key]), key);
+      break;
   }
   // make a button to close the form
   createFormButton(drform, "closereqs", "Close Degree Requirements", closeRequirements);
@@ -80,12 +92,14 @@ function checkRequirementsHelperAll(list) {
   return met;
 }
 // this just checks and makes sure you've taken one of the courses passed to it
-function checkRequirementsHelperOne(list) {
+function checkRequirementsHelperOne(list, node, key) {
   let met = false;
   list.forEach(code => {
-    if(completionMap.get(code) === completions.complete)
-      met = true;
+    let comp = completionMap.get(code)
+    if(comp > completionMap.get(node.code))
+      completionMap.set(node.code, comp);
   });
+  degree_check[key] = completionMap.get(node.code);
   return met;
 }
 // this checks that you've taken a certain number of courses
@@ -117,7 +131,8 @@ function doTheConvexHull() {
   // draw convexHull for all requirements
   var keys = Object.keys(degreeRequirements);
   keys.forEach(function(key) {
-    convexHull(degreeRequirements[key]);
+    checkRequirements(key);
+    convexHull(degreeRequirements[key], degree_check[key]);
   });
   /*
   // draw a convex hull for foundations
@@ -129,7 +144,7 @@ function doTheConvexHull() {
   */
 }
 // this is a function that will draw a convex hull around the courses passed
-function convexHull(courses) {
+function convexHull(courses, completion) {
   // our list of points for the hull
   let points = [];
   // go through each of the courses passed
