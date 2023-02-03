@@ -1,0 +1,2110 @@
+{
+  "fileType": "courselayout",
+  "courses": [
+    {
+      "code": "CSCI 1000",
+      "credits": "1",
+      "name": "Computer Science as a Field of Work and Study",
+      "prerequisites": [],
+      "x": -4349.353094016378,
+      "y": 970.7308313461762,
+      "height": 45,
+      "width": 313.552734375,
+      "subnodes": [
+        "-1394879839"
+      ]
+    },
+    {
+      "code": "CSCI 1300",
+      "credits": "4",
+      "name": "Computer Science 1: Starting Computing",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "APPM 1350",
+          "MATH 1150",
+          "MATH 1300"
+        ]
+      ],
+      "x": -3520.0260628604105,
+      "y": 583.0969433043864,
+      "height": 45,
+      "width": 269.4609375,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 1235",
+      "credits": "4",
+      "name": "Pre-Calculus for Engineers",
+      "prerequisites": [],
+      "x": -4524.415866692923,
+      "y": 1478.782779398126,
+      "height": 45,
+      "width": 182.2958984375,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 1350",
+      "credits": "4",
+      "name": "Calculus 1 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1300"
+        ]
+      ],
+      "x": -3976.6258212891044,
+      "y": 1559.8217404370837,
+      "height": 45,
+      "width": 167.5234375,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 1150",
+      "credits": "4",
+      "name": "Precalculus Mathematics",
+      "prerequisites": [
+        [
+          "MATH 1011"
+        ]
+      ],
+      "x": -4520.257175286673,
+      "y": 1366.782779398126,
+      "height": 45,
+      "width": 170.61328125,
+      "subnodes": [
+        "-1272468592"
+      ]
+    },
+    {
+      "code": "MATH 1300",
+      "credits": "5",
+      "name": "Calculus 1",
+      "prerequisites": [
+        [
+          "MATH 1150",
+          "APPM 1235"
+        ]
+      ],
+      "x": -3827.534912198193,
+      "y": 1358.0035586189056,
+      "height": 45,
+      "width": 101.884765625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 2270",
+      "credits": "4",
+      "name": "Computer Science 2: Data Structures",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "MATH 1300",
+          "APPM 1350"
+        ]
+      ],
+      "x": -2204.0260628604096,
+      "y": 331.09694330439186,
+      "height": 45,
+      "width": 246.8818359375,
+      "subnodes": [
+        "297405059"
+      ]
+    },
+    {
+      "code": "CSCI 2400",
+      "credits": "4",
+      "name": "Computer Systems",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": -3152.026062860414,
+      "y": 67.09694330438535,
+      "height": 45,
+      "width": 134.0341796875,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 2001",
+      "credits": "3",
+      "name": "Introduction to Discrete Mathematics",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": -2418.5795707560287,
+      "y": 1594.00770961067,
+      "height": 45,
+      "width": 242.2060546875,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 2824",
+      "credits": "3",
+      "name": "Discrete Structures",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ],
+        [
+          "CSCI 1300"
+        ]
+      ],
+      "x": -3071.2416801310305,
+      "y": 1449.5910429440075,
+      "height": 45,
+      "width": 134.0341796875,
+      "subnodes": []
+    },
+    {
+      "code": "ECEN 2703",
+      "credits": "3",
+      "name": "Discrete Mathematics for Computer Engineers",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": -2849.6906818671464,
+      "y": 1194.0077096106684,
+      "height": 45,
+      "width": 302.109375,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 3170",
+      "credits": "3",
+      "name": "Discrete Applied Mathematics",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": -2596.3573485338043,
+      "y": 1925.1188207217747,
+      "height": 45,
+      "width": 200.185546875,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 1360",
+      "credits": "4",
+      "name": "Calculus 2 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": -3334.1351263115835,
+      "y": 2305.118820721773,
+      "height": 45,
+      "width": 167.5234375,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 2300",
+      "credits": "5",
+      "name": "Calculus 2",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": -3229.690681867139,
+      "y": 1978.4521540551077,
+      "height": 45,
+      "width": 101.884765625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3104",
+      "credits": "4",
+      "name": "Algorithms",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "MATH 2001",
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170"
+        ]
+      ],
+      "x": -2283.5875072639637,
+      "y": 914.3013604043199,
+      "height": 45,
+      "width": 95.9306640625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3155",
+      "credits": "4",
+      "name": "Principles of Programming Languages",
+      "prerequisites": [
+        [
+          "MATH 2001",
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170"
+        ],
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": -2657.801792978253,
+      "y": 791.8965984995601,
+      "height": 45,
+      "width": 252.3505859375,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3308",
+      "credits": "3",
+      "name": "Software Development Methods and Tools",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": -1929.9883058118153,
+      "y": 976.5744304715116,
+      "height": 45,
+      "width": 278.033203125,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3002",
+      "credits": "4",
+      "name": "Fundamentals of Human Computer Interaction",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": -1297.7105280340338,
+      "y": 158.62998602705807,
+      "height": 45,
+      "width": 302.9228515625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 2820",
+      "credits": "3",
+      "name": "Linear Algebra with Computer Science Applications",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": -3209.46845964492,
+      "y": 2664.8965984995534,
+      "height": 45,
+      "width": 333.28125,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 2130",
+      "credits": "3",
+      "name": "Introduction to Linear Algebra for Non-Mathematics Majors",
+      "prerequisites": [
+        [
+          "MATH 2300",
+          "APPM 1360"
+        ]
+      ],
+      "x": -2700.524015200475,
+      "y": 3129.670102773058,
+      "height": 45,
+      "width": 378.3916015625,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 3310",
+      "credits": "3",
+      "name": "Matrix Methods and Applications",
+      "prerequisites": [
+        [
+          "APPM 2340",
+          "APPM 2350",
+          "APPM 2360",
+          "MATH 2400"
+        ]
+      ],
+      "x": -3133.857348533806,
+      "y": 3116.336769439723,
+      "height": 45,
+      "width": 217.3232421875,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 3570",
+      "credits": "3",
+      "name": "Applied Probability",
+      "prerequisites": [
+        [
+          "APPM 2350",
+          "APPM 2340",
+          "MATH 2400"
+        ]
+      ],
+      "x": -2725.609263285724,
+      "y": 4616.307602528202,
+      "height": 45,
+      "width": 130.9580078125,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 2350",
+      "credits": "4",
+      "name": "Calculus 3 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": -4205.921824441621,
+      "y": 3057.027421924481,
+      "height": 45,
+      "width": 167.5234375,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 2340",
+      "credits": "4",
+      "name": "Calculus 3 for Statistics and Data Science",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": -4152.232371316621,
+      "y": 3108.027421924481,
+      "height": 45,
+      "width": 274.90234375,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 2400",
+      "credits": "5",
+      "name": "Calculus 3",
+      "prerequisites": [
+        [
+          "MATH 2300",
+          "APPM 1360"
+        ]
+      ],
+      "x": -4238.741160379121,
+      "y": 3159.027421924481,
+      "height": 45,
+      "width": 101.884765625,
+      "subnodes": []
+    },
+    {
+      "code": "APPM 4570",
+      "credits": "3",
+      "name": "Statistical Methods",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": -2109.1250579485736,
+      "y": 3675.1385330355934,
+      "height": 45,
+      "width": 132.49609375,
+      "subnodes": []
+    },
+    {
+      "code": "CHEN 3010",
+      "credits": "3",
+      "name": "Applied Data Analysis",
+      "prerequisites": [
+        [
+          "CHEN 1310"
+        ],
+        [
+          "APPM 2360",
+          "MATH 2130"
+        ],
+        [
+          "MATH 3430"
+        ]
+      ],
+      "x": -2680.524015200474,
+      "y": 3719.6701027730505,
+      "height": 45,
+      "width": 151.185546875,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3022",
+      "credits": "3",
+      "name": "Introduction to Data Science with Probability and Statistics",
+      "prerequisites": [
+        [
+          "CSCI 2270",
+          "CSCI 2275"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170",
+          "MATH 2001"
+        ]
+      ],
+      "x": -1477.19068186714,
+      "y": 4039.6701027730546,
+      "height": 45,
+      "width": 376.07421875,
+      "subnodes": []
+    },
+    {
+      "code": "CVEN 3227",
+      "credits": "3",
+      "name": "Probability, Statistics and Decision",
+      "prerequisites": [],
+      "x": -2190.524015200472,
+      "y": 4136.3367694397175,
+      "height": 45,
+      "width": 227.953125,
+      "subnodes": [
+        "1441725896"
+      ]
+    },
+    {
+      "code": "ECEN 3810",
+      "credits": "3",
+      "name": "Introduction to Probability Theory",
+      "prerequisites": [
+        [
+          "APPM 2350",
+          "MATH 2400"
+        ]
+      ],
+      "x": -2520.524015200472,
+      "y": 4053.0034361063867,
+      "height": 45,
+      "width": 220.4404296875,
+      "subnodes": []
+    },
+    {
+      "code": "ECON 3818",
+      "credits": "4",
+      "name": "Introduction to Statistics with Computer Applications",
+      "prerequisites": [
+        [
+          "ECON 2020"
+        ],
+        [
+          "MATH 1300",
+          "APPM 1350",
+          "ECON 1088",
+          "MATH 1081",
+          "MATH 1310",
+          "MATH 1330",
+          "APPM 1340",
+          "APPM 1345",
+          "FNCE 2010"
+        ]
+      ],
+      "x": -3261.9945446709958,
+      "y": 3580.008901229491,
+      "height": 45,
+      "width": 337.150390625,
+      "subnodes": [
+        "-1467263382"
+      ]
+    },
+    {
+      "code": "MATH 3510",
+      "credits": "3",
+      "name": "Introduction to Probability and Statistics",
+      "prerequisites": [
+        [
+          "MATH 2300",
+          "APPM 1360"
+        ],
+        [
+          "MATH 2001",
+          "MATH 2002"
+        ]
+      ],
+      "x": -2249.917954594413,
+      "y": 3475.6296987326414,
+      "height": 45,
+      "width": 260.1298828125,
+      "subnodes": []
+    },
+    {
+      "code": "MATH 4510",
+      "credits": "3",
+      "name": "Introduction to Probability Theory",
+      "prerequisites": [
+        [
+          "MATH 2400",
+          "APPM 2350"
+        ],
+        [
+          "MATH 2130",
+          "MATH 3130",
+          "MATH 2135",
+          "MATH 3135"
+        ]
+      ],
+      "x": -2900.524015200472,
+      "y": 3716.3367694397166,
+      "height": 45,
+      "width": 220.4404296875,
+      "subnodes": []
+    },
+    {
+      "code": "STAT 3100",
+      "credits": "3",
+      "name": "Applied Probability",
+      "prerequisites": [
+        [
+          "APPM 2350",
+          "APPM 2340",
+          "MATH 2400"
+        ]
+      ],
+      "x": -2545.6092632857185,
+      "y": 4389.640935861529,
+      "height": 45,
+      "width": 130.9580078125,
+      "subnodes": []
+    },
+    {
+      "code": "STAT 4000",
+      "credits": "3",
+      "name": "Statistical Methods and Application 1",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": -1977.1906818671362,
+      "y": 3909.6701027730496,
+      "height": 45,
+      "width": 243.798828125,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3202",
+      "credits": "3",
+      "name": "Introduction to Artificial Intelligence",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 3170",
+          "CSCI 2824",
+          "ECEN 2703",
+          "MATH 2001"
+        ],
+        [
+          "APPM 3570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "ECEN 3810",
+          "ECON 3818",
+          "MATH 3510",
+          "MATH 4510",
+          "STAT 3100",
+          "STAT 4000"
+        ]
+      ],
+      "x": -706.1806135041319,
+      "y": 1227.3607552578242,
+      "height": 45,
+      "width": 231.3369140625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3287",
+      "credits": "3",
+      "name": "Design and Analysis of Database Systems",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": -1526.599416922922,
+      "y": -16.92556952850464,
+      "height": 45,
+      "width": 278.798828125,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3302",
+      "credits": "3",
+      "name": "Introduction to Robotics",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 3170",
+          "CSCI 2824",
+          "ECEN 2703",
+          "MATH 2001"
+        ],
+        [
+          "APPM 2360",
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ]
+      ],
+      "x": -1239.5139468374641,
+      "y": 1517.3607552578308,
+      "height": 45,
+      "width": 162.08203125,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3403",
+      "credits": "4",
+      "name": "Introduction to CyberSecurity for a Converged World",
+      "prerequisites": [
+        [
+          "CSCI 2400",
+          "ECEN 3350"
+        ]
+      ],
+      "x": -1707.988305811816,
+      "y": -741.4255695285128,
+      "height": 45,
+      "width": 340.0146484375,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3434",
+      "credits": "3",
+      "name": "Theory of Computation",
+      "prerequisites": [
+        [
+          "CSCI 3104"
+        ]
+      ],
+      "x": -1519.9883058118144,
+      "y": 508.57443047150525,
+      "height": 45,
+      "width": 157.40625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3656",
+      "credits": "3",
+      "name": "Numerical Computation",
+      "prerequisites": [
+        [
+          "ASEN 1320",
+          "CSCI 1300"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "APPM 2360",
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ]
+      ],
+      "x": -1055.0160786925398,
+      "y": 1765.7299318328894,
+      "height": 45,
+      "width": 161.2822265625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3753",
+      "credits": "4",
+      "name": "Design and Analysis of Operating Systems",
+      "prerequisites": [
+        [
+          "CSCI 2400"
+        ]
+      ],
+      "x": -1705.988305811816,
+      "y": -325.4255695285068,
+      "height": 45,
+      "width": 280.3505859375,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 4022",
+      "credits": "3",
+      "name": "Advanced Data Science",
+      "prerequisites": [
+        [
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ],
+        [
+          "CSCI 3022",
+          "APPM 3570",
+          "CHEN 3010",
+          "CVEN 3227",
+          "MATH 3510",
+          "MATH 4510",
+          "ECEN 3810",
+          "ECON 3818",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ],
+        [
+          "CSCI 3104"
+        ]
+      ],
+      "x": -238.2105280340461,
+      "y": 2962.1299860270465,
+      "height": 45,
+      "width": 164.4267578125,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 4273",
+      "credits": "3",
+      "name": "Network Systems",
+      "prerequisites": [
+        [
+          "CSCI 3753"
+        ]
+      ],
+      "x": -1207.9883058118228,
+      "y": -367.4255695285036,
+      "height": 45,
+      "width": 123.91015625,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 4448",
+      "credits": "3",
+      "name": "Object-Oriented Analysis and Design",
+      "prerequisites": [
+        [
+          "CSCI 3308"
+        ]
+      ],
+      "x": -1455.9883058118176,
+      "y": 1036.574430471512,
+      "height": 45,
+      "width": 244.5576171875,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3010",
+      "credits": "3",
+      "name": "Programming Project Workshop",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "CSCI 3308"
+        ]
+      ],
+      "x": -52.92097805874995,
+      "y": 1837.1178170814435,
+      "height": 45,
+      "width": 213.1533203125,
+      "subnodes": [
+        "-2022840893"
+      ]
+    },
+    {
+      "code": "CSCI 3090",
+      "credits": "3",
+      "name": "Introduction to Quantum Computing",
+      "prerequisites": [
+        [
+          "APPM 2360",
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ]
+      ],
+      "x": 963.2189930812252,
+      "y": 3767.903531367161,
+      "height": 45,
+      "width": 236.7919921875,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3112",
+      "credits": "1",
+      "name": "Professional Development in Computer Science",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": -258.3257648783924,
+      "y": 427.59813423590276,
+      "height": 45,
+      "width": 312.2607421875,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3150",
+      "credits": "3",
+      "name": "Universal Design for Digital Media",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ]
+      ],
+      "x": -1001.4686220212457,
+      "y": -1652.3780562402928,
+      "height": 45,
+      "width": 225.861328125,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3352",
+      "credits": "3",
+      "name": "Biological Networks",
+      "prerequisites": [
+        [
+          "ASTR 2600",
+          "CSCI 2270",
+          "INFO 2201",
+          "PHYS 2600"
+        ],
+        [
+          "APPM 1345",
+          "APPM 1350",
+          "MATH 1300"
+        ],
+        [
+          "APPM 3570",
+          "APPM 4570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "EBIO 4410",
+          "ECEN 3810",
+          "ECON 3818",
+          "IPHY 2800",
+          "MATH 3510",
+          "MATH 4510",
+          "MATH 4520",
+          "MCDB 3450",
+          "MCEN 3047",
+          "STAT 2600",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ]
+      ],
+      "x": 2046.507593369825,
+      "y": 3013.207283170912,
+      "height": 45,
+      "width": 137.158203125,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3702",
+      "credits": "3",
+      "name": "Cognitive Science",
+      "prerequisites": [
+        [
+          "CSCI 1300",
+          "LING 2000",
+          "PHIL 2440",
+          "PSYC 2145",
+          "CSCI 2275"
+        ]
+      ],
+      "x": -187.4523809523821,
+      "y": -1138.2142857142865,
+      "height": 45,
+      "width": 127.0615234375,
+      "subnodes": []
+    },
+    {
+      "code": "CSCI 3832",
+      "credits": "3",
+      "name": "Natural Language Processing",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "CSCI 2824",
+          "MATH 2001",
+          "ECEN 2703",
+          "APPM 3170"
+        ]
+      ],
+      "x": 427.4369945843631,
+      "y": -225.62991150146726,
+      "height": 45,
+      "width": 199.4541015625,
+      "subnodes": []
+    }
+  ],
+  "coursemap": {
+    "CSCI 1000": 0,
+    "CSCI 1300": 1,
+    "APPM 1235": 2,
+    "APPM 1350": 3,
+    "MATH 1150": 4,
+    "MATH 1300": 5,
+    "CSCI 2270": 6,
+    "CSCI 2400": 7,
+    "MATH 2001": 8,
+    "CSCI 2824": 9,
+    "ECEN 2703": 10,
+    "APPM 3170": 11,
+    "APPM 1360": 12,
+    "MATH 2300": 13,
+    "CSCI 3104": 14,
+    "CSCI 3155": 15,
+    "CSCI 3308": 16,
+    "CSCI 3002": 17,
+    "CSCI 2820": 18,
+    "MATH 2130": 19,
+    "APPM 3310": 20,
+    "APPM 3570": 21,
+    "APPM 2350": 22,
+    "APPM 2340": 23,
+    "MATH 2400": 24,
+    "APPM 4570": 25,
+    "CHEN 3010": 26,
+    "CSCI 3022": 27,
+    "CVEN 3227": 28,
+    "ECEN 3810": 29,
+    "ECON 3818": 30,
+    "MATH 3510": 31,
+    "MATH 4510": 32,
+    "STAT 3100": 33,
+    "STAT 4000": 34,
+    "CSCI 3202": 35,
+    "CSCI 3287": 36,
+    "CSCI 3302": 37,
+    "CSCI 3403": 38,
+    "CSCI 3434": 39,
+    "CSCI 3656": 40,
+    "CSCI 3753": 41,
+    "CSCI 4022": 42,
+    "CSCI 4273": 43,
+    "CSCI 4448": 44,
+    "CSCI 3010": 45,
+    "CSCI 3090": 46,
+    "CSCI 3112": 47,
+    "CSCI 3150": 48,
+    "CSCI 3352": 49,
+    "CSCI 3702": 50,
+    "CSCI 3832": 51
+  },
+  "notes": [
+    {
+      "code": "-1394879839",
+      "title": "",
+      "text": "Restricted to students with 0-26 credits",
+      "x": -4360.019597922628,
+      "y": 1012.9808313461762,
+      "width": 256.2197265625,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "1201074917",
+      "title": "Pre-Calculus",
+      "text": "Requires ALEKS math exam taken\nin 2016 or earlier, or placement\ninto pre-calculus based on your\nadmissions data and/or CU Boulder\ncoursework.",
+      "x": -4515.560886224173,
+      "y": 1270.782779398126,
+      "width": 236.005859375,
+      "height": 115,
+      "subnodes": [
+        "MATH 1150",
+        "APPM 1235"
+      ],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "720334344",
+      "title": "Calculus 1",
+      "text": "",
+      "x": -3883.898548561829,
+      "y": 1478.0035586189085,
+      "width": 85.02734375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "1201074917"
+      ]
+    },
+    {
+      "code": "110256",
+      "title": "",
+      "text": "Requires Pre-Calculus or\nCalculus as a corequisite\nor prerequisite",
+      "x": -3939.6680290813115,
+      "y": 1046.3899222552666,
+      "width": 171.392578125,
+      "height": 62.5,
+      "subnodes": [],
+      "gate": true,
+      "connections": [
+        "1201074917",
+        "720334344"
+      ]
+    },
+    {
+      "code": "297405059",
+      "title": "",
+      "text": "Calculus can be taken as corequisite",
+      "x": -2187.9572152041596,
+      "y": 373.34694330439186,
+      "width": 243.01953125,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "-1272468592",
+      "title": "",
+      "text": "Requires enrollment in\ncorequisite MATH 1151",
+      "x": -4507.951511224173,
+      "y": 1417.782779398126,
+      "width": 159.224609375,
+      "height": 45,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "751554235",
+      "title": "Calculus 2",
+      "text": "",
+      "x": -3277.4684596449183,
+      "y": 2168.8965984995507,
+      "width": 85.02734375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "1885038654",
+      "title": "Discrete",
+      "text": "Only need 1 course",
+      "x": -2451.9129040893613,
+      "y": 1405.118820721785,
+      "width": 136.40625,
+      "height": 45,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "1790067037",
+      "title": "Recommended",
+      "text": "",
+      "x": -3098.5795707560305,
+      "y": 1407.3410429440075,
+      "width": 115.3583984375,
+      "height": 27.5,
+      "subnodes": [
+        "CSCI 2824"
+      ],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "181339140",
+      "title": "Linear Algebra",
+      "text": "Only 1 Required",
+      "x": -3013.4684596449174,
+      "y": 2916.8965984995502,
+      "width": 116.1650390625,
+      "height": 45,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "751554235"
+      ]
+    },
+    {
+      "code": "154094754",
+      "title": "Calculus 3",
+      "text": "Not needed for CS BS degree",
+      "x": -4207.180613504121,
+      "y": 3006.027421924481,
+      "width": 201.005859375,
+      "height": 45,
+      "subnodes": [
+        "APPM 2350",
+        "APPM 2340",
+        "MATH 2400"
+      ],
+      "gate": false,
+      "connections": [
+        "751554235"
+      ]
+    },
+    {
+      "code": "-1873880064",
+      "title": "Probability or Statistics",
+      "text": "1 Course Required",
+      "x": -1438.8286259663978,
+      "y": 3876.629361092987,
+      "width": 171.3720703125,
+      "height": 45,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "751554235"
+      ]
+    },
+    {
+      "code": "1441725896",
+      "title": "",
+      "text": "Restricted to students with 57-180 credits\nCollege of Engineering students only",
+      "x": -2150.604581606722,
+      "y": 4187.3367694397175,
+      "width": 271.7919921875,
+      "height": 45,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "-1467263382",
+      "title": "",
+      "text": "Restricted to students with 22-180 credits",
+      "x": -3276.6737438897458,
+      "y": 3622.258901229491,
+      "width": 271.7919921875,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "-1164186894",
+      "title": "Requires Calculus 3",
+      "text": "",
+      "x": -2793.4880511645147,
+      "y": 4253.580329800923,
+      "width": 148.8271484375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "154094754"
+      ]
+    },
+    {
+      "code": "-1164187854",
+      "title": "",
+      "text": "Requires Calculus 2",
+      "x": -1889.3017929782477,
+      "y": 3637.1585032614494,
+      "width": 140.2822265625,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "751554235"
+      ]
+    },
+    {
+      "code": "-2022840893",
+      "title": "",
+      "text": "Able to take CSCI 3308 as co-requisite",
+      "x": -13.377521027499938,
+      "y": 1879.3678170814435,
+      "width": 256.240234375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": []
+    },
+    {
+      "code": "746777975",
+      "title": "Require CSCI 1300",
+      "text": "",
+      "x": -754.8333333333321,
+      "y": -1129.1507936507953,
+      "width": 139.49609375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": true,
+      "connections": [
+        "CSCI 1300"
+      ]
+    },
+    {
+      "code": "774692143",
+      "title": "Require CSCI 2270",
+      "text": "",
+      "x": 210.29413744150577,
+      "y": 702.941517069962,
+      "width": 139.49609375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": true,
+      "connections": [
+        "CSCI 2270"
+      ]
+    },
+    {
+      "code": "-438079959",
+      "title": "Requires Discrete Mathematics",
+      "text": "",
+      "x": 1230.7045630667947,
+      "y": 1326.7606742242997,
+      "width": 222.7509765625,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "1885038654"
+      ]
+    },
+    {
+      "code": "-1164188789",
+      "title": "Requires Calculus 1",
+      "text": "",
+      "x": 535.2189930812218,
+      "y": 2267.9035313671593,
+      "width": 148.8271484375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "720334344"
+      ]
+    },
+    {
+      "code": "-1164187827",
+      "title": "Requires Calculus 2",
+      "text": "",
+      "x": 2463.2189930812233,
+      "y": 2599.9035313671598,
+      "width": 148.8271484375,
+      "height": 27.5,
+      "subnodes": [],
+      "gate": false,
+      "connections": [
+        "751554235"
+      ]
+    }
+  ],
+  "notemap": {
+    "110256": 3,
+    "154094754": 10,
+    "181339140": 9,
+    "297405059": 4,
+    "720334344": 2,
+    "746777975": 17,
+    "751554235": 6,
+    "774692143": 18,
+    "1201074917": 1,
+    "1441725896": 12,
+    "1790067037": 8,
+    "1885038654": 7,
+    "-1394879839": 0,
+    "-1272468592": 5,
+    "-1873880064": 11,
+    "-1467263382": 13,
+    "-1164186894": 14,
+    "-1164187854": 15,
+    "-2022840893": 16,
+    "-438079959": 19,
+    "-1164188789": 20,
+    "-1164187827": 21
+  },
+  "subnodes": [
+    {
+      "code": "CSCI 1000",
+      "x": -4506.129461203878,
+      "y": 948.2308313461762,
+      "width": 313.552734375,
+      "height": 78.5,
+      "lines": [
+        [
+          -4497.129461203878,
+          1012.9808313461762,
+          -4360.019597922628,
+          1012.9808313461762
+        ],
+        [
+          -4497.129461203878,
+          970.7308313461762,
+          -4497.129461203878,
+          1012.9808313461762
+        ]
+      ]
+    },
+    {
+      "code": "CSCI 2270",
+      "x": -2327.4669808291596,
+      "y": 308.59694330439186,
+      "width": 261.01953125,
+      "height": 78.5,
+      "lines": [
+        [
+          -2318.4669808291596,
+          373.34694330439186,
+          -2187.9572152041596,
+          373.34694330439186
+        ],
+        [
+          -2318.4669808291596,
+          331.09694330439186,
+          -2318.4669808291596,
+          373.34694330439186
+        ]
+      ]
+    },
+    {
+      "code": "1201074917",
+      "x": -4633.563815911673,
+      "y": 1213.282779398126,
+      "width": 236.005859375,
+      "height": 288,
+      "lines": [
+        [
+          -4624.563815911673,
+          1366.782779398126,
+          -4520.257175286673,
+          1366.782779398126
+        ],
+        [
+          -4624.563815911673,
+          1478.782779398126,
+          -4524.415866692923,
+          1478.782779398126
+        ],
+        [
+          -4624.563815911673,
+          1270.782779398126,
+          -4624.563815911673,
+          1478.782779398126
+        ]
+      ]
+    },
+    {
+      "code": "MATH 1150",
+      "x": -4605.563815911673,
+      "y": 1344.282779398126,
+      "width": 177.224609375,
+      "height": 96,
+      "lines": [
+        [
+          -4596.563815911673,
+          1417.782779398126,
+          -4507.951511224173,
+          1417.782779398126
+        ],
+        [
+          -4596.563815911673,
+          1366.782779398126,
+          -4596.563815911673,
+          1417.782779398126
+        ]
+      ]
+    },
+    {
+      "code": "1790067037",
+      "x": -3156.2587699747805,
+      "y": 1393.5910429440075,
+      "width": 152.0341796875,
+      "height": 78.5,
+      "lines": [
+        [
+          -3147.2587699747805,
+          1449.5910429440075,
+          -3071.2416801310305,
+          1449.5910429440075
+        ],
+        [
+          -3147.2587699747805,
+          1407.3410429440075,
+          -3147.2587699747805,
+          1449.5910429440075
+        ]
+      ]
+    },
+    {
+      "code": "154094754",
+      "x": -4307.683543191621,
+      "y": 2983.527421924481,
+      "width": 292.90234375,
+      "height": 198,
+      "lines": [
+        [
+          -4298.683543191621,
+          3057.027421924481,
+          -4205.921824441621,
+          3057.027421924481
+        ],
+        [
+          -4298.683543191621,
+          3108.027421924481,
+          -4152.232371316621,
+          3108.027421924481
+        ],
+        [
+          -4298.683543191621,
+          3159.027421924481,
+          -4238.741160379121,
+          3159.027421924481
+        ],
+        [
+          -4298.683543191621,
+          3006.027421924481,
+          -4298.683543191621,
+          3159.027421924481
+        ]
+      ]
+    },
+    {
+      "code": "CVEN 3227",
+      "x": -2304.500577700472,
+      "y": 4113.8367694397175,
+      "width": 289.7919921875,
+      "height": 96,
+      "lines": [
+        [
+          -2295.500577700472,
+          4187.3367694397175,
+          -2150.604581606722,
+          4187.3367694397175
+        ],
+        [
+          -2295.500577700472,
+          4136.3367694397175,
+          -2295.500577700472,
+          4187.3367694397175
+        ]
+      ]
+    },
+    {
+      "code": "ECON 3818",
+      "x": -3430.5697399834958,
+      "y": 3557.508901229491,
+      "width": 337.150390625,
+      "height": 78.5,
+      "lines": [
+        [
+          -3421.5697399834958,
+          3622.258901229491,
+          -3276.6737438897458,
+          3622.258901229491
+        ],
+        [
+          -3421.5697399834958,
+          3580.008901229491,
+          -3421.5697399834958,
+          3622.258901229491
+        ]
+      ]
+    },
+    {
+      "code": "CSCI 3010",
+      "x": -159.49763821499994,
+      "y": 1814.6178170814435,
+      "width": 274.240234375,
+      "height": 78.5,
+      "lines": [
+        [
+          -150.49763821499994,
+          1879.3678170814435,
+          -13.377521027499938,
+          1879.3678170814435
+        ],
+        [
+          -150.49763821499994,
+          1837.1178170814435,
+          -150.49763821499994,
+          1879.3678170814435
+        ]
+      ]
+    }
+  ],
+  "subnodemap": {
+    "154094754": 5,
+    "1201074917": 2,
+    "1790067037": 4,
+    "CSCI 1000": 0,
+    "CSCI 2270": 1,
+    "MATH 1150": 3,
+    "CVEN 3227": 6,
+    "ECON 3818": 7,
+    "CSCI 3010": 8
+  },
+  "lines": [
+    [
+      "CSCI 2270",
+      "CSCI 2400"
+    ],
+    [
+      "110256",
+      "CSCI 1300"
+    ],
+    [
+      "CSCI 1300",
+      "CSCI 2270"
+    ],
+    [
+      "720334344",
+      "CSCI 2270"
+    ],
+    [
+      "CSCI 1300",
+      "647503590"
+    ],
+    [
+      "720334344",
+      "751554235"
+    ],
+    [
+      "647503590",
+      "CSCI 3104"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3104"
+    ],
+    [
+      "751554235",
+      "CSCI 3104"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3155"
+    ],
+    [
+      "647503590",
+      "CSCI 3155"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3308"
+    ],
+    [
+      "1201074917",
+      "110256"
+    ],
+    [
+      "720334344",
+      "110256"
+    ],
+    [
+      "1201074917",
+      "720334344"
+    ],
+    [
+      "CSCI 1300",
+      "CSCI 2824"
+    ],
+    [
+      "CSCI 1300",
+      "ECEN 2703"
+    ],
+    [
+      "751554235",
+      "ECEN 2703"
+    ],
+    [
+      "720334344",
+      "MATH 2001"
+    ],
+    [
+      "720334344",
+      "CSCI 2824"
+    ],
+    [
+      "751554235",
+      "APPM 3170"
+    ],
+    [
+      "1885038654",
+      "CSCI 3104"
+    ],
+    [
+      "1885038654",
+      "CSCI 3155"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3002"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 2820"
+    ],
+    [],
+    [
+      "APPM 2360",
+      "APPM 3310"
+    ],
+    [
+      "751554235",
+      "CSCI 2820"
+    ],
+    [
+      "751554235",
+      "MATH 2130"
+    ],
+    [
+      "751554235",
+      "154094754"
+    ],
+    [
+      "154094754",
+      "APPM 3310"
+    ],
+    [
+      "CHEN 1310",
+      "CHEN 3010"
+    ],
+    [
+      "APPM 2360",
+      "CHEN 3010"
+    ],
+    [
+      "MATH 2130",
+      "CHEN 3010"
+    ],
+    [
+      "MATH 3430",
+      "CHEN 3010"
+    ],
+    [
+      "CSCI 2275",
+      "CSCI 3022"
+    ],
+    [
+      "ECON 2020",
+      "ECON 3818"
+    ],
+    [
+      "ECON 1088",
+      "ECON 3818"
+    ],
+    [
+      "MATH 1081",
+      "ECON 3818"
+    ],
+    [
+      "MATH 1310",
+      "ECON 3818"
+    ],
+    [
+      "MATH 1330",
+      "ECON 3818"
+    ],
+    [
+      "APPM 1340",
+      "ECON 3818"
+    ],
+    [
+      "APPM 1345",
+      "ECON 3818"
+    ],
+    [
+      "FNCE 2010",
+      "ECON 3818"
+    ],
+    [
+      "MATH 2001",
+      "MATH 3510"
+    ],
+    [
+      "MATH 2002",
+      "MATH 3510"
+    ],
+    [
+      "MATH 2130",
+      "MATH 4510"
+    ],
+    [
+      "MATH 3130",
+      "MATH 4510"
+    ],
+    [
+      "MATH 2135",
+      "MATH 4510"
+    ],
+    [
+      "MATH 3135",
+      "MATH 4510"
+    ],
+    [
+      "-1164186894",
+      "ECEN 3810"
+    ],
+    [
+      "-1164186894",
+      "MATH 4510"
+    ],
+    [
+      "-1164186894",
+      "STAT 3100"
+    ],
+    [
+      "-1164186894",
+      "APPM 3570"
+    ],
+    [
+      "154094754",
+      "-1164186894"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3202"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3287"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3302"
+    ],
+    [
+      "APPM 2360",
+      "CSCI 3302"
+    ],
+    [
+      "MATH 2135",
+      "CSCI 3302"
+    ],
+    [
+      "MATH 3130",
+      "CSCI 3302"
+    ],
+    [
+      "MATH 3135",
+      "CSCI 3302"
+    ],
+    [
+      "CSCI 2400",
+      "CSCI 3403"
+    ],
+    [
+      "ECEN 3350",
+      "CSCI 3403"
+    ],
+    [
+      "CSCI 3104",
+      "CSCI 3434"
+    ],
+    [
+      "ASEN 1320",
+      "CSCI 3656"
+    ],
+    [
+      "CSCI 1300",
+      "CSCI 3656"
+    ],
+    [
+      "APPM 2360",
+      "CSCI 3656"
+    ],
+    [
+      "MATH 2135",
+      "CSCI 3656"
+    ],
+    [
+      "MATH 3130",
+      "CSCI 3656"
+    ],
+    [
+      "MATH 3135",
+      "CSCI 3656"
+    ],
+    [
+      "CSCI 2400",
+      "CSCI 3753"
+    ],
+    [
+      "MATH 2135",
+      "CSCI 4022"
+    ],
+    [
+      "MATH 3130",
+      "CSCI 4022"
+    ],
+    [
+      "MATH 3135",
+      "CSCI 4022"
+    ],
+    [
+      "STAT 4520",
+      "CSCI 4022"
+    ],
+    [
+      "CSCI 3104",
+      "CSCI 4022"
+    ],
+    [
+      "CSCI 3753",
+      "CSCI 4273"
+    ],
+    [
+      "CSCI 3308",
+      "CSCI 4448"
+    ],
+    [
+      "CSCI 2400",
+      "CSCI 3753"
+    ],
+    [
+      "751554235",
+      "CSCI 3656"
+    ],
+    [
+      "1885038654",
+      "CSCI 3202"
+    ],
+    [
+      "1885038654",
+      "CSCI 3302"
+    ],
+    [
+      "720334344",
+      "ECON 3818"
+    ],
+    [
+      "-1873880064",
+      "CSCI 4022"
+    ],
+    [
+      "1885038654",
+      "CSCI 3022"
+    ],
+    [
+      "-1873880064",
+      "CSCI 3202"
+    ],
+    [
+      "181339140",
+      "CSCI 3302"
+    ],
+    [
+      "751554235",
+      "-1164187854"
+    ],
+    [
+      "-1164187854",
+      "STAT 4000"
+    ],
+    [
+      "-1164187854",
+      "CSCI 3022"
+    ],
+    [
+      "-1164187854",
+      "APPM 4570"
+    ],
+    [
+      "-1164187854",
+      "MATH 3510"
+    ],
+    [
+      "181339140",
+      "CSCI 3656"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3022"
+    ],
+    [
+      "CSCI 3308",
+      "CSCI 3010"
+    ],
+    [
+      "APPM 2360",
+      "CSCI 3090"
+    ],
+    [
+      "MATH 2135",
+      "CSCI 3090"
+    ],
+    [
+      "MATH 3130",
+      "CSCI 3090"
+    ],
+    [
+      "MATH 3135",
+      "CSCI 3090"
+    ],
+    [
+      "181339140",
+      "CSCI 3090"
+    ],
+    [
+      "CSCI 2270",
+      "CSCI 3112"
+    ],
+    [
+      "ASTR 2600",
+      "CSCI 3352"
+    ],
+    [
+      "INFO 2201",
+      "CSCI 3352"
+    ],
+    [
+      "PHYS 2600",
+      "CSCI 3352"
+    ],
+    [
+      "APPM 1345",
+      "CSCI 3352"
+    ],
+    [
+      "EBIO 4410",
+      "CSCI 3352"
+    ],
+    [
+      "IPHY 2800",
+      "CSCI 3352"
+    ],
+    [
+      "MATH 4520",
+      "CSCI 3352"
+    ],
+    [
+      "MCDB 3450",
+      "CSCI 3352"
+    ],
+    [
+      "MCEN 3047",
+      "CSCI 3352"
+    ],
+    [
+      "STAT 2600",
+      "CSCI 3352"
+    ],
+    [
+      "STAT 4520",
+      "CSCI 3352"
+    ],
+    [
+      "-1873880064",
+      "CSCI 3352"
+    ],
+    [
+      "LING 2000",
+      "CSCI 3702"
+    ],
+    [
+      "PHIL 2440",
+      "CSCI 3702"
+    ],
+    [
+      "PSYC 2145",
+      "CSCI 3702"
+    ],
+    [
+      "CSCI 2275",
+      "CSCI 3702"
+    ],
+    [
+      "CSCI 1300",
+      "746777975"
+    ],
+    [
+      "746777975",
+      "CSCI 3150"
+    ],
+    [
+      "746777975",
+      "CSCI 3702"
+    ],
+    [
+      "CSCI 2270",
+      "774692143"
+    ],
+    [
+      "774692143",
+      "CSCI 3352"
+    ],
+    [
+      "1885038654",
+      "-438079959"
+    ],
+    [
+      "720334344",
+      "-1164188789"
+    ],
+    [
+      "751554235",
+      "-1164187827"
+    ],
+    [
+      "-1164188789",
+      "CSCI 3352"
+    ],
+    [
+      "774692143",
+      "CSCI 3832"
+    ],
+    [
+      "-438079959",
+      "CSCI 3832"
+    ]
+  ]
+}

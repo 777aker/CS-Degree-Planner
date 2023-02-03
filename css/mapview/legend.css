@@ -1,9 +1,19 @@
 /* Entire legend */
 .legend {
-
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  align-items: stretch;
+  font-size: 125%;
+  background-color: rgba(127, 140, 141, 1.0);
+  padding: 5px 5px;
 }
 
 /* Each element of legend */
 .legend_color {
-
+  font-size: 100%;
+  padding: 5px 5px;
+  margin: 2px 2px;
 }

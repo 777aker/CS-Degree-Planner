@@ -24,6 +24,12 @@ function setUpTemplates() {
   templateButton(templateform, 'Computer Science BS Degree', 'templateloadbtns', 'csbs',
   'This will load all the courses and degree requirements for CU CS BS degree',
   'Computer-Science-BS-template.json');
+  templateButton(templateform, 'CS BS Recommended', 'templateloadbtns', 'csbsr',
+  'This will load only recommended courses for the CU CS BS degree',
+  'Computer-Science-BS-essentials.json');
+  templateButton(templateform, 'CS BS Full', 'templateloadbtns', 'csbsf',
+  'This will load electives also WIP',
+  'Computer-Science-BS-electives.json');
 }
 // template button setup function
 function templateButton(form, name, btnclass, btnid, btntitle, url) {
