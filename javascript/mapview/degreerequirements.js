@@ -16,7 +16,7 @@ let degreeRequirements = {
   logic: ['PHIL 1440', 'PHIL 2440'],
   ethics: ['CSCI 2750', 'INFO 4601', 'PHIL 1100', 'PHIL 1200', 'PHIL 2160', 'EHON 1151', 'ENLP 2000'],
   writing: ['ENES 1010', 'ENES 3100', 'PHYS 3050', 'WRTG 3030', 'WRTG 3035'],
-  cs_electives: ['CSCI 3010', 'CSCI 3022', 'CSCI 3090', 'CSCI 3112', 'CSCI 3150', 'CSCI 3352', 'CSCI 3702', 'CSCI 3832', 'CSCI 4113', 'CSCI 4114', 'CSCI 4122',
+  cs_electives: ['CSCI 3010', 'CSCI 3090', 'CSCI 3112', 'CSCI 3150', 'CSCI 3352', 'CSCI 3702', 'CSCI 3832', 'CSCI 4113', 'CSCI 4114', 'CSCI 4122',
                  'CSCI 4200', 'CSCI 4229', 'CSCI 4239', 'CSCI 4240', 'CSCI 4253', 'CSCI 4302', 'CSCI 4314', 'CSCI 4413', 'CSCI 4446', 'CSCI 4502', 'CSCI 4555',
                  'CSCI 4576', 'CSCI 4593', 'CSCI 4616', 'CSCI 4622', 'CSCI 4753', 'CSCI 4802', 'CSCI 4809', 'CSCI 4830', 'CSCI 4831', 'CSCI 4849', 'CSCI 4889',
                  'CSCI 4900', 'APPM 4120', 'MATH 4120', 'APPM 4370', 'ATLS 4120', 'ATLS 4214', 'ATLS 4320', 'ECEN 2350', 'EVEN 4133', 'ECEN 4313', 'INFO 3504',
@@ -42,17 +42,10 @@ function checkRequirements(key) {
   // create our diclaimer since this is definitely not the final version for degree requirements
   createFormText(drform, "Degree Requirements Design and Functionality WIP", false);
 
-  
+
 
   // make a button to close the form
   createFormButton(drform, "closereqs", "Close Degree Requirements", closeRequirements);
-}
-
-// this just checks and makes sure you've taken one of the courses passed to it
-function checkRequirementsHelperOne(list, node, key) {
-  let met = false;
-
-  return met;
 }
 
 // ok, let's do the convex hull
@@ -192,6 +185,13 @@ function convexHull(courses, completion) {
   endShape(CLOSE);
 }
 
+
+// this just checks and makes sure you've taken one of the courses passed to it
+function checkRequirementsHelperOne(list, node, key) {
+  let met = false;
+
+  return met;
+}
 
 // helper that makes sure you've completed every course sent to it
 // you send a list of courses it returns true or false depending on if
