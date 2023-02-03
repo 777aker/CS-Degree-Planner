@@ -22,7 +22,7 @@ let degreeRequirements = {
                  'CSCI 4900', 'APPM 4120', 'MATH 4120', 'APPM 4370', 'ATLS 4120', 'ATLS 4214', 'ATLS 4320', 'ECEN 2350', 'EVEN 4133', 'ECEN 4313', 'INFO 3504',
                  'INFO 4602', 'INFO 4604', 'INFO 4609', 'INFO 4611', 'MATH 4440', 'MCDB 4520']
 };
-let degree_check = {
+/*let degree_check = {
   foundations: completions.incomplete,
   calculus1: completions.incomplete,
   calculus2: completions.incomplete,
@@ -36,9 +36,24 @@ let degree_check = {
   ethics: completions.incomplete,
   writing: completions.incomplete,
   cs_electives: completions.incomplete
+};*/
+let degree_note = {
+  foundations: null,
+  calculus1: "720334344",
+  calculus2: "751554235",
+  discrete: "1885038654",
+  core: null,
+  linear: "181339140",
+  probstat: "-1873880064",
+  naturalscience: null,
+  natural_science_electives: null,
+  logic: null,
+  ethics: null,
+  writing: null,
+  cs_electives: null
 };
 // checks what requirements have and have not been met
-function checkRequirements(key) {
+function checkRequirementsButton() {
   // create our diclaimer since this is definitely not the final version for degree requirements
   createFormText(drform, "Degree Requirements Design and Functionality WIP", false);
 
@@ -54,8 +69,10 @@ function doTheConvexHull() {
   // draw convexHull for all requirements
   var keys = Object.keys(degreeRequirements);
   keys.forEach(function(key) {
-    checkRequirements(key);
-    convexHull(degreeRequirements[key], degree_check[key]);
+    let completion = checkRequirements(key);
+    if(degree_note[key] !== null)
+      completionMap.set(degree_note[key], completion);
+    convexHull(degreeRequirements[key], completion);
   });
   /*
   // draw a convex hull for foundations
@@ -170,7 +187,22 @@ function convexHull(courses, completion) {
   */
   // now we actually draw the convex hull
   beginShape();
-  fill(255, 255, 255, 50/zoom);
+  switch(completion) {
+    case completions.find:
+      fill(155, 89, 182, 50/zoom);
+      break;
+    case completions.available:
+      fill(26, 188, 156, 50/zoom);
+      break;
+    case completions.inprogress:
+      fill(46, 204, 113, 50/zoom);
+      break;
+    case completions.complete:
+      fill(52, 152, 219, 50/zoom);
+      break;
+    default:
+      fill(255, 255, 255, 50/zoom);
+  }
   //curveVertex(convexHull[convexHull.length-1].x, convexHull[convexHull.length-1].y);
   for(let i = 0; i < convexHull.length; i++) {
 
@@ -185,35 +217,70 @@ function convexHull(courses, completion) {
   endShape(CLOSE);
 }
 
-
-// this just checks and makes sure you've taken one of the courses passed to it
-function checkRequirementsHelperOne(list, node, key) {
-  let met = false;
-
-  return met;
+function checkRequirements(key) {
+  switch(key) {
+    case 'foundations':
+      return checkRequirementsAll(degreeRequirements[key]);
+      break;
+    case 'calculus1':
+    case 'calculus2':
+    case 'discrete':
+    case 'linear':
+    case 'probstat':
+      return checkRequirementsOne(degreeRequirements[key]);
+      break;
+    case 'core':
+      return checkRequirementsNumber(degreeRequirements[key], 5);
+      break;
+  }
 }
 
 // helper that makes sure you've completed every course sent to it
 // you send a list of courses it returns true or false depending on if
 // they are all complete or not
-function checkRequirementsHelperAll(list) {
-  let met = true;
+function checkRequirementsAll(list) {
+  let completion = completions.complete;
   list.forEach(code => {
-    if(completionMap.get(code) !== completions.complete)
-      met = false;
+    if(completionMap.get(code) < completion)
+      completion = completionMap.get(code);
   });
-  return met;
+  return completion;
 }
 
-// this checks that you've taken a certain number of courses
-function checkRequirementsHelperNumber(list, amount) {
-  let number = 0;
+// this just checks and makes sure you've taken one of the courses passed to it
+function checkRequirementsOne(list) {
+  let completion = completions.incomplete;
+  list.forEach(code => {
+    if(completionMap.get(code) > completion)
+      completion = completionMap.get(code);
+  });
+  return completion;
+}
+
+// check how many courses you've taken in the area
+function checkRequirementsNumber(list, num) {
+  let complete = 0;
   list.forEach(code => {
     if(completionMap.get(code) === completions.complete)
-      number += 1
+      complete += 1;
   });
-  return number >= amount;
+  if(complete >= num)
+    return completions.complete;
+  list.forEach(code => {
+    if(completionMap.get(code) === completions.inprogress)
+      complete += 1;
+  });
+  if(complete >= num)
+    return completions.inprogress;
+  list.forEach(code => {
+    if(completionMap.get(code) === completions.available)
+      complete += 1;
+  });
+  if(complete >= num)
+    return completions.available;
+  return completions.incomplete;
 }
+
 // this checks that you've met the credit hours
 function checkRequirementsHelperCredits(list, amount) {
   let credits = 0;
@@ -233,7 +300,7 @@ function openRequirements() {
   typing = true;
   drform.innerHTML = "";
   // check if requirements are met or not and display differently based on whether they are or not
-  checkRequirements();
+  checkRequirementsButton();
   degreqDiv.style.display = 'block';
 }
 // close the requirements view box thingy

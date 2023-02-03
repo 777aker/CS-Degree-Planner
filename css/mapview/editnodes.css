@@ -22,3 +22,10 @@
   margin: 0px 0px;
   padding: 0px 0px;
 }
+
+/* change checkboxes */
+input[type=checkbox] {
+  transform: scale(2);
+  padding: 20px;
+  margin: 20px;
+}
