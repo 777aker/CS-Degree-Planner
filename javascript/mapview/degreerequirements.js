@@ -52,6 +52,8 @@ let degree_note = {
   writing: null,
   cs_electives: null
 };
+// how far you can zoom before the degree requirement fill takes over
+let cloud = 25;
 // checks what requirements have and have not been met
 function checkRequirementsButton() {
   // create our diclaimer since this is definitely not the final version for degree requirements
@@ -189,19 +191,19 @@ function convexHull(courses, completion) {
   beginShape();
   switch(completion) {
     case completions.find:
-      fill(155, 89, 182, 50/zoom);
+      fill(155, 89, 182, cloud/zoom);
       break;
     case completions.available:
-      fill(26, 188, 156, 50/zoom);
+      fill(26, 188, 156, cloud/zoom);
       break;
     case completions.inprogress:
-      fill(46, 204, 113, 50/zoom);
+      fill(46, 204, 113, cloud/zoom);
       break;
     case completions.complete:
-      fill(52, 152, 219, 50/zoom);
+      fill(52, 152, 219, cloud/zoom);
       break;
     default:
-      fill(255, 255, 255, 50/zoom);
+      fill(255, 255, 255, cloud/zoom);
   }
   //curveVertex(convexHull[convexHull.length-1].x, convexHull[convexHull.length-1].y);
   for(let i = 0; i < convexHull.length; i++) {

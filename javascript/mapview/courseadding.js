@@ -215,8 +215,8 @@ function submitCourse() {
     credits: ch,
     name: coursename,
     prerequisites: prereqs,
-    x: windowWidth / 2,
-    y: windowHeight / 2,
+    x: ((windowWidth / 2) - mxzoom) / zoom,
+    y: ((windowHeight / 2) - myzoom) / zoom,
     height: textLeading() * 2 + boxpadding.y,
     width: bold > textWidth(coursename) ? bold + boxpadding.x : textWidth(coursename) + boxpadding.x,
     subnodes: []
