@@ -7,7 +7,7 @@
 }
 
 #degree-selector {
-  font-size: 16pt;
+  font-size: 18pt;
   padding: 6px;
   width: 100%;
 }
@@ -24,7 +24,7 @@
 
 .dropdown-content {
   display: none;
-  position: absolute;
+  position: relative;
   width: 100%;
   overflow: auto;
 }
@@ -44,6 +44,7 @@
 }
 
 #class-content-area {
+  font-size: 12pt;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -51,6 +52,7 @@
 }
 
 #class-content-area button {
+  font-size: 12pt;
   width: 100%;
   display: block;
   padding: 5px;

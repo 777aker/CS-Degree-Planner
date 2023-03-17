@@ -27,9 +27,12 @@
   background-color: #95a5a6;
   gap: 5px;
   padding: 5px;
+  flex-grow: 1;
+  font-size: 18pt;
 }
 
 .coursedrop {
+  font-size: 12pt;
   width: 80%;
   min-height: 30px;
   background-color: #3498db;

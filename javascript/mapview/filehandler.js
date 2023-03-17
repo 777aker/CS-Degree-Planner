@@ -171,9 +171,6 @@ function processCourseLayout(json) {
   jsonlist.forEach((line) => {
     lineList.push(line);
   });
-  // TODO: hot take that this is default complete, poor students who are behind
-  completionMap.set("MATH 1150", completions.complete)
-  completionMap.set("APPM 1235", completions.complete)
 }
 // process json file loaded but append rather than replace
 // this may look like a simple addition, but that's because I changed everything else
