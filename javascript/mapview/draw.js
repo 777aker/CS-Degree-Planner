@@ -196,31 +196,32 @@ const lineListHandler = (ln, index, lines) => {
       y: node2.y
     };
   }
+  hoveringOverSomething = lineTest(20, p1.x, p1.y, p2.x, p2.y, calcMouseX, calcMouseY);
   if(mode === modes.delete) {
     // if mouse intersecting line highlight it red
     // if mouse pressed also delete it
     // AAAHHHH, PAST ME MADE THIS ALREADY!!!!!!
     // yaaaayyyyyyyyy
-    if(lineTest(20, p1.x, p1.y, p2.x, p2.y, calcMouseX, calcMouseY)) {
-      hoveringOverSomething = true;
+    if(hoveringOverSomething) {
       if(mouseIsPressed && !typing) {
         lines.splice(index, 1);
         return;
       }
       // applying a gradient so directionality more clear
-      lineGradient(node1.code, node2, true, p1.x, p1.y, p2.x, p2.y);
+      lineGradient(node1.code, node2, true, p1.x, p1.y, p2.x, p2.y, hoveringOverSomething);
     } else {
       // applying a gradient so directionality more clear
-      lineGradient(node1.code, node2, false, p1.x, p1.y, p2.x, p2.y);
+      lineGradient(node1.code, node2, false, p1.x, p1.y, p2.x, p2.y, hoveringOverSomething);
     }
   } else {
     // applying a gradient so directionality more clear
-    lineGradient(node1.code, node2, false, p1.x, p1.y, p2.x, p2.y);
+    lineGradient(node1.code, node2, false, p1.x, p1.y, p2.x, p2.y, hoveringOverSomething);
   }
   line(p1.x, p1.y, p2.x, p2.y);
 };
 // helper function that draws gradients and stuff
-function lineGradient(code1, node2, red, x1, y1, x2, y2) {
+function lineGradient(code1, node2, red, x1, y1, x2, y2, hovering) {
+  //console.log(hovering);
   let grad = drawingContext.createLinearGradient(x1, y1, x2, y2);
   drawingContext.strokeStyle = grad;
   if(red) {
@@ -246,6 +247,14 @@ function lineGradient(code1, node2, red, x1, y1, x2, y2) {
       default:
         drawingContext.setLineDash([1,40]);
         break;
+    }
+    return;
+  }
+  if(hovering) {
+    if(completionMap.get(code1) !== completions.incomplete || (completionMap.get(node2.code) !== completions.incomplete && node2 !== undefined)) {
+      grad.addColorStop(0, colors.draw);
+      grad.addColorStop(1, colors.draw);
+      drawingContext.setLineDash([2,15]);
     }
     return;
   }
@@ -311,13 +320,18 @@ const courseListHandler = (course, index, arr) => {
   // move the courses based on which keys are held
   course.x += xy[0];
   course.y += xy[1];
+  // one day, I'll refactor this instead of adding more, and everything will be better
+  // a lot of this implementation is so gross
+
   // if hovering over the box change fill
   // oh, but also to fix a weird bug if this is the course we are dragging then also set fill
   let mouseHovering = draggingcourse === index;
   // intersecting course check
-  if(mouseHovering || (calcMouseX > course.x - course.width/2 && calcMouseX < course.x + course.width/2 && calcMouseY > course.y - course.height/2 && calcMouseY < course.y + course.height/2)) {
-    hoveringOverSomething = true;
-    mouseHovering = true;
+  if(!(hide_incompletes && completionMap.get(course.code) === completions.incomplete)) {
+    if(mouseHovering || (calcMouseX > course.x - course.width/2 && calcMouseX < course.x + course.width/2 && calcMouseY > course.y - course.height/2 && calcMouseY < course.y + course.height/2)) {
+      hoveringOverSomething = true;
+      mouseHovering = true;
+    }
   }
   // draw the rectangle around our course
   boxFill(course.code, mouseHovering);
@@ -450,7 +464,7 @@ const courseListHandler = (course, index, arr) => {
   // draw course code, credit hours, and name to the screen
   textAlign(CENTER, TOP);
   textStyle(BOLD);
-  textFill(course.code, mouseHovering);
+  textFill(completionMap.get(course.code), mouseHovering);
   let topline = course.y - course.height/2 + boxpadding.y/2
   text(course.code + "-" + course.credits, course.x, topline);
   textStyle(NORMAL);
@@ -548,7 +562,7 @@ const noteListHandler = (note, index, arr) => {
   noStroke();
   // finally draw the text
   // if it doesn't have a title center text
-  textFill(note.code, mouseHovering);
+  textFill(completionMap.get(note.code), mouseHovering);
   if(note.title === '') {
     textStyle(NORMAL);
     textAlign(LEFT, CENTER);
@@ -610,6 +624,8 @@ function boxFill(code, mh) {
         fill(colors.find);
       break;
     default:
+      if(hide_incompletes)
+        stroke(0, 0, 0, 0);
       if(mh)
         fill(colors.incompletehover);
       else
@@ -617,8 +633,11 @@ function boxFill(code, mh) {
       break;
   }
 }
-function textFill(code, mh) {
-  fill(0, 0, 0, 255);
+function textFill(completion, mh) {
+  if(hide_incompletes && completion === completions.incomplete || completion == undefined)
+    fill(0, 0, 0, 0);
+  else
+    fill(0, 0, 0, 255);
 }
 // some variables for drawing a nice box
 // spacing around the subnodes

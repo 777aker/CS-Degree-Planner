@@ -82,6 +82,7 @@ let completions = {
   complete: 4,
 };
 let completionMap = new Map();
+let hide_incompletes = true;
 // colors because I'm lazy
 // actually this is just the better way to do this
 colors = {
@@ -101,8 +102,8 @@ colors = {
   completehover: 'rgba(41, 128, 185, 1.0)', // Belize Hole
   find: 'rgba(155, 89, 182, 1.0)', // Amethyst
   findhover: 'rgba(142, 68, 173, 1.0)', // Wisteria
-  incomplete: 'rgba(149, 165, 166, 1.0)', // Concrete
-  incompletehover: 'rgba(127, 140, 141, 1.0)', // Asbestos
+  incomplete: 'rgba(149, 165, 166, 0.0)', // Concrete
+  incompletehover: 'rgba(127, 140, 141, 0.0)', // Asbestos
   // Actually just the color
   concrete: 'rgba(149, 165, 166, 1.0)',
   asbestos: 'rgba(127, 140, 141, 1.0)',

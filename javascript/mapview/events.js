@@ -64,8 +64,14 @@ function keyTyped() {
     case 'g':
       if(!advanceduses && throwError("WARNING: about to enable advanced uses")) {
         showUses();
+        hide_incompletes = false;
+        colors.incomplete = 'rgba(149, 165, 166, 1.0)'; // Concrete
+        colors. incompletehover = 'rgba(127, 140, 141, 1.0)'; // Asbestos
       } else {
         rehideUses();
+        hide_incompletes = true;
+        colors.incomplete = 'rgba(149, 165, 166, 0.0)'; // Concrete
+        colors. incompletehover = 'rgba(127, 140, 141, 0.0)'; // Asbestos
       }
       break;
     // testing popups

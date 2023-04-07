@@ -188,6 +188,7 @@ function convexHull(courses, completion) {
   }
   */
   // now we actually draw the convex hull
+  curveTightness(0.25);
   beginShape();
   switch(completion) {
     case completions.find:
@@ -203,7 +204,10 @@ function convexHull(courses, completion) {
       fill(52, 152, 219, cloud/zoom);
       break;
     default:
-      fill(255, 255, 255, cloud/zoom);
+      if(hide_incompletes)
+        fill(0, 0, 0, 0);
+      else
+        fill(255, 255, 255, cloud/zoom);
   }
   //curveVertex(convexHull[convexHull.length-1].x, convexHull[convexHull.length-1].y);
   for(let i = 0; i < convexHull.length; i++) {
@@ -214,8 +218,8 @@ function convexHull(courses, completion) {
     //vertex(convexHull[i].x, convexHull[i].y);
   }
   // if you don't do this you get a gross straight edge
-  curveVertex(convexHull[0].x, convexHull[0].y);
-  curveVertex(convexHull[1].x, convexHull[1].y);
+  //vertex(convexHull[0].x, convexHull[0].y);
+  //vertex(convexHull[1].x, convexHull[1].y);
   endShape(CLOSE);
 }
 
