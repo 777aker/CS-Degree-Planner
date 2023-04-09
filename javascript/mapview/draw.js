@@ -251,7 +251,13 @@ function lineGradient(code1, node2, red, x1, y1, x2, y2, hovering) {
     return;
   }
   if(hovering) {
-    if(completionMap.get(code1) !== completions.incomplete || (completionMap.get(node2.code) !== completions.incomplete && node2 !== undefined)) {
+    if(hide_incompletes) {
+      if(completionMap.get(code1) !== completions.incomplete || (completionMap.get(node2.code) !== completions.incomplete && node2 !== undefined)) {
+        grad.addColorStop(0, colors.draw);
+        grad.addColorStop(1, colors.draw);
+        drawingContext.setLineDash([2,15]);
+      }
+    } else {
       grad.addColorStop(0, colors.draw);
       grad.addColorStop(1, colors.draw);
       drawingContext.setLineDash([2,15]);
