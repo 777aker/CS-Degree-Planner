@@ -10,3 +10,15 @@ function add_year(element) {
   //console.log(year_dict);
   year_elements_dict[element.elt.innerText] = element;
 }
+
+function checkyear() {
+
+}
+
+function coloryears() {
+
+}
+
+function decolor_years() {
+  
+}
