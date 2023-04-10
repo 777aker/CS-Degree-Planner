@@ -35,6 +35,7 @@ let coursecomp = {};
 function handleDrop(e) {
   e.stopPropagation();
 
+  /*
   let srctmp;
   let thistmp;
   let checksrc = false;
@@ -92,7 +93,7 @@ function handleDrop(e) {
 
   //print(srcyear);
   //print(thisyear);
-
+  /*
   // if check is not true do this
   // for each prereq group
   // for each prereq
@@ -118,7 +119,7 @@ function handleDrop(e) {
     }
   }
   //print(checksrc);
-
+  /*
   if(!checkthis) {
     checkthis = true;
     courses[this.innerHTML].forEach((prereqgroup) => {
@@ -144,7 +145,7 @@ function handleDrop(e) {
   // if !(check 1 and check 2)
   // throwerror
   // return false
-
+  /*
   if(!(checksrc && checkthis)) {
     if(!checksrc) {
       throwCourseError(dragSrcEl.innerHTML, courses[dragSrcEl.innerHTML]);
@@ -154,6 +155,7 @@ function handleDrop(e) {
         print(prereqgroup);
       });
       */
+    /*
     }
     if(!checkthis) {
       throwCourseError(dragSrcEl.innerHTML, courses[dragSrcEl.innerHTML]);
@@ -161,8 +163,7 @@ function handleDrop(e) {
       print(this.innerHTML + " prereqs not met");
       courses[this.innerHTML].forEach((prereqgroup) => {
         print(prereqgroup);
-      });
-      */
+
     }
     if(dragSrcEl.innerHTML !== '') {
       //print('yo mama');
@@ -185,7 +186,7 @@ function handleDrop(e) {
     if(srcyear !== null && srcyear !== undefined) {
       coursecomp[this.innerHTML] = srcyear;
     }
-  }
+  //}*/
 
   if(dragSrcEl !== this) {
     if(dragSrcEl.classList.contains('coursedrop')) {

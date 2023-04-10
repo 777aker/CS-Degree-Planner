@@ -18,11 +18,13 @@ function setupYears() {
     newyear.parent('active-area');
     // add a drop area to this year so classes can be dropped into it
     addDropArea(newyear);
+    add_year(newyear);
     // add fall
     newyear = createDiv('Fall ' + yr);
     newyear.class('year');
     newyear.parent('active-area');
     addDropArea(newyear);
+    add_year(newyear);
   }
   // this is a button that lets you move the years around
   newbtn = createButton('>');
