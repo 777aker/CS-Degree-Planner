@@ -24,9 +24,6 @@ function throwAway(e) {
   //console.log(dragSrcEl.innerHTML);
 
   //console.log(coursecomp);
-  if(dragSrcEl.innerHTML in coursecomp) {
-    delete coursecomp[dragSrcEl.innerHTML];
-  }
   courselist = document.querySelectorAll('.nocoursedrop');
   courselist.forEach(course => {
     if(course.innerHTML === dragSrcEl.innerHTML) {
@@ -39,7 +36,15 @@ function throwAway(e) {
     dragSrcEl.remove();
   }
 
-  console.log(coursecomp);
-
   return false;
+}
+
+function resetElement(element) {
+  courselist = document.querySelectorAll('.nocoursedrop');
+  courselist.forEach(course => {
+    if(course.innerHTML === element.innerHTML) {
+      course.setAttribute('draggable', 'true');
+      course.setAttribute('class', 'course-drag');
+    }
+  });
 }

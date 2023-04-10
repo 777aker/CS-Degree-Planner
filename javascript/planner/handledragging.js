@@ -3,6 +3,7 @@ function handleDragStart(e) {
   this.style.opacity = '0.4';
 
   dragSrcEl = this;
+  coloryears(dragSrcEl);
 
   e.dataTransfer.effectAllowed = 'copy';
   e.dataTransfer.setData('text/html', this.innerHTML);
@@ -16,6 +17,7 @@ function handleDragEnd(e) {
   document.querySelectorAll('.coursedrop').forEach(function(item) {
     item.classList.remove('over');
   });
+  decolor_years();
 }
 
 function handleDragOver(e) {
@@ -31,7 +33,6 @@ function handleDragLeave(e) {
   this.classList.remove('over');
 }
 
-let coursecomp = {};
 function handleDrop(e) {
   e.stopPropagation();
 
@@ -196,13 +197,19 @@ function handleDrop(e) {
       if(dragSrcEl.innerHTML === '' && this.innerHTML !== '') {
         addDropArea(dragSrcEl.parentElement);
       }
-
       dragSrcEl.innerHTML = this.innerHTML;
     } else {
-      dragSrcEl.setAttribute('draggable', 'false');
-      dragSrcEl.setAttribute('class', 'nocoursedrop');
-      if(this.innerHTML === '') {
-        addDropArea(this.parentElement);
+      if(dragSrcEl.classList.contains('course-drag') && this.classList.contains('coursedrop') && this.innerHTML !== '') {
+        resetElement(this);
+        dragSrcEl.setAttribute('draggable', 'false');
+        dragSrcEl.setAttribute('class', 'nocoursedrop');
+
+      } else {
+        dragSrcEl.setAttribute('draggable', 'false');
+        dragSrcEl.setAttribute('class', 'nocoursedrop');
+        if(this.innerHTML === '') {
+          addDropArea(this.parentElement);
+        }
       }
     }
     this.innerHTML = e.dataTransfer.getData('text/html');
@@ -217,6 +224,8 @@ function handleDrop(e) {
     }
   }
 
+  decolor_years();
+
   return false;
 }
 
@@ -224,6 +233,7 @@ function handleMoveStart(e) {
   this.style.opacity = '0.4';
 
   dragSrcEl = this;
+  coloryears(dragSrcEl);
 
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.innerHTML);
