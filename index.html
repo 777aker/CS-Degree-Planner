@@ -57,6 +57,18 @@
   </head>
   <body>
     <main>
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend_color" style="background-color:rgba(26, 188, 156, 1.0)">
+          Available
+        </div>
+        <div class="legend_color" style="background-color:rgba(46, 204, 113, 1.0)">
+          In Progress
+        </div>
+        <div class="legend_color" style="background-color:rgba(52, 152, 219, 1.0)">
+          Completed!
+        </div>
+      </div>
       <div class="menus">
         <!-- dropdown menu for saving options -->
         <div class="save-dropdown">
@@ -93,23 +105,28 @@
           <button class="dropbtn">View</button>
           <div id="view-content">
             <button id="openhelp" title="Open Help" class="viewbtn">Help</button>
+            <button id="degreq" title="View Degree Requirements" class="viewbtn">Degree Requirements</button>
+            <!--
             <button id="search" title="Search for a course" class="viewbtn">Search</button>
             <input id="searchtxt" type="text" class="viewbtn" value="" placeholder="Enter Course To Search For">
-            <button id="degreq" title="View Degree Requirements" class="viewbtn">Degree Requirements</button>
             <button class="viewbtn" onclick="location.href='APItesting'">API testing</button>
             <button class="viewbtn" onclick="location.href='planner.html'">Planner</button>
+            -->
           </div>
         </div>
       </div>
       <!-- Form for loading templates -->
       <div class="template-div">
+        <button class="closex" type="button" id="canceltemplate" name="canceltemplate">X</button>
+        <h1>Load Template</h1>
         <form class="template-form">
           <!-- look at js for how to add a template, easier to do there -->
         </form>
-        <button type="button" id="canceltemplate" name="canceltemplate">Close Templates</button>
       </div>
       <!-- Form for loading files -->
       <div class="fileloader-div">
+        <input class="closex" type="button" id="cancelload" value="X">
+        <h1>Open File</h1>
         <form class="fileloader-form">
           <p>
             Here you can load course layout files, course work files, or any other files
@@ -126,11 +143,12 @@
             Append file to currently used data rather than replace data completely (ie double major and want to add two course degree requirement files)
           </label>
           <input type="button" id="import" value="Import" title="Load the file into the software, including changes made in edit area">
-          <input type="button" id="cancelload" value="Close File Loader">
         </form>
       </div>
       <!-- Form for adding a class -->
       <div class="add-course-div">
+        <button class="closex" type="button" id="cancelcourse" name="cancelcourse">X</button><br>
+        <h1>Add Course</h1>
         <form class="add-course-form">
           <!-- form filled out through javascript -->
         </form>
@@ -138,15 +156,16 @@
         <!-- Need these outside the form so appended nodes go on properly -->
         <button type="button" id="submitcourse" name="submitcourse">Submit Course Form</button><br>
         <br>
-        <button type="button" id="cancelcourse" name="cancelcourse">Cancel</button><br>
+
       </div>
       <!-- Form for adding a note -->
       <div class="add-note-div">
+        <button class="closex" type="button" id="cancelnote" name="cancelnote">X</button>
+        <h1>Add Note</h1>
         <form class="add-note-form" onsubmit="return submitNote();">
           <!-- form filled out through javascript bc created easy function for it -->
         </form>
         <button type="button" id="submitnote" name="submitnote">Submit Note</button>
-        <button type="button" id="cancelnote" name="cancelnote">Cancel</button>
       </div>
       <!-- Buttons for editing a node -->
       <div class="edit-nodes-div">
@@ -157,16 +176,18 @@
       <!-- Form for clearing some data -->
       <div class="clear-data-div">
         <form class="clear-data-form">
+          <button class="closex" type="button" id="closeclearform"
+          title="Close this form">X</button>
+          <h1>Clear Data</h1>
           <button type="button" id="clearlayout"
           title="Clear the courses shown">Clear Course Layout</button>
           <button type="button" id="clearcoursework"
           title="Clear course progress">Clear Coursework</button>
-          <button type="button" id="closeclearform"
-          title="Close this form">Cancel</button>
         </form>
       </div>
       <!-- Help Menu -->
       <div class="help-menu-div">
+        <button type="button" class="helpbutton, closex" id="closehelp">X</button>
         <div class="help-left-buttons">
           <!-- Lots of buttons that toggle which help item you are looking at -->
           <button type="button" class="helpbutton" id="overview">Overview</button>
@@ -177,13 +198,11 @@
           <button type="button" class="helpbutton" id="shortcuts">Shortcuts</button>
           <button type="button" class="helpbutton" id="advanceduses">Advanced Uses</button>
           <button type="button" class="helpbutton" id="credits">Credits</button>
-          <button type="button" class="helpbutton" id="closehelp">Close Help</button>
         </div>
         <!-- The actual content in the help menu -->
         <div class="help-right-content">
           <div class="helpdivs" id="overviewdiv">
             <h1>Overview</h1>
-            <h2>What this is</h2>
             <p>This is a degree planning software meant to help students
             navigate the Computer Science Bachelor of Science Degree. <br>
             Currently, there isn't a great way for students to navigate through
@@ -248,28 +267,11 @@
       </div>
       <!-- Degree Requirements -->
       <div class="degree-requirements">
+        <button class="closex" id="closereqs" type="button" name="button">X</button>
+        <h1>Degree Requirements</h1>
         <form class="dr">
 
         </form>
-      </div>
-      <!-- Legend -->
-      <div class="legend">
-        Legend:
-        <div class="legend_color" style="background-color:rgba(155, 89, 182, 1.0)">
-          Pathing
-        </div>
-        <div class="legend_color" style="background-color:rgba(149, 165, 166, 1.0)">
-          Incomplete
-        </div>
-        <div class="legend_color" style="background-color:rgba(26, 188, 156, 1.0)">
-          Available
-        </div>
-        <div class="legend_color" style="background-color:rgba(46, 204, 113, 1.0)">
-          In Progress
-        </div>
-        <div class="legend_color" style="background-color:rgba(52, 152, 219, 1.0)">
-          Completed!
-        </div>
       </div>
     </main>
   </body>

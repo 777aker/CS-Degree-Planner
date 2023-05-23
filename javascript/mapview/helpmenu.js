@@ -12,6 +12,8 @@ helpDiv.addEventListener('mouseover', function() {
 helpDiv.addEventListener('mouseleave', function() {
   typing = false;
 });
+const closeHelpBtn = document.querySelector('#closehelp');
+closeHelpBtn.addEventListener('click', closeHelp);
 const openHelpBtn = document.querySelector('#openhelp');
 const defaultViewDiv = document.querySelector('#overviewdiv');
 let setupAlready = false;
@@ -46,9 +48,6 @@ const divsList = document.querySelectorAll('.helpdivs');
 function setupButtons() {
   buttonsList.forEach(button => {
     switch(button.id) {
-      case "closehelp":
-        button.addEventListener('click', closeHelp);
-        return;
       case "advanceduses":
         let advancedCheck = document.querySelector('#advancedcheck');
         button.addEventListener('click', function() {
@@ -76,8 +75,6 @@ function setupButtons() {
           }
         });
     }
-    if(button.id === "closehelp")
-      return;
     const div = document.querySelector(`#${button.id}div`);
     button.addEventListener('click', function() {
       // TODO: change your style here to be toggled on @button

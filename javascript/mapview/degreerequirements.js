@@ -58,11 +58,6 @@ let cloud = 25;
 function checkRequirementsButton() {
   // create our diclaimer since this is definitely not the final version for degree requirements
   createFormText(drform, "Degree Requirements Design and Functionality WIP", false);
-
-
-
-  // make a button to close the form
-  createFormButton(drform, "closereqs", "Close Degree Requirements", closeRequirements);
 }
 
 // ok, let's do the convex hull
@@ -318,3 +313,6 @@ function closeRequirements() {
 const degreqBtn = document.querySelector("#degreq");
 // when you press the button open degree requirements
 degreqBtn.addEventListener('click', openRequirements);
+// close the degree requirements
+const closeDegreeReqsBtn = document.querySelector("#closereqs");
+closeDegreeReqsBtn.addEventListener('click', closeRequirements);

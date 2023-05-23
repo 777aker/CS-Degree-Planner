@@ -5,12 +5,17 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgb(255, 255, 255);
+  background-color: #2A4260;
   padding: 10px 10px;
-  border: 2px solid black;
-  border-radius: 4px;
+  border: none;
+  box-shadow: 0px 0px 50px 2px #2D547A;
   height: 80%;
   overflow-y: auto;
+  color: #ecf0f1;
+}
+
+.add-course-div * {
+  color: #ecf0f1;
 }
 
 /* form for adding a course */

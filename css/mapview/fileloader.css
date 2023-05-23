@@ -9,6 +9,8 @@
   padding: 10px 10px;
   border: 2px solid black;
   border-radius: 4px;
+  overflow-y: auto;
+  height: 80%;
 }
 
 /* form for loading files */

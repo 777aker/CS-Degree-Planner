@@ -1,3 +1,4 @@
+/* temporarily hiding until fixed later
 // search time
 const searchbtn = document.querySelector('#search');
 const searchtxt = document.querySelector('#searchtxt');
@@ -41,3 +42,4 @@ function searchTitles(term) {
   });
   return undefined;
 }
+*/

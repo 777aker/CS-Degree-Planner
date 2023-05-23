@@ -163,6 +163,15 @@ function createFormButton(form, id, value, func) {
   form.appendChild(tempbutton);
   tempbutton.addEventListener('click', func);
 }
+function createFormButtonWithClass(form, id, cl, value, func) {
+  let tempbutton = document.createElement("input");
+  tempbutton.setAttribute("id", id);
+  tempbutton.setAttribute("type", "button");
+  tempbutton.setAttribute("value", value);
+  tempbutton.setAttribute("class", cl);
+  form.appendChild(tempbutton);
+  tempbutton.addEventListener('click', func);
+}
 function createFormButtonWithTitle(form, id, value, func, title) {
   let tempbutton = document.createElement("input");
   tempbutton.setAttribute("id", id);
