@@ -124,6 +124,9 @@ function openNodeOptions(nodeType, node) {
         }
       }
       createFormText(editNodeForm, "Prerequisites:", false);
+      if(node.prerequisites.length == 0) {
+        createFormText(editNodeForm, "None", false);
+      }
       node.prerequisites.forEach((array) => {
         let str = "";
         array.forEach((code, ind, len) => {
@@ -134,9 +137,9 @@ function openNodeOptions(nodeType, node) {
         });
         createFormText(editNodeForm, str, false);
       });
-      createFormButtonWithTitle(editNodeForm, "opencoursepage", "Open Course Page", openCourseHTML,
-      "Opens a new webpage with more information on this course");
-      editNodeForm.appendChild(document.createElement('br'));
+      //createFormButtonWithTitle(editNodeForm, "opencoursepage", "Open Course Page", openCourseHTML,
+      //"Opens a new webpage with more information on this course");
+      //editNodeForm.appendChild(document.createElement('br'));
       if(advanceduses) {
         createFormButtonWithTitle(editNodeForm, "editnodebtn", "Edit Course", editCourse,
         "Allows you to edit this courses information");

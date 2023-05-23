@@ -590,7 +590,9 @@ const noteListHandler = (note, index, arr) => {
 };
 // helper function that determines boxfill
 function boxFill(code, mh) {
+  //stroke('rgba(45, 84, 122, .2)');
   stroke(44, 62, 80);
+  strokeWeight(2);
   if(mh && mode !== modes.none) {
     switch(mode) {
       case modes.delete:
@@ -661,6 +663,7 @@ const subnodeHandler = (subnode, ind, arr) => {
   }
   boxFill(subnode.code, false);
   rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2, rectRoundness);
+  stroke(44, 62, 80);
   subnode.lines.forEach((ln) => {
     line(ln[0], ln[1], ln[2], ln[3]);
   });

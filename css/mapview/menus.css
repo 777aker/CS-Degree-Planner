@@ -6,6 +6,7 @@
   left: 2%;
   top: 2%;
   align-items: flex-start;
+  justify-content: space-between;
 }
 
 /* div holding the edit menu */

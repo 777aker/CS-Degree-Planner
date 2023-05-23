@@ -40,3 +40,7 @@
 ::-webkit-scrollbar-corner {
   background: #555;
 }
+
+main * {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+}
