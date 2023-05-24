@@ -107,6 +107,11 @@ function removePrereqGroup() {
   // but we have to do a lot of checks in case some idiot presses remove
   // when there's nothing to remove :/
   let lastgroup = document.querySelectorAll(".prereqGroupDiv");
+  // also remove hr
+  let removeabove = document.querySelector("#addprereqgroup");
+  let prev = removeabove.previousSibling;
+  if(prev.nodeName == "HR" && lastgroup.length > 0)
+    prev.remove();
   if(lastgroup.length > 0)
     lastgroup[lastgroup.length - 1].remove();
   // oh, also remove all the buttons for that group bc it'd be weird and awkward
@@ -118,6 +123,7 @@ function removePrereqGroup() {
   lastbtn = document.querySelectorAll(".removePrereqBtn");
   if(lastbtn.length > 0)
     lastbtn[lastbtn.length - 1].remove();
+
 }
 // add prereq group button action in add course form
 // ^ bad wording what does that mean?
@@ -162,6 +168,9 @@ function addPrereqGroup() {
     if(groupdiv.lastChild != null)
       groupdiv.lastChild.remove();
   });
+  // horizontal line for nice sectioning
+  const anotherhr = document.createElement("hr");
+  addCourseForm.insertBefore(anotherhr, addabove);
 }
 // set up the submit button for add course form
 const submitcoursebtn = document.querySelector("#submitcourse");

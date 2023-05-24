@@ -22,7 +22,7 @@ let timep = 0;
 // keeping track of if we are hovering over anything so we can change cursor
 let hoveringOverSomething = false;
 // how round edges of rectangles are
-let rectRoundness = 20;
+let rectRoundness = 5;
 // p5js drawing code called every frame
 // where most of the real meat happens
 function draw() {
