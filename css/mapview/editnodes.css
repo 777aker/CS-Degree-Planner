@@ -5,10 +5,13 @@
   top: 0;
   left: 0;
   background-color: rgb(255, 255, 255);
-  border: 2px solid black;
+  border: none;
   border-radius: 4px;
   padding: 5px 5px;
   width: 20%;
+  box-shadow: 0px 0px 50px 2px #2D547A;
+  /*transform: translate(-20%, -50%);*/
+  overflow-y: auto;
 }
 
 /* edit nodes form */

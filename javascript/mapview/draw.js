@@ -342,6 +342,7 @@ const courseListHandler = (course, index, arr) => {
   // draw the rectangle around our course
   boxFill(course.code, mouseHovering);
   rectMode(CENTER);
+  noStroke();
   rect(course.x, course.y, course.width, course.height, rectRoundness);
   // in different modes do some different things
   switch(mode) {
@@ -496,6 +497,7 @@ const noteListHandler = (note, index, arr) => {
   // draw rect around note
   rectMode(CENTER);
   boxFill(note.code, mouseHovering);
+  noStroke();
   rect(note.x, note.y, note.width, note.height, rectRoundness);
   switch(mode) {
     case modes.delete:
@@ -589,11 +591,12 @@ const noteListHandler = (note, index, arr) => {
   }
 };
 // helper function that determines boxfill
-function boxFill(code, mh) {
+function boxFill(code, mh, skipmode=false) {
   //stroke('rgba(45, 84, 122, .2)');
-  stroke(44, 62, 80);
+  //stroke(44, 62, 80);
   strokeWeight(2);
-  if(mh && mode !== modes.none) {
+  //noStroke();
+  if(mh && mode !== modes.none && !skipmode) {
     switch(mode) {
       case modes.delete:
         fill(colors.delete);
@@ -608,36 +611,51 @@ function boxFill(code, mh) {
   }
   switch(completionMap.get(code)) {
     case completions.available:
-      if(mh)
+      if(mh) {
         fill(colors.availablehover);
-      else
+        stroke(colors.available);
+      } else {
         fill(colors.available);
+        stroke(colors.availablehover);
+      }
       break;
     case completions.inprogress:
-      if(mh)
+      if(mh) {
         fill(colors.inprogresshover);
-      else
+        stroke(colors.inprogress);
+      } else {
         fill(colors.inprogress);
+        stroke(colors.inprogresshover);
+      }
       break;
     case completions.complete:
-      if(mh)
+      if(mh) {
         fill(colors.completehover);
-      else
+        stroke(colors.complete);
+      } else {
         fill(colors.complete);
+        stroke(colors.completehover);
+      }
       break;
     case completions.find:
-      if(mh)
+      if(mh) {
         fill(colors.findhover);
-      else
+        stroke(colors.find);
+      } else {
         fill(colors.find);
+        stroke(colors.findhover);
+      }
       break;
     default:
       if(hide_incompletes)
         stroke(0, 0, 0, 0);
-      if(mh)
+      if(mh) {
         fill(colors.incompletehover);
-      else
+        stroke(colors.incomplete);
+      } else {
         fill(colors.incomplete);
+        stroke(colors.incompletehover);
+      }
       break;
   }
 }
@@ -661,9 +679,12 @@ const subnodeHandler = (subnode, ind, arr) => {
     deleteElement(subnodeboxesList, subnodeboxesMap, subnode.code);
     return;
   }
-  boxFill(subnode.code, false);
+  boxFill(subnode.code, true, true);
+  noStroke();
   rect(subnode.x - subnodepadding, subnode.y - subnodepadding, subnode.width + subnodepadding*2, subnode.height + subnodepadding*2, rectRoundness);
-  stroke(44, 62, 80);
+  //stroke(44, 62, 80);
+  //strokeWeight(2);
+  boxFill(subnode.code, true);
   subnode.lines.forEach((ln) => {
     line(ln[0], ln[1], ln[2], ln[3]);
   });
