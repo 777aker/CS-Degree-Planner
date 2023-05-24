@@ -1,5 +1,4 @@
 let csDegreeTest = {
-  misc: ['MATH 1011'],
   precalculus: ['MATH 1150', 'APPM 1235'],
   foundations: ['CSCI 1000', 'CSCI 1300', 'CSCI 2270', 'CSCI 2400', 'CSCI 3308', 'CSCI 3155', 'CSCI 3104'],
   calculus1: ['APPM 1350', 'MATH 1300'],
