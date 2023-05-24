@@ -7,12 +7,15 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgb(255, 255, 255);
-  border: 2px solid black;
-  border-radius: 4px;
+  background-color: #2A4260;
+  box-shadow: 0px 0px 50px 2px #2D547A;
+  border: none;
+  border-radius: 5px;
   height: 80%;
   width: 90%;
   justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .help-left-buttons {
@@ -67,4 +70,8 @@ hr {
 #defaultviewvideo {
   width: 60%;
   height: auto;
+}
+
+#closehelp {
+  transform: translate(-20%, 20%);
 }
