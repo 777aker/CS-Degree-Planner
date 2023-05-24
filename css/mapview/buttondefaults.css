@@ -1,5 +1,5 @@
 button {
-  background-color: #95a5a6;
+  background-color: #7f8c8d;
   border: none;
   color: black;
   padding: 15px 15px;
@@ -14,10 +14,11 @@ button:hover {
   background-color: #dce0e0;
   padding: 10px 10px;
   transition-duration: .4s;
+  color: black;
 }
 
 input {
-  background-color: #95a5a6;
+  background-color: #7f8c8d;
   border: none;
   color: black;
   padding: 15px 15px;
@@ -28,8 +29,44 @@ input {
   transition-duration: .4s;
 }
 
+input::placeholder {
+  color: white;
+}
+
+input:hover::placeholder {
+  color: black;
+}
+
 input:hover {
   background-color: #dce0e0;
   padding: 10px 10px;
   transition-duration: .4s;
+  color: black;
+}
+
+textarea {
+  background-color: #7f8c8d;
+  border: none;
+  color: black;
+  padding: 15px 15px;
+  text-align: center;
+  display: block;
+  font-size: 16px;
+  border-radius: 2px;
+  transition-duration: .4s;
+}
+
+textarea::placeholder {
+  color: white;
+}
+
+textarea:hover::placeholder {
+  color: black;
+}
+
+textarea:hover {
+  background-color: #dce0e0;
+  padding: 10px 10px;
+  transition-duration: .4s;
+  color: black;
 }

@@ -170,20 +170,22 @@ function updateStyles() {
 function inprogressToggle(tf) {
   if(tf) {
     completionMap.set(lastCodeClicked, completions.inprogress);
-    popup(lastCodeClicked + '<br>In Progress', colors.inprogress, colors.inprogresshover);
+    //popup(lastCodeClicked + '<br>In Progress', colors.inprogress, colors.inprogresshover);
+    inprogress_animation(mouseX, mouseY);
   } else {
     completionMap.set(lastCodeClicked, completions.available);
-    popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
+    //popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
   }
   updateStyles();
 }
 function completeToggle(tf) {
   if(tf) {
     completionMap.set(lastCodeClicked, completions.complete);
-    popup(lastCodeClicked + '<br>Complete!', colors.complete, colors.completehover);
+    //popup(lastCodeClicked + '<br>Complete!', colors.complete, colors.completehover);
+    complete_animation(mouseX, mouseY);
   } else {
     completionMap.set(lastCodeClicked, completions.available);
-    popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
+    //popup(lastCodeClicked + '<br>Available', colors.available, colors.availablehover);
   }
   updateStyles();
 }

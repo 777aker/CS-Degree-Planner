@@ -1,14 +1,21 @@
 /* add note container */
 .add-note-div {
-  display: none;
   position: absolute;
+  display: none;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgb(255, 255, 255);
+  background-color: #2A4260;
   padding: 10px 10px;
-  border: 2px solid black;
-  border-radius: 4px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 50px 2px #2D547A;
+  height: 80%;
+  overflow-y: auto;
+}
+
+.add-note-div * {
+  color: #ecf0f1;
 }
 
 /* add note form */
@@ -16,4 +23,5 @@
   display: flex;
   flex-direction: column;
   padding-bottom: 10px;
+  gap: 5px;
 }

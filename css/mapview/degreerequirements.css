@@ -1,5 +1,5 @@
-/* add course container */
-.add-course-div {
+/* tmp degree reqs */
+.degree-requirements {
   position: absolute;
   display: none;
   top: 50%;
@@ -10,28 +10,16 @@
   border: none;
   border-radius: 5px;
   box-shadow: 0px 0px 50px 2px #2D547A;
-  height: 80%;
   overflow-y: auto;
 }
 
-.add-course-div * {
+.degree-requirements * {
   color: #ecf0f1;
 }
 
-/* form for adding a course */
-.add-course-form {
+.dr {
   display: flex;
   flex-direction: column;
   padding-bottom: 10px;
   gap: 5px;
-}
-
-.add-course-form>input {
-  margin-bottom: 10px;
-}
-
-/* prereq group divs */
-.prereqGroupDiv {
-  display: flex;
-  flex-wrap: wrap;
 }

@@ -169,7 +169,7 @@ document.addEventListener("keydown", function(e) {
 // -------------------------------- Mouse Events -------------------------------- //
 // when mouse is pressed do some stuff
 function mousePressed() {
-
+  //inprogress_animation(mouseX, mouseY);
 }
 // do a zoom when mouseWheel moved
 function mouseWheel(delta) {

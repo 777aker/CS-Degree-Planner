@@ -162,6 +162,7 @@ function draw() {
   // display what mode we are in
   displayMode();
 }
+
 function moveEverythingMouse() {
   document.body.style.cursor = "all-scroll";
   xy[0] += (mouseX - pmouseX) / zoom;

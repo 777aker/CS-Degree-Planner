@@ -68,7 +68,7 @@ function tempDegreeLoader() {
       }
     });
   }
-  let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-template.json';
+  let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-electives.json';
   loadJSON(furl, loadCourses);
 }
 
