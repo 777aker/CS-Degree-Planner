@@ -7,7 +7,7 @@ let boxpadding = {
 }
 // whether or not we are typing a form (so that we don't move the screen and stuff while typing / do special key presses)
 let typing = false;
-let myFont = 'Helvetica';
+let myFont = 'Gill Sans';
 // global variable list of courses
 let courseList = [];
 // I'm also thinking of making a map that says code is key gives you index in course list
