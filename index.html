@@ -72,7 +72,9 @@
       <div class="menus">
         <!-- dropdown menu for saving options -->
         <div class="save-dropdown">
-          <button class="dropbtn" title="Load and save different files">File</button>
+          <button class="dropbtn" id="savedropbtn" title="Load and save different files">
+            <img src="images/filemenu.png" alt="File">
+          </button>
           <div id="save-content">
             <form class="fileform">
               <input class="filebtn" type="button" id="savebtn" value="Save Course Layout"
@@ -95,14 +97,18 @@
         </div>
         <!-- dropdown menu for edit mode options -->
         <div class="edit-dropdown">
-          <button class="dropbtn" title="Edit the course layout">Edit</button>
+          <button class="dropbtn" id="editdropbtn" title="Edit the course layout">
+            <img src="images/editmenu.png" alt="Edit">
+          </button>
           <div id="edit-content">
             <!-- all buttons placed here in js are class="editbuttons" -->
           </div>
         </div>
         <!-- dropdown menu for view -->
         <div class="view-dropdown">
-          <button class="dropbtn">View</button>
+          <button class="dropbtn" id="viewdropbtn">
+            <img src="images/viewmenu.png" alt="View">
+          </button>
           <div id="view-content">
             <button id="openhelp" title="Open Help" class="viewbtn">Help</button>
             <button id="degreq" title="View Degree Requirements" class="viewbtn">Degree Requirements</button>
@@ -114,7 +120,9 @@
             -->
           </div>
         </div>
-        <button class="dropbtn" id="openplanner" onclick="location.href='planner.html'">Open Planner</button>
+        <button class="dropbtn" id="openplanner" onclick="location.href='planner.html'">
+          <img src="images/plannermenu.png" alt="Planner">
+        </button>
       </div>
       <!-- Form for loading templates -->
       <div class="template-div">

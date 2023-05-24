@@ -9,6 +9,22 @@
   justify-content: space-between;
 }
 
+/* dropdown button styles */
+.dropbtn {
+  color: white;
+  font-size: 150%;
+  background-color: rgba(0, 0, 0, 0);
+  margin-right: 10px;
+  width: 75px;
+  height: 75px;
+  padding: 0px;
+}
+
+.dropbtn:hover {
+  background-color: #2c3e50;
+  box-shadow: 0px 0px 50px 2px #2D547A;
+}
+
 /* div holding the edit menu */
 .edit-dropdown {
   /*
@@ -24,22 +40,10 @@
 /* when you hover edit menu change some child stuff */
 .edit-dropdown:hover #edit-content {
   display: flex;
-}
-
-.edit-dropdown:hover .dropbtn {
-
-}
-
-/* dropdown button styles */
-.dropbtn {
-  color: white;
-  font-size: 150%;
-  background-color: rgba(0, 0, 0, 0);
-  margin-right: 10px;
   box-shadow: 0px 0px 50px 2px #2D547A;
 }
 
-.dropbtn:hover {
+.edit-dropdown:hover > #editdropbtn {
   background-color: #2c3e50;
 }
 
@@ -53,12 +57,13 @@
 /* style for the buttons within the edit menu */
 .editbuttons {
     padding: 5px 5px;
-    /*background-color: rgb(155, 89, 182);*/
+    background-color: #2c3e50;
+    color: white;
 }
 
 /* when hovering over an edit button do some stuff */
 .editbuttons:hover {
-
+  color: black;
 }
 
 /* some stuff for the file dropdown */
@@ -71,6 +76,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: stretch;
 }
 
 #save-content {
@@ -81,12 +87,22 @@
 
 .save-dropdown:hover #save-content {
   display: flex;
+  box-shadow: 0px 0px 50px 2px #2D547A;
+}
+
+.save-dropdown:hover > #savedropbtn {
+  background-color: #2c3e50;
 }
 
 /* File loading buttons need some thickness */
 .filebtn {
   padding: 5px 5px;
-  /*background-color: rgb(155, 89, 182);*/
+  background-color: #2c3e50;
+  color: white;
+}
+
+.filebtn:hover {
+  color: black;
 }
 
 /* file form styling */
@@ -110,16 +126,27 @@
 
 .view-dropdown:hover #view-content {
   display: flex;
+  box-shadow: 0px 0px 50px 2px #2D547A;
+}
+
+.view-dropdown:hover #viewdropbtn {
+  background-color: #2c3e50;
 }
 
 .viewbtn {
   padding: 5px 5px;
   /*background-color: rgb(155, 89, 182);*/
+  background-color: #2c3e50;
+  color: white;
+}
+
+.viewbtn:hover {
+  color: black;
 }
 
 #openplanner:hover {
   background-color: white;
-  padding: 20px 20px;
+  padding: 5px;
   transition-duration: .4s;
   color: #2c3e50;
 }
