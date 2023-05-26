@@ -32,7 +32,7 @@ function modeChanger(fmode, color) {
   // set each of the edit buttons to black
   let buttons = document.querySelectorAll(".editbuttons");
   buttons.forEach(button => {
-    button.style.color = "rgb(0, 0, 0)";
+    button.style.color = "white";
   });
   // I need this for the switcher later
   let prevmode = mode;

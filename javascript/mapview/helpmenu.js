@@ -25,9 +25,9 @@ function openHelp() {
   });
   buttonsList.forEach(tmpbutton => {
     if(tmpbutton.id === "overview") {
-      tmpbutton.style.background = "rgb(200, 200, 200)";
+      tmpbutton.style.background = "#7f8c8d";
     } else {
-      tmpbutton.style.background = "rgb(255, 255, 255)";
+      tmpbutton.style.background = "#2A4260";
     }
   });
   defaultViewDiv.style.display = 'flex';
@@ -46,35 +46,19 @@ function closeHelp() {
 const buttonsList = document.querySelectorAll('.helpbutton');
 const divsList = document.querySelectorAll('.helpdivs');
 function setupButtons() {
-  buttonsList.forEach(button => {
-    switch(button.id) {
-      case "advanceduses":
-        let advancedCheck = document.querySelector('#advancedcheck');
-        button.addEventListener('click', function() {
-          // TODO: change your style here to be toggled on @button
-          // Also turn off everyone else's
-          divsList.forEach(tmpdiv => {
-            tmpdiv.style.display = 'none';
-          });
-          buttonsList.forEach(tmpbutton => {
-            tmpbutton.style.background = "rgb(255, 255, 255)";
-          });
-          button.style.background = "rgb(200, 200, 200)";
-          advancedCheck.checked = advanceduses;
-          div.style.display = 'flex';
-        });
-        advancedCheck.addEventListener('click', function() {
-          if(advancedCheck.checked) {
-            if(throwError('Warning: about to enable advanced uses')) {
-              showUses();
-            } else {
-                advancedCheck.checked = false;
-            }
-          } else {
-            rehideUses();
-          }
-        });
+  let advancedCheck = document.querySelector('#advancedcheck');
+  advancedCheck.addEventListener('click', function() {
+    if(advancedCheck.checked) {
+      if(throwError('Warning: about to enable advanced uses')) {
+        showUses();
+      } else {
+          advancedCheck.checked = false;
+      }
+    } else {
+      rehideUses();
     }
+  });
+  buttonsList.forEach(button => {
     const div = document.querySelector(`#${button.id}div`);
     button.addEventListener('click', function() {
       // TODO: change your style here to be toggled on @button
@@ -83,9 +67,9 @@ function setupButtons() {
         tmpdiv.style.display = 'none';
       });
       buttonsList.forEach(tmpbutton => {
-        tmpbutton.style.background = "rgb(255, 255, 255)";
+        tmpbutton.style.background = "#2A4260";
       });
-      button.style.background = "rgb(200, 200, 200)";
+      button.style.background = "#7f8c8d";
       div.style.display = 'flex';
     });
   });
