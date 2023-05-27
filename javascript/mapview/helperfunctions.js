@@ -203,6 +203,18 @@ function createCheckboxes(form, id, value) {
   form.appendChild(templabel);
   return tempcheck;
 }
+function createDivCheckboxes(div, id, value) {
+  let tempcheck = createElement("input");
+  tempcheck.attribute("type", "checkbox");
+  tempcheck.attribute("id", id);
+  tempcheck.attribute("name", id);
+  let templabel = createElement("label");
+  templabel.attribute("for", id);
+  templabel.elt.innerHTML = value;
+  tempcheck.parent(templabel);
+  templabel.parent(div);
+  return tempcheck;
+}
 // map and list helper functions
 /* this will help us delete things properly
 basically making these because I had impossible to find bugs because I didn't

@@ -73,45 +73,48 @@ function openNodeOptions(nodeType, node) {
       editNodesDiv.style.width = '10%';
       updateStyles();
       break;
+
     case nodeTypes.course:
       editNodeForm.innerHTML = "";
-      editNodesDiv.style.width = '30%';
-      createFormText(editNodeForm, "Course Code: " + node.code, false);
-      createFormText(editNodeForm, "Credit Hours: " + node.credits, false);
-      createFormText(editNodeForm, "Course Name: " + node.name, false);
-      switch(completionMap.get(node.code)) {
-        case completions.available:
-          createFormText(editNodeForm, "Completion: Available to Take", false);
-          break;
-        case completions.inprogress:
-          createFormText(editNodeForm, "Completion: Currently Taking", false);
-          break;
-        case completions.complete:
-          createFormText(editNodeForm, "Completion: Completed!", false);
-          break;
-        default:
-          createFormText(editNodeForm, "Completion: Prerequisites not met", false);
-          break;
+      editNodesDiv.style.width = '40%';
+
+      let elem = createElement("h1", node.name);
+      elem.parent(editNodeForm);
+
+      elem = createElement("h2", node.code + " : " + node.credits + " credits");
+      elem.parent(editNodeForm);
+
+      if(completionMap.get(node.code) == completions.incomplete) {
+        elem = createElement("p", "Prerequisites for " + node.code + " not yet met");
+        elem.parent(editNodeForm);
       }
+
+      let checkboxdiv = createElement("div");
+      checkboxdiv.parent(editNodeForm);
+      checkboxdiv.attribute("id", "course-checkboxes");
+
+      //const inprogresscheck = createDivCheckboxes(checkboxdiv, "progresscheck", "In Progress");
+      //const completecheck = createDivCheckboxes(checkboxdiv, "completecheck", "Completed");
+
       let completion = completionMap.get(node.code);
       if(completion !== completions.incomplete && completion !== completions.find) {
-        const inprogresscheck = createCheckboxes(editNodeForm, "progresscheck", "In Progress");
-        const completecheck = createCheckboxes(editNodeForm, "completecheck", "Complete");
-        inprogresscheck.addEventListener('click', function() {
-          inprogressToggle(inprogresscheck.checked);
-          completecheck.checked = false;
+        const inprogresscheck = createDivCheckboxes(checkboxdiv, "progresscheck", "In Progress");
+        const completecheck = createDivCheckboxes(checkboxdiv, "completecheck", "Complete");
+        inprogresscheck.elt.addEventListener('click', function() {
+          inprogressToggle(inprogresscheck.elt.checked);
+          completecheck.elt.checked = false;
         });
-        completecheck.addEventListener('click', function() {
-          completeToggle(completecheck.checked);
-          inprogresscheck.checked = false;
+        completecheck.elt.addEventListener('click', function() {
+          completeToggle(completecheck.elt.checked);
+          inprogresscheck.elt.checked = false;
         });
         editNodeForm.appendChild(document.createElement('br'));
         switch(completion) {
           case completions.inprogress:
-            inprogresscheck.checked = true;
+            inprogresscheck.elt.checked = true;
             break;
           case completions.complete:
-            completecheck.checked = true;
+            completecheck.elt.checked = true;
             break;
         }
       } else {
@@ -123,9 +126,14 @@ function openNodeOptions(nodeType, node) {
           "Shows the courses you need to complete in order to take this course");
         }
       }
-      createFormText(editNodeForm, "Prerequisites:", false);
+
+      elem = createElement("h2", "Prerequisites");
+      elem.parent(editNodeForm);
+
       if(node.prerequisites.length == 0) {
         createFormText(editNodeForm, "None", false);
+        let br = createElement("br");
+        br.parent(editNodeForm);
       }
       node.prerequisites.forEach((array) => {
         let str = "";
@@ -136,10 +144,12 @@ function openNodeOptions(nodeType, node) {
             str += code;
         });
         createFormText(editNodeForm, str, false);
+        let hr = createElement("hr");
+        hr.parent(editNodeForm);
       });
       //createFormButtonWithTitle(editNodeForm, "opencoursepage", "Open Course Page", openCourseHTML,
       //"Opens a new webpage with more information on this course");
-      //editNodeForm.appendChild(document.createElement('br'));
+
       if(advanceduses) {
         createFormButtonWithTitle(editNodeForm, "editnodebtn", "Edit Course", editCourse,
         "Allows you to edit this courses information");
