@@ -18,7 +18,7 @@ function overTheTrash(e) {
 
 function throwAway(e) {
   e.stopPropagation();
-  if(dragSrcEl.innerHTML === '')
+  if(dragSrcEl.id === '')
     return false;
   //console.log(dragSrcEl);
   //console.log(dragSrcEl.innerHTML);
@@ -26,7 +26,7 @@ function throwAway(e) {
   //console.log(coursecomp);
   courselist = document.querySelectorAll('.nocoursedrop');
   courselist.forEach(course => {
-    if(course.innerHTML === dragSrcEl.innerHTML) {
+    if(course.id === dragSrcEl.id) {
       course.setAttribute('draggable', 'true');
       course.setAttribute('class', 'course-drag');
     }
@@ -42,7 +42,7 @@ function throwAway(e) {
 function resetElement(element) {
   courselist = document.querySelectorAll('.nocoursedrop');
   courselist.forEach(course => {
-    if(course.innerHTML === element.innerHTML) {
+    if(course.id === element.id) {
       course.setAttribute('draggable', 'true');
       course.setAttribute('class', 'course-drag');
     }
