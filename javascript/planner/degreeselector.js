@@ -19,7 +19,26 @@ let csDegreeTest = {
                  'CSCI 4200', 'CSCI 4229', 'CSCI 4239', 'CSCI 4240', 'CSCI 4253', 'CSCI 4302', 'CSCI 4314', 'CSCI 4413', 'CSCI 4446', 'CSCI 4502', 'CSCI 4555',
                  'CSCI 4576', 'CSCI 4593', 'CSCI 4616', 'CSCI 4622', 'CSCI 4753', 'CSCI 4802', 'CSCI 4809', 'CSCI 4830', 'CSCI 4831', 'CSCI 4849', 'CSCI 4889',
                  'CSCI 4900', 'APPM 4120', 'MATH 4120', 'APPM 4370', 'ATLS 4120', 'ATLS 4214', 'ATLS 4320', 'ECEN 2350', 'EVEN 4133', 'ECEN 4313', 'INFO 3504',
-                 'INFO 4602', 'INFO 4604', 'INFO 4609', 'INFO 4611', 'MATH 4440', 'MCDB 4520']
+                 'INFO 4602', 'INFO 4604', 'INFO 4609', 'INFO 4611', 'MATH 4440', 'MCDB 4520'],
+  cs_capstone: ['CSCI 4308', 'CSCI 4318', 'CSCI 4348', 'CSCI 4358', 'CSCI 4368', 'CSCI 4378', 'CSCI 4950', 'CSCI 3100']
+}
+
+let csDegreeRequirements = {
+  precalculus: 'Required for Calculus',
+  foundations: 'All courses listed required',
+  calculus1: 'Must take one course',
+  calculus2: 'Must take one course',
+  discrete: 'Must take one course',
+  core: 'Must take five from list below',
+  linear: 'Must take one course',
+  probstat: 'Must take one course',
+  naturalscience: 'Must complete one sequence with lab',
+  natural_science_electives: 'Complete 8 credit hours',
+  logic: 'Must take one course',
+  ethics: 'Must take one course',
+  writing: 'Must take one course',
+  cs_electives: 'Take enough to bring total credit hours to 58 or more',
+  cs_capstone: 'Must complete sequence'
 }
 
 const degDropdown = document.querySelector('#deg-sel');
@@ -46,16 +65,30 @@ function tempDegreeLoader() {
   for(let key in csDegreeTest) {
     let tempdiv = createDiv();
     tempdiv.parent(classContentArea);
-    let tempbtn = createButton(key);
+    let tempbtn = createButton(key + '<br>' + csDegreeRequirements[key]);
     tempbtn.parent(tempdiv);
     let invisdiv = createDiv();
     invisdiv.parent(tempdiv);
     invisdiv.style('display', 'none');
     invisdiv.class('course-holders');
     for(let i in csDegreeTest[key]) {
-      let coursediv = createDiv(csDegreeTest[key][i]);
+      let course = csDegreeTest[key][i];
+      let coursediv;
+      if(Object.keys(courses).includes(course)) {
+        coursediv = createDiv(
+          course + '<br>'
+          + courses[course][1] + ' : '
+          + courses[course][2] + ' credits'
+        );
+      } else {
+        coursediv = createDiv(course);
+      }
+      //
+      //  csDegreeTest[key][i] + '<br>'
+      //  + courses[course][1] + ':' + courses[course][2]
       coursediv.parent(invisdiv);
       coursediv.attribute('draggable', 'true');
+      coursediv.attribute('id', course);
       coursediv.class('course-drag');
       coursediv.elt.addEventListener('dragstart', handleDragStart);
       coursediv.elt.addEventListener('dragend', handleDragEnd);
@@ -68,6 +101,9 @@ function tempDegreeLoader() {
       }
     });
   }
+}
+
+function preload() {
   let furl = 'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-electives.json';
   loadJSON(furl, loadCourses);
 }
@@ -78,7 +114,7 @@ function loadCourses(jsonp) {
   courses = {};
   json.forEach((course) => {
     //print(course);
-    courses[course.code] = course.prerequisites;
+    courses[course.code] = [course.prerequisites, course.name, course.credits];
   });
   //print(courses);
 }

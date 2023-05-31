@@ -16,13 +16,14 @@ function checkyear() {
 }
 
 function check_completed(element) {
-  if(!courses[element.innerHTML])
+  if(!courses[element.id]) {
     return true;
+  }
   //print('prereqs');
   //print(courses[element.innerHTML]);
   //print('completed:')
   //print(courses_completed);
-  for(prereqgroup of courses[element.innerHTML]) {
+  for(prereqgroup of courses[element.id][0]) {
     let groupcheck = false;
     for(prereq of prereqgroup) {
       //print(prereq);
@@ -39,19 +40,19 @@ function check_completed(element) {
 
 let courses_completed = []
 function coloryears(element) {
-  if(element.innerHTML === '')
+  if(element.id === '')
     return;
   courses_completed = [];
   for(year_elt of year_elements) {
     let courses_this_year = []
     for(child of year_elt.children) {
-      if(child.innerHTML === '') {
+      if(child.id === '') {
         if(check_completed(element))
           child.style.backgroundColor = 'green';
         else
           child.style.backgroundColor = 'red';
       } else {
-        courses_this_year.push(child.innerHTML);
+        courses_this_year.push(child.id);
       }
     }
     //print('this year');
@@ -70,7 +71,7 @@ function decolor_years() {
   for(year_elt of year_elements) {
     let courses_this_year = []
     for(child of year_elt.children) {
-      if(child.innerHTML === '') {
+      if(child.id === '') {
         child.style.backgroundColor = '#3498db';
       } else {
         if(check_completed(child)) {
@@ -78,7 +79,7 @@ function decolor_years() {
         } else {
           child.style.backgroundColor = 'red';
         }
-        courses_this_year.push(child.innerHTML);
+        courses_this_year.push(child.id);
       }
     }
     for(course of courses_this_year) {
