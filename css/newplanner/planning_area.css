@@ -2,4 +2,39 @@
   width: 75%;
 
   background-color: #2A4260;
+
+  overflow-x: scroll;
+}
+
+#semesters-holder {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  margin: 10px;
+}
+
+#semesters-holder > button {
+  margin: 5px;
+}
+
+.semester {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 2px;
+
+  box-shadow: 0px 0px 50px 2px #2D547A;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-course-holder {
+  width: 100px;
+  height: 50px;
+  background-color: #f1c40f;
+  border-radius: 2px;
 }

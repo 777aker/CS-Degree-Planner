@@ -13,19 +13,29 @@ body {
   color: #ecf0f1;
 }
 
+main * {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+}
+
 button {
   background-color: #7f8c8d;
   border: none;
   padding: 10px 10px;
   border-radius: 2px;
   transition-duration: .4s;
+  color: #ecf0f1;
 }
 
 button:hover {
   background-color: #dce0e0;
   padding: 15px 15px;
   transition-duration: .4s;
-  color: #7f8c8d;
+  color: #2c3e50;
+}
+
+.close-btn {
+  align-self: flex-end;
+  background-color: #c0392b;
 }
 
 img {
@@ -34,4 +44,41 @@ img {
   margin-right: auto;
   max-height: 100%;
   max-width: 100%;
+}
+
+form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 50px 2px #2D547A;
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #2A4260;
+  border-radius: 2px;
+  z-index: 5;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::-webkit-scrollbar-corner {
+  background: #555;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
 }

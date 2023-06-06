@@ -5,6 +5,9 @@
     <title>Degree Planner</title>
     <script src="p5/p5.js"></script>
 
+    <script defer src="javascript/newplanner/main.js"></script>
+    <script defer src="javascript/newplanner/degree_selector.js"></script>
+
     <link rel="stylesheet" href="css/newplanner/master.css">
     <link rel="stylesheet" href="css/newplanner/degree_area.css">
     <link rel="stylesheet" href="css/newplanner/planning_area.css">
@@ -26,6 +29,57 @@
           <img src="images/plannerview/mapview.png" alt="map">
         </button>
       </nav>
+      <div id="nav-spacer">
+        &nbsp;
+      </div>
+      <div id="semesters-holder">
+        <div class="semester" id="transfer-courses">
+          <p>Transfer Courses</p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <button id="left-add-semester" type="button" name="button" title="Add a semester">
+          Add a Semester
+        </button>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <div class="semester">
+          <p class="semester-title"></p>
+          <div class="empty-course-holder"></div>
+        </div>
+        <button id="right-add-semester" type="button" name="button" title="Add a semester">
+          Add a Semester
+        </button>
+      </div>
     </div>
+    <form id="select-degree-form">
+      <button class="close-btn" type="button" name="button">X</button>
+      <h1>Select Degree</h1>
+    </form>
   </body>
 </html>
