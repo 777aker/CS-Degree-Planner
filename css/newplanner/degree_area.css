@@ -1,0 +1,15 @@
+#degree-area {
+  width: 25%;
+
+  background-color: #2A4260;
+  box-shadow: 0px 0px 50px 5px #2D547A;
+  border: none;
+  border-radius: 5px;
+
+  position: relative;
+  z-index: 1;
+
+  text-align: center;
+  text-overflow: clip;
+  text-wrap: wrap;
+}

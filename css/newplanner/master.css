@@ -1,0 +1,35 @@
+body {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  margin: 0px;
+
+  background-color: #2A4260;
+
+  color: #ecf0f1;
+}
+
+button {
+  background-color: #7f8c8d;
+  border: none;
+  padding: 10px 10px;
+  border-radius: 2px;
+  transition-duration: .4s;
+}
+
+button:hover {
+  background-color: #dce0e0;
+  padding: 15px 15px;
+  transition-duration: .4s;
+  color: #7f8c8d;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

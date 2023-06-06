@@ -3,9 +3,9 @@
 // TODO: go-left and go-right button need to actually do something
 function setupYears() {
   // this is a button that lets us move the years around
-  let newbtn = createButton('<');
-  newbtn.id('go-left');
-  newbtn.parent('active-area');
+  //let newbtn = createButton('<');
+  //newbtn.id('go-left');
+  //newbtn.parent('active-area');
   // get the year
   const d = new Date();
   let year = d.getFullYear();
@@ -27,7 +27,7 @@ function setupYears() {
     add_year(newyear);
   }
   // this is a button that lets you move the years around
-  newbtn = createButton('>');
-  newbtn.id('go-right');
-  newbtn.parent('active-area');
+  //newbtn = createButton('>');
+  //newbtn.id('go-right');
+  //newbtn.parent('active-area');
 }
