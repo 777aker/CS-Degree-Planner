@@ -1,0 +1,19 @@
+nav {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.menu-option {
+  transition-duration: .4s;
+  padding: 5px 5px;
+  background-color: #2A4260;
+  width: 100px;
+  height: 100px;
+}
+
+.menu-option:hover {
+  box-shadow: 0px 0px 50px 2px #2D547A;
+  transition-duration: .4s;
+}
