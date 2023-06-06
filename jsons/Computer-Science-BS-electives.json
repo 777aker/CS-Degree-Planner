@@ -3494,5 +3494,28 @@
       "181339140",
       "75022978"
     ]
-  ]
+  ],
+  "requirements": {
+    "precalculus": {
+      "type": "Course",
+      "number": "1",
+      "courses": [
+        "MATH 1150",
+        "APPM 1235"
+      ]
+    },
+    "foundations": {
+      "type": "Course",
+      "number": "7",
+      "courses": [
+        "CSCI 1000",
+        "CSCI 1300",
+        "CSCI 2270",
+        "CSCI 2400",
+        "CSCI 3308",
+        "CSCI 3155",
+        "CSCI 3104"
+      ]
+    }
+  }
 }
