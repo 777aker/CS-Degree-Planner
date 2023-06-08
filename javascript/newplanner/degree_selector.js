@@ -4,6 +4,7 @@ degreeButton.addEventListener('click', function() {
 });
 
 let degreeJSON;
+let degreeName;
 
 const degreeSelectorForm = document.querySelector('#select-degree-form');
 function degreeSelectorSetup() {
@@ -11,15 +12,12 @@ function degreeSelectorSetup() {
   csButton.parent(degreeSelectorForm);
   csButton.attribute('type', 'button');
   csButton.mousePressed(function() {
-
     csButton.elt.parentElement.style.display = 'none';
-
+    degreeName = 'CS BS Degree';
     degreeJSON = loadJSON(
       'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-electives.json',
       processJSON
     );
-
-    populateDegreeArea('CS BS Degree');
   });
 }
 
@@ -28,11 +26,24 @@ function processJSON() {
     degreeJSON.courses[course.code] = course;
     delete degreeJSON.courses[key];
   });
+
+  populateDegreeArea();
 }
 
 const degreeSelected = document.querySelector('#degree-selected');
-function populateDegreeArea(degreeName) {
+const degreeArea = document.querySelector('#degree-area');
+function populateDegreeArea() {
   degreeSelected.innerHTML = degreeName;
 
-  console.log(degreeSelected.requirements);
+  /* error doing it this way :/
+  degreeJSON.requirements.forEach((requirement, key) => {
+    console.log('ur momma');
+  });
+  */
+  Object.keys(degreeJSON.requirements).forEach(key => {
+    let requirement = createP(key);
+    let hr = document.createElement('hr');
+    requirement.parent(degreeArea);
+    degreeArea.appendChild(hr);
+  });
 }

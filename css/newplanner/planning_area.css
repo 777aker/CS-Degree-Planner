@@ -15,10 +15,6 @@
   margin: 10px;
 }
 
-#semesters-holder > button {
-  margin: 5px;
-}
-
 .semester {
   margin: 5px;
   padding: 10px;
@@ -37,4 +33,12 @@
   height: 50px;
   background-color: #f1c40f;
   border-radius: 2px;
+}
+
+.button-holder {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
 }

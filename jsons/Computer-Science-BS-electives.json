@@ -3517,7 +3517,7 @@
         "CSCI 3104"
       ]
     },
-    "calculus1": {
+    "calculus_1": {
       "type": "Course",
       "number": 1,
       "courses": [
@@ -3525,7 +3525,7 @@
         "MATH 1300"
       ]
     },
-    "calculus2": {
+    "calculus_2": {
       "type": "Course",
       "number": 1,
       "courses": [
