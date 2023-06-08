@@ -28,6 +28,11 @@ function degreeSelectorSetup() {
       processJSON
     );
   });
+  // make all empty courses draggable
+  document.querySelectorAll('.empty-course-holder').forEach(empty => {
+    empty.setAttribute('draggable', 'true');
+
+  });
 }
 
 // do stuff once degree is loaded
@@ -72,7 +77,7 @@ function populateDegreeArea() {
     // put each course under the requirement
     degreeJSON.requirements[key].courses.forEach(course => {
       let courseP = createP(course);
-      courseP.class('course');
+      courseP.class('course degree-course');
       courseP.parent(courseHolder);
     });
 

@@ -1,3 +1,4 @@
+/* left div holding degree information */
 #degree-area {
   width: 25%;
 
@@ -17,7 +18,24 @@
   overflow-x: hidden;
 }
 
+/* each degree requirement */
 .degree-requirement {
   font-size: 18pt;
   background-color: #2A4260;
+}
+
+/* courses in the degree requirements */
+.degree-course {
+  padding: 10px;
+  margin: 0px;
+
+  transition-duration: .4s;
+}
+
+/* when hovering over a course in degree requirements area */
+.degree-course:hover {
+  transition-duration: .4s;
+
+  background-color: #f1c40f;
+  color: #2c3e50;
 }

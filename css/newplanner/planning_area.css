@@ -45,9 +45,19 @@
 /* style for the holders containing the add and remove semester buttons */
 .button-holder {
   margin: 5px;
-  
+
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: stretch;
+}
+
+/* make empty course holders look draggable */
+.empty-course-holder:hover {
+  cursor: grab;
+}
+
+/* when hover over a course */
+.course:hover {
+  cursor: grab;
 }
