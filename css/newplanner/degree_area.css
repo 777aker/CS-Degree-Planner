@@ -12,4 +12,12 @@
   text-align: center;
   text-overflow: clip;
   text-wrap: wrap;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.degree-requirement {
+  font-size: 18pt;
+  background-color: #2A4260;
 }

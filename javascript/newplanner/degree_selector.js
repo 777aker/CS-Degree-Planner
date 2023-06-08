@@ -33,7 +33,9 @@ function processJSON() {
 const degreeSelected = document.querySelector('#degree-selected');
 const degreeArea = document.querySelector('#degree-area');
 function populateDegreeArea() {
+  degreeArea.innerHTML = '';
   degreeSelected.innerHTML = degreeName;
+  degreeArea.appendChild(degreeSelected);
 
   /* error doing it this way :/
   degreeJSON.requirements.forEach((requirement, key) => {
@@ -41,9 +43,23 @@ function populateDegreeArea() {
   });
   */
   Object.keys(degreeJSON.requirements).forEach(key => {
-    let requirement = createP(key);
-    let hr = document.createElement('hr');
+    let requirement = createButton(key.replace(/_/g, ' '));
     requirement.parent(degreeArea);
+    requirement.class('degree-requirement');
+
+    let courseHolder = createDiv();
+    courseHolder.class('course-holder');
+    courseHolder.parent(degreeArea);
+
+    degreeJSON.requirements[key].courses.forEach(course => {
+      let courseP = createP(course);
+      courseP.class('course');
+      courseP.parent(courseHolder);
+    });
+
+    let hr = document.createElement('hr');
     degreeArea.appendChild(hr);
   });
+
+
 }

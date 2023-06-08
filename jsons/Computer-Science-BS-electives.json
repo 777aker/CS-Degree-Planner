@@ -3586,7 +3586,7 @@
         "STAT 4000"
       ]
     },
-    "naturalscience": {
+    "natural_science": {
       "type": "Sequence",
       "number": 1,
       "required": [
