@@ -52,12 +52,12 @@
   align-items: stretch;
 }
 
-/* make empty course holders look draggable */
-.empty-course-holder:hover {
-  cursor: grab;
-}
-
 /* when hover over a course */
 .course:hover {
   cursor: grab;
+}
+
+/* display when over an element */
+.over {
+  border: 3px dotted #666;
 }

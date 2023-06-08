@@ -1,3 +1,4 @@
+// setup everything that needs to be setup
 function setup() {
   textFont('Gill Sans MT');
   // All close buttons close your parent object
@@ -8,4 +9,14 @@ function setup() {
   });
   // setup the degree selecting area
   degreeSelectorSetup();
+  // setup planning area
+  planningAreaSetup();
 }
+
+// global variables
+// source element dragged
+let dragSrcElement;
+// degree JSON object for degree information
+let degreeJSON;
+// name of the selected degree
+let degreeName;

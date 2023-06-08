@@ -4,14 +4,16 @@ degreeButton.addEventListener('click', function() {
   document.querySelector('#select-degree-form').style.display = 'flex';
 });
 
-// degree JSON object for degree information
-let degreeJSON;
-// name of the selected degree
-let degreeName;
-
 // form for selecting a degree
 const degreeSelectorForm = document.querySelector('#select-degree-form');
 function degreeSelectorSetup() {
+  // TODO
+  // temporary? load CS degree by default
+  degreeName = 'CS BS Degree';
+  degreeJSON = loadJSON(
+    'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-electives.json',
+    processJSON
+  );
   // create a button for the cs degree
   // if you want to
   let csButton = createButton('CS BS Degree');
@@ -75,10 +77,28 @@ function populateDegreeArea() {
     courseHolder.attribute('style', 'display: none');
 
     // put each course under the requirement
-    degreeJSON.requirements[key].courses.forEach(course => {
-      let courseP = createP(course);
-      courseP.class('course degree-course');
+    degreeJSON.requirements[key].courses.forEach(courseCode => {
+      let course = degreeJSON.courses[courseCode];
+
+      let courseP;
+      if(course !== undefined) {
+        courseP = createP(
+          courseCode + ' : ' + course.credits + ' credits'
+          + '<br>'
+          + course.name
+        );
+      } else {
+        courseP = createP(courseCode);
+      }
+
+      courseP.class('degree-course');
       courseP.parent(courseHolder);
+      courseP.attribute('draggable', 'true');
+      courseP.attribute('id', courseCode);
+
+      // connect dragging events
+      courseP.elt.addEventListener('dragstart', degreeCourseDragStart);
+      courseP.elt.addEventListener('dragend', degreeCourseDragEnd);
     });
 
     // display or hide the requirement courses
@@ -94,6 +114,19 @@ function populateDegreeArea() {
     let hr = document.createElement('hr');
     degreeArea.appendChild(hr);
   });
+}
 
+// when you start dragging an element
+function degreeCourseDragStart(e) {
+  this.style.opacity = '0.4';
 
+  dragSrcElement = this;
+
+  e.dataTransfer.effectAllowed = 'copy';
+  e.dataTransfer.setData('text/html', this.id);
+}
+
+// when you stop dragging an element
+function degreeCourseDragEnd(e) {
+  this.style.opacity = '1';
 }
