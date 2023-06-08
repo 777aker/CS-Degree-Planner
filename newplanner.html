@@ -5,19 +5,28 @@
     <title>Degree Planner</title>
     <script src="p5/p5.js"></script>
 
+    <!-- Main script that contains setup fuction and sets up general things -->
     <script defer src="javascript/newplanner/main.js"></script>
+    <!-- Script for selecting a degree -->
     <script defer src="javascript/newplanner/degree_selector.js"></script>
 
+    <!-- General styles and HTML element styles -->
     <link rel="stylesheet" href="css/newplanner/master.css">
+    <!-- Styles for the left degree area -->
     <link rel="stylesheet" href="css/newplanner/degree_area.css">
+    <!-- Styles for the planning area -->
     <link rel="stylesheet" href="css/newplanner/planning_area.css">
+    <!-- Styles for the menu -->
     <link rel="stylesheet" href="css/newplanner/navigation.css">
   </head>
   <body>
+    <!-- Left degree area -->
     <div id="degree-area">
       <h1 id="degree-selected">No Degree Selected</h1>
     </div>
+    <!-- right planning area -->
     <div id="planning-area">
+      <!-- menu -->
       <nav>
         <button class="menu-option" id="menu-select-degree" type="button" name="button" title="Load a Degree">
           <img src="images/plannerview/select_degree_img.png" alt="Degree">
@@ -28,15 +37,22 @@
         <button class="menu-option" id="open-mapview" type="button" name="button" title="Open Map View">
           <img src="images/plannerview/mapview.png" alt="map">
         </button>
+        <button class="menu-option" id="trashcan" type="button" name="button" title="Trash">
+          <img src="images/plannerview/trashcan.png" alt="trashcan">
+        </button>
       </nav>
+      <!-- Spacer so elements don't interfere with menu -->
       <div id="nav-spacer">
         &nbsp;
       </div>
+      <!-- Semester area -->
       <div id="semesters-holder">
+        <!-- Transfer semester -->
         <div class="semester" id="transfer-courses">
           <p>Transfer Courses</p>
           <div class="empty-course-holder"></div>
         </div>
+        <!-- Holder for remove and add course buttons -->
         <div class="button-holder">
           <button class="add-semester" type="button" name="button" title="Add a semester">
             Add a Semester
@@ -45,7 +61,7 @@
             Remove a Semester
           </button>
         </div>
-
+        <!-- Semesters -->
         <div class="semester">
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
@@ -78,7 +94,7 @@
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
-
+        <!-- Holder for the add and remove course buttons -->
         <div class="button-holder">
           <button class="add-semester" type="button" name="button" title="Add a semester">
             Add a Semester
@@ -87,9 +103,9 @@
             Remove a Semester
           </button>
         </div>
-
       </div>
     </div>
+    <!-- Form that appears to select a degree -->
     <form id="select-degree-form">
       <button class="close-btn" type="button" name="button">X</button>
       <h1>Select Degree</h1>
