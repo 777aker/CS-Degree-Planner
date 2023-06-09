@@ -203,28 +203,49 @@ function checkNumberRequirement(requirement, element, completed) {
 
 function checkSequenceRequirement(requirement, element, completed) {
   let sequenceCompletion = [];
+  let sequenceInProgress = [];
+  let sequencePlanned = []
   let sequenceLength = requirement.sequences.length;
   for(let i = 0; i < sequenceLength; i++) {
     sequenceCompletion.push(0);
+    sequenceInProgress.push(0);
+    sequencePlanned.push(0);
   }
   completed.forEach(completedElt => {
     let courseCode = completedElt.getAttribute('coursecode');
     if(requirement.courses.includes(courseCode)) {
       for(let i = 0; i < sequenceLength; i++) {
         if(requirement.sequences[i].includes(courseCode)) {
-          sequenceCompletion[i] += 1;
+          let order = completedElt.parentElement.getAttribute('order');
+          if(order < currentSemester) {
+            sequenceCompletion[i] += 1;
+          } else if(order == currentSemester) {
+            sequenceInProgress[i] += 1;
+          } else {
+            sequencePlanned[i] += 1;
+          }
         }
       }
     }
   });
   let completion = 0;
+  let inProgress = 0;
+  let planned = 0;
   for(let i = 0; i < sequenceLength; i++) {
     if(sequenceCompletion[i] >= requirement.sequences[i].length) {
       completion += 1;
+    } else if(sequenceCompletion[i] + sequenceInProgress[i] >= requirement.sequences[i].length) {
+      inProgress += 1;
+    } else if(sequenceCompletion[i] + sequenceInProgress[i] + sequencePlanned[i] >= requirement.sequences[i].length) {
+      planned += 1;
     }
   }
   if(completion >= requirement.number) {
     requirementCompleted(element);
+  } else if(completion + inProgress >= requirement.number) {
+    requirementInProgress(element);
+  } else if(completion + inProgress + planned >= requirement.number) {
+    requirementPlanned(element);
   } else {
     requirementIncomplete(element);
   }
