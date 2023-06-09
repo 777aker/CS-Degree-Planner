@@ -32,6 +32,8 @@ button {
   padding: 10px 10px;
 
   transition-duration: .4s;
+
+  font-size: 14pt;
 }
 
 /* button hover defaults */
@@ -61,6 +63,8 @@ input {
   padding: 10px;
 
   transition-duration: .4s;
+
+  font-size: 14pt;
 }
 
 input::placeholder {
@@ -71,7 +75,7 @@ input::placeholder {
 
 /* input hover defaults */
 input:hover {
-  background-color: #dce0e0
+  background-color: #dce0e0;
   color: #2c3e50;
 
   padding: 15px;
@@ -83,6 +87,10 @@ input:hover::placeholder {
   color: #2c3e50;
 
   transition-duration: .4s;
+}
+
+label {
+  font-size: 14pt;
 }
 
 /* image defaults so they are always centered */
@@ -116,6 +124,29 @@ form {
   z-index: 5;
 
   gap: 10px;
+}
+
+select {
+  background-color: #7f8c8d;
+  color: #ecf0f1;
+
+  border: none;
+  border-radius: 2px;
+
+  padding: 10px;
+
+  transition-duration: .4s;
+
+  font-size: 14pt;
+}
+
+select:hover {
+  background-color: #dce0e0;
+  color: #2c3e50;
+
+  padding: 15px;
+
+  transition-duration: .4s;
 }
 
 /* scroll bar styling */
