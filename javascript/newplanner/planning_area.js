@@ -1,8 +1,8 @@
 const SeasonValues = {
-  Spring: .1,
-  Maymester: .2,
-  Summer: .3,
-  Fall: .4
+  spring: .1,
+  maymester: .2,
+  summer: .3,
+  fall: .4
 }
 
 // setup the planning area
@@ -34,36 +34,142 @@ function setupSemesters() {
       let yearValue = int(currentYear + i / 2);
       if(i % 2 == 1) {
         title.innerHTML = 'Fall ' + yearValue;
-        semesters[i].setAttribute('order', yearValue + SeasonValues.Fall);
+        semesters[i].setAttribute('order', yearValue + SeasonValues.fall);
       } else {
         title.innerHTML = 'Spring ' + yearValue;
-        semesters[i].setAttribute('order', yearValue + SeasonValues.Spring);
+        semesters[i].setAttribute('order', yearValue + SeasonValues.spring);
       }
     } else {
       let yearValue = int(currentYear + (i - 1) / 2);
       if(i % 2 == 1) {
         title.innerHTML = 'Spring ' + yearValue;
-        semesters[i].setAttribute('order', yearValue + SeasonValues.Spring);
+        semesters[i].setAttribute('order', yearValue + SeasonValues.spring);
       } else {
         title.innerHTML = 'Fall ' + int(yearValue + (i - 1) / 2);
-        semesters[i].setAttribute('order', yearValue + SeasonValues.Fall);
+        semesters[i].setAttribute('order', yearValue + SeasonValues.fall);
       }
     }
   }
 }
 
 // setup the add/remove a semester buttons
+const addSemesterForm = document.querySelector('#add-semester-form');
 function setupButtons() {
+  const seasonSelector = document.querySelector('#season-selector');
+  const semesterYear = document.querySelector('#semester-year');
   document.querySelectorAll('.add-semester').forEach(button => {
     button.addEventListener('click', function() {
-
+      addSemesterForm.style.display = 'flex';
+      seasonSelector.value = 'spring';
+      semesterYear.value = '';
     });
   });
   document.querySelectorAll('.remove-semester').forEach(button => {
+    button.addEventListener('click', toggleDeleteSemester);
+  });
+  document.querySelectorAll('.delete-semester').forEach(button => {
     button.addEventListener('click', function() {
-
+      deleteSemester(button.parentElement);
+      toggleDeleteSemester();
     });
   });
+}
+
+// toggle delete semester mode
+let deleteSemesterToggle = false;
+function toggleDeleteSemester() {
+  if(deleteSemesterToggle) {
+    deleteSemesterOff();
+  } else {
+    deleteSemesterOn();
+  }
+  deleteSemesterToggle = !deleteSemesterToggle;
+}
+
+// turn off delete semester mode
+function deleteSemesterOff() {
+  document.querySelectorAll('.delete-semester').forEach(button => {
+    button.style.display = 'none';
+  });
+  document.querySelectorAll('.remove-semester').forEach(button => {
+    button.innerHTML = 'Remove a Semester';
+    button.style.backgroundColor = '';
+  });
+}
+
+// turn on delete semester mode
+function deleteSemesterOn() {
+  document.querySelectorAll('.delete-semester').forEach(button => {
+    button.style.display = 'block';
+  });
+  document.querySelectorAll('.remove-semester').forEach(button => {
+    button.innerHTML = 'Cancel';
+    button.style.backgroundColor = '#c0392b';
+  });
+}
+
+// add a semester
+document.querySelector('#submit-semester').addEventListener('click', function(){
+  addSemesterForm.style.display = 'none';
+  addSemester(
+    document.querySelector('#season-selector').value,
+    document.querySelector('#semester-year').value
+  );
+});
+function addSemester(season, year) {
+  if(year == '') {
+    let date = new Date();
+    year = date.getFullYear();
+  }
+
+  let order = int(year) + SeasonValues[season];
+  let newSemester = createDiv();
+  newSemester.class('semester');
+  newSemester.attribute('order', order);
+
+  let deleteSemesterBtn = createButton('X');
+  deleteSemesterBtn.mouseClicked(function() {
+    deleteSemester(newSemester.elt);
+    toggleDeleteSemester();
+  });
+  deleteSemesterBtn.parent(newSemester);
+  deleteSemesterBtn.class('delete-semester');
+
+  let title = createP(capatilize(season) + ' ' + year);
+  title.parent(newSemester);
+  title.class('semester-title');
+  addCourse(newSemester);
+
+  // once finished making element insert it
+  // length -1 because our new semester is part of these classes now
+  let semesterList = document.querySelectorAll('.semester');
+  for(let i = 0; i < semesterList.length-1; i++) {
+    if(float(semesterList[i].getAttribute('order')) > float(order)) {
+      semesterList[i].parentElement.insertBefore(newSemester.elt, semesterList[i]);
+      return;
+    }
+  }
+
+  let buttonHolders = document.querySelectorAll('.button-holder');
+  buttonHolders[buttonHolders.length-1].parentElement.insertBefore(
+    newSemester.elt,
+    buttonHolders[buttonHolders.length-1]
+  );
+}
+
+// everything you gotta do to delete a semester
+function deleteSemester(semester) {
+  semester.querySelectorAll('.course').forEach(course => {
+    resetDegreeCourse(course.getAttribute('coursecode'));
+  });
+  semester.remove();
+}
+
+// capatilize first letter of a string
+function capatilize(aString) {
+  const firstLetter = aString.charAt(0).toUpperCase();
+  const remaining = aString.slice(1);
+  return firstLetter + remaining;
 }
 
 // add all events necessary to a course object

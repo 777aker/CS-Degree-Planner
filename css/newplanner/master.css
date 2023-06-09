@@ -50,6 +50,41 @@ button:hover {
   background-color: #c0392b;
 }
 
+/* defaults for an input field */
+input {
+  background-color: #7f8c8d;
+  color: #ecf0f1;
+
+  border: none;
+  border-radius: 2px;
+
+  padding: 10px;
+
+  transition-duration: .4s;
+}
+
+input::placeholder {
+  color: #ecf0f1;
+
+  transition-duration: .4s;
+}
+
+/* input hover defaults */
+input:hover {
+  background-color: #dce0e0
+  color: #2c3e50;
+
+  padding: 15px;
+
+  transition-duration: .4s;
+}
+
+input:hover::placeholder {
+  color: #2c3e50;
+
+  transition-duration: .4s;
+}
+
 /* image defaults so they are always centered */
 img {
   display: block;
@@ -79,6 +114,8 @@ form {
   background-color: #2A4260;
 
   z-index: 5;
+
+  gap: 10px;
 }
 
 /* scroll bar styling */

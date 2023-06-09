@@ -80,3 +80,11 @@
 .over {
   border: 3px dotted #666;
 }
+
+/* delete course buttons */
+.delete-semester {
+  align-self: flex-end;
+  background-color: #c0392b;
+
+  display: none;
+}

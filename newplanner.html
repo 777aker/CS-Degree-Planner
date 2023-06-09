@@ -65,34 +65,42 @@
         </div>
         <!-- Semesters -->
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
         <div class="semester">
+          <button class="delete-semester" type="button" name="button">X</button>
           <p class="semester-title"></p>
           <div class="empty-course-holder"></div>
         </div>
@@ -111,6 +119,20 @@
     <form id="select-degree-form">
       <button class="close-btn" type="button" name="button">X</button>
       <h1>Select Degree</h1>
+    </form>
+    <form id="add-semester-form">
+      <button class="close-btn" type="button" name="button">X</button>
+      <h1>Add a Semester</h1>
+      <label for="season-selector">Choose semester's season</label>
+      <select id="season-selector" name="season-selector">
+        <option value="spring">Spring</option>
+        <option value="maymester">Maymester</option>
+        <option value="summer">Summer</option>
+        <option value="fall">Fall</option>
+      </select>
+      <label for="semester-year">Semester's year</label>
+      <input type="number" name="semester-year" id="semester-year" placeholder="enter year XXXX">
+      <button type="button" name="button" id="submit-semester">Add Semester</button>
     </form>
   </body>
 </html>
