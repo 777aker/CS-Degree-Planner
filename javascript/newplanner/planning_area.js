@@ -4,8 +4,7 @@ const SeasonValues = {
   sessionsACD: .3,
   sessionB: .4,
   augmester: .5,
-  summer: .6,
-  fall: .7
+  fall: .6
 }
 let currentSemester;
 
@@ -29,10 +28,19 @@ function setupSemesters() {
   const date = new Date();
   const currentYear = date.getFullYear();
   const currentMonth = date.getMonth();
-  if(currentMonth > 4) {
-    currentSemester = currentYear + SeasonValues.fall;
+  currentSemester = currentYear;
+  if(currentMonth < 4) {
+    currentSemester += SeasonValues.spring;
+  } else if(currentMonth == 4) {
+    currentSemester += SeasonValues.maymester;
+  } else if(currentMonth == 5) {
+    currentSemester += SeasonValues.sessionACD;
+  } else if(currentMonth == 6) {
+    currentSemester += SeasonValues.sessionB;
+  } else if(currentMonth == 7) {
+    currentSemester += SeasonValues.augmester;
   } else {
-    currentSemester = currentYear + SeasonValues.spring;
+    currentSemester += SeasonValues.fall;
   }
 
   semesters[0].setAttribute('order', 0);
@@ -303,6 +311,8 @@ function courseDragEnd(e) {
   this.style.opacity = '1';
 
   resetSemesters();
+  
+  checkRequirements();
 }
 
 // setup trashcan

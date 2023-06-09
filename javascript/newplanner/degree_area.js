@@ -149,5 +149,37 @@ function degreeCourseDragEnd(e) {
 
 // check if degree requirements fulfilled
 function checkRequirements() {
-  
+  let completedCourses = [];
+  document.querySelectorAll('.course').forEach(course => {
+    completedCourses.push(course.getAttribute('coursecode'));
+  });
+  // oof, now comes the complicated part
+  document.querySelectorAll('.degree-requirement').forEach(requirementElt => {
+    let requirement = degreeJSON.requirements[requirementElt.getAttribute('requirementkey')];
+    switch(requirement.type) {
+      case 'Course':
+        checkCourseRequirement(requirement);
+        break;
+      case 'Credits':
+        checkCreditsRequirement(requirement);
+        break;
+      case 'Sequence':
+        checkSequenceRequirement(requirement);
+        break;
+      default:
+        console.log('Not accounted for: ' + requirement.type);
+    }
+  });
+}
+
+function checkCourseRequirement(requirement) {
+
+}
+
+function checkCreditsRequirement(requirement) {
+
+}
+
+function checkSequenceRequirement(requirement) {
+
 }
