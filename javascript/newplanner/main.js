@@ -21,3 +21,13 @@ let dragSrcElement;
 let degreeJSON;
 // name of the selected degree
 let degreeName;
+// semester we are currently in
+let currentSemester;
+// some colors
+const Colors = {
+  incomplete: '',
+  available: '#1abc9c',
+  planned: '#9b59b6',
+  inProgress: '#2ecc71',
+  complete: '#3498db'
+}

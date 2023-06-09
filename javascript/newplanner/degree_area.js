@@ -50,7 +50,6 @@ function processJSON() {
 
 // populate degree area with buttons and such
 const degreeSelected = document.querySelector('#degree-selected');
-const degreeRequirements = document.querySelector('#completed-requirements');
 const degreeArea = document.querySelector('#degree-area');
 function populateDegreeArea() {
   // delete previous data
@@ -66,8 +65,6 @@ function populateDegreeArea() {
   */
   // populate each requirement
   Object.keys(degreeJSON.requirements).forEach(key => createRequirement(key));
-
-  degreeArea.appendChild(degreeRequirements);
 }
 
 // create a requirement
@@ -149,22 +146,19 @@ function degreeCourseDragEnd(e) {
 
 // check if degree requirements fulfilled
 function checkRequirements() {
-  let completedCourses = [];
-  document.querySelectorAll('.course').forEach(course => {
-    completedCourses.push(course.getAttribute('coursecode'));
-  });
+  let completedElements = document.querySelectorAll('.course');
   // oof, now comes the complicated part
   document.querySelectorAll('.degree-requirement').forEach(requirementElt => {
     let requirement = degreeJSON.requirements[requirementElt.getAttribute('requirementkey')];
     switch(requirement.type) {
       case 'Course':
-        checkCourseRequirement(requirement);
+        checkCourseRequirement(requirement, requirementElt, completedElements);
         break;
       case 'Credits':
-        checkCreditsRequirement(requirement);
+        checkCreditsRequirement(requirement, requirementElt, completedElements);
         break;
       case 'Sequence':
-        checkSequenceRequirement(requirement);
+        checkSequenceRequirement(requirement, requirementElt, completedElements);
         break;
       default:
         console.log('Not accounted for: ' + requirement.type);
@@ -172,14 +166,55 @@ function checkRequirements() {
   });
 }
 
-function checkCourseRequirement(requirement) {
+function checkCourseRequirement(requirement, element, completed) {
+  let totalCompleted = 0;
+  let totalInProgress = 0;
+  let totalPlanned = 0;
+  completed.forEach(completedElt => {
+    if(requirement.courses.includes(completedElt.getAttribute('coursecode'))) {
+      console.log(currentSemester);
+      console.log(element.parentElement.getAttribute('order'));
+      console.log(element.parentElement);
+      if(completedElt.parentElement.getAttribute('order') < currentSemester) {
+        totalCompleted += 1;
+      } else if(completedElt.parentElement.getAttribute('order') == currentSemester) {
+        totalInProgress += 1;
+      } else {
+        totalPlanned += 1;
+      }
+    }
+  });
+  if(totalCompleted >= requirement.number) {
+    requirementCompleted(element);
+  } else if(totalInProgress + totalCompleted >= requirement.number) {
+    requirementInProgress(element);
+  } else if(totalInProgress + totalCompleted + totalPlanned >= requirement.number) {
+    requirementPlanned(element);
+  } else {
+    requirementIncomplete(element);
+  }
+}
+
+function checkCreditsRequirement(requirement, element, completed) {
+  
+}
+
+function checkSequenceRequirement(requirement, element, completed) {
 
 }
 
-function checkCreditsRequirement(requirement) {
-
+function requirementCompleted(requirement) {
+  requirement.style.backgroundColor = Colors.complete;
 }
 
-function checkSequenceRequirement(requirement) {
+function requirementInProgress(requirement) {
+  requirement.style.backgroundColor = Colors.inProgress;
+}
 
+function requirementPlanned(requirement) {
+  requirement.style.backgroundColor = Colors.planned;
+}
+
+function requirementIncomplete(requirement) {
+  requirement.style.backgroundColor = Colors.incomplete;
 }

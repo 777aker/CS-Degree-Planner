@@ -6,7 +6,6 @@ const SeasonValues = {
   augmester: .5,
   fall: .6
 }
-let currentSemester;
 
 // setup the planning area
 function planningAreaSetup() {
@@ -34,7 +33,7 @@ function setupSemesters() {
   } else if(currentMonth == 4) {
     currentSemester += SeasonValues.maymester;
   } else if(currentMonth == 5) {
-    currentSemester += SeasonValues.sessionACD;
+    currentSemester += SeasonValues.sessionsACD;
   } else if(currentMonth == 6) {
     currentSemester += SeasonValues.sessionB;
   } else if(currentMonth == 7) {
@@ -180,6 +179,7 @@ function deleteSemester(semester) {
     resetDegreeCourse(course.getAttribute('coursecode'));
   });
   semester.remove();
+  checkRequirements();
 }
 
 // capatilize first letter of a string
@@ -278,7 +278,11 @@ function noGrabDegreeCourse(element) {
 
 // how you make an element have the right data
 function updateCourse(element, code) {
-  element.innerHTML = code + ' : ' + degreeJSON.courses[code].credits;
+  if(degreeJSON.courses[code] == undefined) {
+    element.innerHTML = code;
+  } else {
+    element.innerHTML = code + ' : ' + degreeJSON.courses[code].credits;
+  }
   element.setAttribute('class', 'course');
   element.setAttribute('coursecode', code);
 }
@@ -311,7 +315,7 @@ function courseDragEnd(e) {
   this.style.opacity = '1';
 
   resetSemesters();
-  
+
   checkRequirements();
 }
 
