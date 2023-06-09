@@ -39,6 +39,21 @@ nav {
   margin-left: auto;
 }
 
+/* make children of trash not get in way of stuff */
+#trashcan * {
+  pointer-events: none;
+}
+
+/* cahnge hover from button defaults */
 #trashcan:hover {
   background-color: #c0392b;
+}
+
+/* so, annoyingly, while dragging over we can't do button stuff, so, do nonsense */
+.dragging-trash {
+  transition-duration: .4s;
+
+  background-color: #c0392b;
+
+  padding: 15px 15px;
 }

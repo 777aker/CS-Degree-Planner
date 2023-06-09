@@ -32,6 +32,8 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  min-width: 110px;
 }
 
 /* style for empty courses */
@@ -50,11 +52,28 @@
   flex-direction: column;
   gap: 10px;
   align-items: stretch;
+
+  min-width: 100px;
+}
+
+/* courses in the planner view */
+.course {
+  padding: 5px;
+
+  transition-duration: .4s;
 }
 
 /* when hover over a course */
 .course:hover {
   cursor: grab;
+
+  border-radius: 2px;
+
+  transition-duration: .4s;
+
+  background-color: #f1c40f;
+
+  color: #2c3e50;
 }
 
 /* display when over an element */

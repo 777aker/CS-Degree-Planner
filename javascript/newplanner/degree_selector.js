@@ -64,56 +64,62 @@ function populateDegreeArea() {
   });
   */
   // populate each requirement
-  Object.keys(degreeJSON.requirements).forEach(key => {
-    // add the requirement to the degree area
-    let requirement = createButton(key.replace(/_/g, ' '));
-    requirement.parent(degreeArea);
-    requirement.class('degree-requirement');
+  Object.keys(degreeJSON.requirements).forEach(key => createRequirement(key));
+}
 
-    // div holding the courses for this requirement
-    let courseHolder = createDiv();
-    courseHolder.class('course-holder');
-    courseHolder.parent(degreeArea);
-    courseHolder.attribute('style', 'display: none');
+// create a requirement
+function createRequirement(key) {
+  // add the requirement to the degree area
+  let requirement = createButton(key.replace(/_/g, ' '));
+  requirement.parent(degreeArea);
+  requirement.class('degree-requirement');
 
-    // put each course under the requirement
-    degreeJSON.requirements[key].courses.forEach(courseCode => {
-      let course = degreeJSON.courses[courseCode];
+  // div holding the courses for this requirement
+  let courseHolder = createDiv();
+  courseHolder.class('course-holder');
+  courseHolder.parent(degreeArea);
+  courseHolder.attribute('style', 'display: none');
 
-      let courseP;
-      if(course !== undefined) {
-        courseP = createP(
-          courseCode + ' : ' + course.credits + ' credits'
-          + '<br>'
-          + course.name
-        );
-      } else {
-        courseP = createP(courseCode);
-      }
+  // put each course under the requirement
+  degreeJSON.requirements[key].courses.forEach(courseCode => createCourse(courseCode, courseHolder));
 
-      courseP.class('degree-course');
-      courseP.parent(courseHolder);
-      courseP.attribute('draggable', 'true');
-      courseP.attribute('id', courseCode);
-
-      // connect dragging events
-      courseP.elt.addEventListener('dragstart', degreeCourseDragStart);
-      courseP.elt.addEventListener('dragend', degreeCourseDragEnd);
-    });
-
-    // display or hide the requirement courses
-    requirement.mousePressed(function() {
-      if(courseHolder.elt.style.display == 'none') {
-        courseHolder.attribute('style', 'display: block');
-      } else {
-        courseHolder.attribute('style', 'display: none');
-      }
-    });
-
-    // add a horizontal bar after each requirement
-    let hr = document.createElement('hr');
-    degreeArea.appendChild(hr);
+  // display or hide the requirement courses
+  requirement.mousePressed(function() {
+    if(courseHolder.elt.style.display == 'none') {
+      courseHolder.attribute('style', 'display: block');
+    } else {
+      courseHolder.attribute('style', 'display: none');
+    }
   });
+
+  // add a horizontal bar after each requirement
+  let hr = document.createElement('hr');
+  degreeArea.appendChild(hr);
+}
+
+// create a course under a requirement
+function createCourse(courseCode, courseHolder) {
+  let course = degreeJSON.courses[courseCode];
+
+  let courseP;
+  if(course !== undefined) {
+    courseP = createP(
+      courseCode + ' : ' + course.credits + ' credits'
+      + '<br>'
+      + course.name
+    );
+  } else {
+    courseP = createP(courseCode);
+  }
+
+  courseP.class('degree-course');
+  courseP.parent(courseHolder);
+  courseP.attribute('draggable', 'true');
+  courseP.attribute('id', courseCode);
+
+  // connect dragging events
+  courseP.elt.addEventListener('dragstart', degreeCourseDragStart);
+  courseP.elt.addEventListener('dragend', degreeCourseDragEnd);
 }
 
 // when you start dragging an element
@@ -122,7 +128,7 @@ function degreeCourseDragStart(e) {
 
   dragSrcElement = this;
 
-  e.dataTransfer.effectAllowed = 'copy';
+  e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.id);
 }
 
