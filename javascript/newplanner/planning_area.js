@@ -4,6 +4,7 @@ const SeasonValues = {
   summer: .3,
   fall: .4
 }
+let currentSemester;
 
 // setup the planning area
 function planningAreaSetup() {
@@ -25,6 +26,11 @@ function setupSemesters() {
   const date = new Date();
   const currentYear = date.getFullYear();
   const currentMonth = date.getMonth();
+  if(currentMonth > 4) {
+    currentSemester = currentYear + SeasonValues.fall;
+  } else {
+    currentSemester = currentYear + SeasonValues.spring;
+  }
 
   semesters[0].setAttribute('order', 0);
 
