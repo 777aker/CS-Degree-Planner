@@ -1,8 +1,11 @@
 const SeasonValues = {
   spring: .1,
   maymester: .2,
-  summer: .3,
-  fall: .4
+  sessionsACD: .3,
+  sessionB: .4,
+  augmester: .5,
+  summer: .6,
+  fall: .7
 }
 let currentSemester;
 
@@ -287,6 +290,8 @@ function courseDragStart(e) {
 
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this.getAttribute('coursecode'));
+
+    colorSemesters(this.getAttribute('coursecode'));
   } else if(this.classList.contains('empty-course-holder')) {
     e.preventDefault();
   }
@@ -296,6 +301,8 @@ function courseDragStart(e) {
 // when you stop dragging a course
 function courseDragEnd(e) {
   this.style.opacity = '1';
+
+  resetSemesters();
 }
 
 // setup trashcan
@@ -347,4 +354,73 @@ function dropTrash(e) {
 function dragStartTrash(e) {
   e.preventDefault();
   return false;
+}
+
+// color the semesters based on what you've done
+function colorSemesters(code) {
+  let completed = false;
+  let coursesCompleted = [];
+
+  let semesters = document.querySelectorAll('.semester');
+
+  semesterComplete(semesters[0]);
+  semesters[0].querySelectorAll('.course').forEach(course => {
+    coursesCompleted.push(course.getAttribute('coursecode'));
+  });
+  completed = checkPrerequisites(code, coursesCompleted);
+
+  for(let i = 1; i < semesters.length; i++) {
+    if(!completed) {
+      semesterIncomplete(semesters[i]);
+      semesters[i].querySelectorAll('.course').forEach(course => {
+        coursesCompleted.push(course.getAttribute('coursecode'));
+      });
+      completed = checkPrerequisites(code, coursesCompleted);
+    } else {
+      semesterComplete(semesters[i]);
+    }
+  }
+}
+
+// what to do if it's complete
+function semesterComplete(element) {
+  element.querySelectorAll('.empty-course-holder').forEach(empty => {
+    empty.style.backgroundColor = '#2ecc71';
+  });
+}
+
+// what to do if incomplete
+function semesterIncomplete(element) {
+  element.querySelectorAll('.empty-course-holder').forEach(empty => {
+    empty.style.backgroundColor = '#e74c3c';
+  });
+}
+
+// reset semesters
+function resetSemesters() {
+  document.querySelectorAll('.empty-course-holder').forEach(empty => {
+    empty.style.backgroundColor = '';
+  });
+  document.querySelectorAll('.course').forEach(course => {
+    course.style.backgroundColor = '';
+  });
+}
+
+// check course prerequisites
+function checkPrerequisites(code, completed) {
+  if(degreeJSON.courses[code] == undefined) {
+    return true;
+  }
+  for(prereqGroup of degreeJSON.courses[code].prerequisites) {
+    let groupCheck = false;
+    for(prereq of prereqGroup) {
+      if(completed.includes(prereq)) {
+        groupCheck = true;
+      }
+    }
+    if(!groupCheck) {
+      return false;
+    }
+  }
+  return true;
 }

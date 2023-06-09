@@ -50,6 +50,7 @@ function processJSON() {
 
 // populate degree area with buttons and such
 const degreeSelected = document.querySelector('#degree-selected');
+const degreeRequirements = document.querySelector('#completed-requirements');
 const degreeArea = document.querySelector('#degree-area');
 function populateDegreeArea() {
   // delete previous data
@@ -65,6 +66,8 @@ function populateDegreeArea() {
   */
   // populate each requirement
   Object.keys(degreeJSON.requirements).forEach(key => createRequirement(key));
+
+  degreeArea.appendChild(degreeRequirements);
 }
 
 // create a requirement
@@ -73,6 +76,7 @@ function createRequirement(key) {
   let requirement = createButton(key.replace(/_/g, ' '));
   requirement.parent(degreeArea);
   requirement.class('degree-requirement');
+  requirement.attribute('requirementkey', key);
 
   // div holding the courses for this requirement
   let courseHolder = createDiv();
@@ -130,9 +134,20 @@ function degreeCourseDragStart(e) {
 
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.id);
+
+  colorSemesters(this.id);
 }
 
 // when you stop dragging an element
 function degreeCourseDragEnd(e) {
   this.style.opacity = '1';
+
+  resetSemesters();
+
+  checkRequirements();
+}
+
+// check if degree requirements fulfilled
+function checkRequirements() {
+  
 }
