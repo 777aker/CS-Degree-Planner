@@ -152,10 +152,8 @@ function checkRequirements() {
     let requirement = degreeJSON.requirements[requirementElt.getAttribute('requirementkey')];
     switch(requirement.type) {
       case 'Course':
-        checkCourseRequirement(requirement, requirementElt, completedElements);
-        break;
       case 'Credits':
-        checkCreditsRequirement(requirement, requirementElt, completedElements);
+        checkNumberRequirement(requirement, requirementElt, completedElements);
         break;
       case 'Sequence':
         checkSequenceRequirement(requirement, requirementElt, completedElements);
@@ -166,21 +164,29 @@ function checkRequirements() {
   });
 }
 
-function checkCourseRequirement(requirement, element, completed) {
+function checkNumberRequirement(requirement, element, completed) {
   let totalCompleted = 0;
   let totalInProgress = 0;
   let totalPlanned = 0;
   completed.forEach(completedElt => {
-    if(requirement.courses.includes(completedElt.getAttribute('coursecode'))) {
-      console.log(currentSemester);
-      console.log(element.parentElement.getAttribute('order'));
-      console.log(element.parentElement);
-      if(completedElt.parentElement.getAttribute('order') < currentSemester) {
-        totalCompleted += 1;
-      } else if(completedElt.parentElement.getAttribute('order') == currentSemester) {
-        totalInProgress += 1;
+    let numberAdd;
+    if(requirement.type == 'Course') {
+      numberAdd = 1;
+    } else {
+      let jsonCourse = degreeJSON.courses[completedElt.getAttribute('coursecode')];
+      if(jsonCourse == undefined) {
+        numberAdd = 3;
       } else {
-        totalPlanned += 1;
+        numberAdd = jsonCourse.credits;
+      }
+    }
+    if(requirement.courses.includes(completedElt.getAttribute('coursecode'))) {
+      if(completedElt.parentElement.getAttribute('order') < currentSemester) {
+        totalCompleted += numberAdd;
+      } else if(completedElt.parentElement.getAttribute('order') == currentSemester) {
+        totalInProgress += numberAdd;
+      } else {
+        totalPlanned += numberAdd;
       }
     }
   });
@@ -195,12 +201,33 @@ function checkCourseRequirement(requirement, element, completed) {
   }
 }
 
-function checkCreditsRequirement(requirement, element, completed) {
-  
-}
-
 function checkSequenceRequirement(requirement, element, completed) {
-
+  let sequenceCompletion = [];
+  let sequenceLength = requirement.sequences.length;
+  for(let i = 0; i < sequenceLength; i++) {
+    sequenceCompletion.push(0);
+  }
+  completed.forEach(completedElt => {
+    let courseCode = completedElt.getAttribute('coursecode');
+    if(requirement.courses.includes(courseCode)) {
+      for(let i = 0; i < sequenceLength; i++) {
+        if(requirement.sequences[i].includes(courseCode)) {
+          sequenceCompletion[i] += 1;
+        }
+      }
+    }
+  });
+  let completion = 0;
+  for(let i = 0; i < sequenceLength; i++) {
+    if(sequenceCompletion[i] >= requirement.sequences[i].length) {
+      completion += 1;
+    }
+  }
+  if(completion >= requirement.number) {
+    requirementCompleted(element);
+  } else {
+    requirementIncomplete(element);
+  }
 }
 
 function requirementCompleted(requirement) {
