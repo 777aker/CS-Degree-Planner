@@ -55,11 +55,13 @@ function populateDegreeArea() {
   // delete previous data
   degreeArea.innerHTML = '';
   // add degree name
-  degreeSelected.innerHTML = degreeName;
+  degreeSelected.innerHTML = degreeName + ' Requirements';
   degreeArea.appendChild(degreeSelected);
 
   // populate each requirement
   Object.keys(degreeJSON.requirements).forEach(key => createRequirement(key));
+
+  checkRequirements();
 }
 
 // create a requirement
@@ -76,6 +78,9 @@ function createRequirement(key) {
   courseHolder.parent(degreeArea);
   courseHolder.attribute('style', 'display: none');
 
+  // add a description to the requirement
+  createRequirementDescription(degreeJSON.requirements[key], courseHolder);
+
   // put each course under the requirement
   degreeJSON.requirements[key].courses.forEach(courseCode => createCourse(courseCode, courseHolder));
 
@@ -91,6 +96,35 @@ function createRequirement(key) {
   // add a horizontal bar after each requirement
   let hr = document.createElement('hr');
   degreeArea.appendChild(hr);
+}
+
+// give a requirement a description
+function createRequirementDescription(requirement, parent) {
+  let text;
+  switch(requirement.type) {
+    case 'Course':
+    case 'Sequence':
+      if(requirement.number == 1) {
+        text = 'Complete 1 ' + requirement.type;
+      } else if(requirement.number == requirement.courses.length) {
+        text = 'Complete Every ' + requirement.type;
+      } else {
+        text = 'Complete ' + requirement.number + ' ' + requirement.type + 's';
+      }
+      break;
+    case 'Credits':
+      text = 'Complete ' + requirement.number + ' ' + requirement.type;
+      break;
+    default:
+      console.log('requirement not handled');
+  }
+
+  let description = createP(text);
+  description.parent(parent);
+  // for some other guys to populate
+  let completed = createP('');
+  completed.parent(parent);
+  completed.class('requirement-completion');
 }
 
 // create a course under a requirement
@@ -175,7 +209,7 @@ function checkNumberRequirement(requirement, element, completed) {
       if(jsonCourse == undefined) {
         numberAdd = 3;
       } else {
-        numberAdd = jsonCourse.credits;
+        numberAdd = int(jsonCourse.credits);
       }
     }
     // if the course is in our plan add it correctly
@@ -197,7 +231,7 @@ function checkNumberRequirement(requirement, element, completed) {
   } else if(totalInProgress + totalCompleted + totalPlanned >= requirement.number) {
     requirementPlanned(element);
   } else {
-    requirementIncomplete(element);
+    requirementIncomplete(element, totalInProgress + totalCompleted + totalPlanned, requirement)
   }
 }
 
@@ -253,25 +287,30 @@ function checkSequenceRequirement(requirement, element, completed) {
   } else if(completion + inProgress + planned >= requirement.number) {
     requirementPlanned(element);
   } else {
-    requirementIncomplete(element);
+    requirementIncomplete(element, completion + inProgress + planned, requirement);
   }
 }
 
 // these functions are actually pretty straight forward
 // right now they just color the requirement
 // maybe in the future they'll involve more so they're here
-function requirementCompleted(requirement) {
-  requirement.style.backgroundColor = Colors.complete;
+function requirementCompleted(element) {
+  element.nextSibling.querySelector('.requirement-completion').innerHTML = '';
+  element.style.backgroundColor = Colors.complete;
 }
 
-function requirementInProgress(requirement) {
-  requirement.style.backgroundColor = Colors.inProgress;
+function requirementInProgress(element) {
+  element.nextSibling.querySelector('.requirement-completion').innerHTML = '';
+  element.style.backgroundColor = Colors.inProgress;
 }
 
-function requirementPlanned(requirement) {
-  requirement.style.backgroundColor = Colors.planned;
+function requirementPlanned(element) {
+  element.nextSibling.querySelector('.requirement-completion').innerHTML = '';
+  element.style.backgroundColor = Colors.planned;
 }
 
-function requirementIncomplete(requirement) {
-  requirement.style.backgroundColor = Colors.incomplete;
+// changed how incomplete works this is why we do this
+function requirementIncomplete(element, number, requirement) {
+  element.nextSibling.querySelector('.requirement-completion').innerHTML = number + '/' + requirement.number + ' in planner';
+  element.style.backgroundColor = Colors.incomplete;
 }

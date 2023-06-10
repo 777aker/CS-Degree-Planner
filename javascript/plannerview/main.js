@@ -43,3 +43,20 @@ function cleanUpDragEnd() {
   updateSemesterCredits();
   updateCourseColors();
 }
+
+// handle key presses
+function keyPressed() {
+  if(keyCode === ESCAPE) {
+    closeAll();
+  }
+}
+
+// close everything
+function closeAll() {
+  document.querySelectorAll('form').forEach(form => {
+    form.style.display = 'none';
+  });
+  document.querySelectorAll('.course-holder').forEach(courseHolder => {
+    courseHolder.style.display = 'none';
+  });
+}
