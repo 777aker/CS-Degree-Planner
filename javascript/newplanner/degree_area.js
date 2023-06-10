@@ -139,9 +139,7 @@ function degreeCourseDragStart(e) {
 function degreeCourseDragEnd(e) {
   this.style.opacity = '1';
 
-  resetSemesters();
-
-  checkRequirements();
+  cleanUpDragEnd();
 }
 
 // check if degree requirements fulfilled

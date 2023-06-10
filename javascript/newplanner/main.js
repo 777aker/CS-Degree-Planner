@@ -31,3 +31,11 @@ const Colors = {
   inProgress: '#2ecc71',
   complete: '#3498db'
 }
+
+// whenever we stop dragging elements do some common clean up
+function cleanUpDragEnd() {
+  resetSemesters();
+
+  checkRequirements();
+  updateSemesterCredits();
+}

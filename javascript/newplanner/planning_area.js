@@ -223,7 +223,6 @@ function courseDrop(e) {
       dropDegreeCourseOnCourse(this, e.dataTransfer.getData('text/html'));
     }
   }
-
   return false;
 }
 
@@ -314,9 +313,7 @@ function courseDragStart(e) {
 function courseDragEnd(e) {
   this.style.opacity = '1';
 
-  resetSemesters();
-
-  checkRequirements();
+  cleanUpDragEnd();
 }
 
 // setup trashcan
@@ -437,4 +434,9 @@ function checkPrerequisites(code, completed) {
     }
   }
   return true;
+}
+
+// there's somewhere you can call this that's clever
+function updateSemesterCredits() {
+
 }
