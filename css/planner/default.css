@@ -1,9 +1,0 @@
-/* no styling yet */
-#trashcan {
-  position: absolute;
-  font-size: 32pt;
-  background-color: red;
-  z-index: 10;
-  bottom: 0;
-  right: 0;
-}

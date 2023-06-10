@@ -2,291 +2,102 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, initial-scale=1.0">
-    <title>Degree Planner Map View</title>
+    <title>Degree Planner</title>
     <script src="p5/p5.js"></script>
-    <!-- defer so it can actually find stuff and not break -->
-    <!-- global variables everything uses first -->
-    <script defer src="javascript/mapview/mapsketch.js"></script>
-    <!-- how we throw and deal with errors -->
-    <script defer src="javascript/mapview/error.js"></script>
-    <!-- nice helper functions for convenience -->
-    <script defer src="javascript/mapview/helperfunctions.js"></script>
-    <!-- you won't beleive this based on the name, but this sets up stuff.... crazy -->
-    <script defer src="javascript/mapview/setup.js"></script>
-    <!-- how we add a course to the layout -->
-    <script defer src="javascript/mapview/courseadding.js"></script>
-    <!-- how we add a note to the layout -->
-    <script defer src="javascript/mapview/noteadding.js"></script>
-    <!-- node editing -->
-    <script defer src="javascript/mapview/editnode.js"></script>
-    <!-- template handling -->
-    <script defer src="javascript/mapview/templates.js"></script>
-    <!-- File handling -->
-    <script defer src="javascript/mapview/filehandler.js"></script>
-    <!-- mode changer -->
-    <script defer src="javascript/mapview/modehandler.js"></script>
-    <!-- draw loops: this is the stuff that happens every frame -->
-    <script defer src="javascript/mapview/draw.js"></script>
-    <!-- This is where all the help menu stuff is -->
-    <script defer src="javascript/mapview/helpmenu.js"></script>
-    <!-- Search stuff -->
-    <script defer src="javascript/mapview/search.js"></script>
-    <!-- Advanced uses handler -->
-    <script defer src="javascript/mapview/advancedmode.js"></script>
-    <!-- Time to give a degree requirements placeholder -->
-    <script defer src="javascript/mapview/degreerequirements.js"></script>
-    <!-- This one should load last because events should be able to access everything else -->
-    <script defer src="javascript/mapview/events.js"></script>
-    <!-- I just want some fun pop ups so people know what they are doing -->
-    <script defer src="javascript/mapview/popup.js"></script>
-    <!-- Animations obviously -->
-    <script defer src="javascript/mapview/animations.js"></script>
-    <!-- all the style sheets -->
-    <link rel="stylesheet" href="css/mapview/buttondefaults.css">
-    <link rel="stylesheet" href="css/mapview/addcourse.css">
-    <link rel="stylesheet" href="css/mapview/addnote.css">
-    <link rel="stylesheet" href="css/mapview/cleardata.css">
-    <link rel="stylesheet" href="css/mapview/editnodes.css">
-    <link rel="stylesheet" href="css/mapview/fileloader.css">
-    <link rel="stylesheet" href="css/mapview/helpmenu.css">
-    <link rel="stylesheet" href="css/mapview/mapstyle.css">
-    <link rel="stylesheet" href="css/mapview/menus.css">
-    <link rel="stylesheet" href="css/mapview/templates.css">
-    <link rel="stylesheet" href="css/mapview/popups.css">
-    <link rel="stylesheet" href="css/mapview/canvas.css">
-    <link rel="stylesheet" href="css/mapview/legend.css">
-    <link rel="stylesheet" href="css/mapview/animations.css">
-    <link rel="stylesheet" href="css/mapview/degreerequirements.css">
+
+    <!-- Main script that contains setup fuction and sets up general things -->
+    <script defer src="javascript/plannerview/main.js"></script>
+    <!-- Script for selecting a degree -->
+    <script defer src="javascript/plannerview/degree_area.js"></script>
+    <!-- Script for the planning area -->
+    <script defer src="javascript/plannerview/planning_area.js"></script>
+
+    <!-- General styles and HTML element styles -->
+    <link rel="stylesheet" href="css/plannerview/master.css">
+    <!-- Styles for the left degree area -->
+    <link rel="stylesheet" href="css/plannerview/degree_area.css">
+    <!-- Styles for the planning area -->
+    <link rel="stylesheet" href="css/plannerview/planning_area.css">
+    <!-- Styles for the menu -->
+    <link rel="stylesheet" href="css/plannerview/navigation.css">
   </head>
   <body>
-    <main>
-      <!-- Legend -->
-      <div class="legend">
-        <div class="legend_color" style="background-color:rgba(26, 188, 156, 1.0)">
-          Available
-        </div>
-        <div class="legend_color" style="background-color:rgba(46, 204, 113, 1.0)">
-          In Progress
-        </div>
-        <div class="legend_color" style="background-color:rgba(52, 152, 219, 1.0)">
-          Completed!
-        </div>
-      </div>
-      <div class="menus">
-        <!-- dropdown menu for saving options -->
-        <div class="save-dropdown">
-          <button class="dropbtn" id="savedropbtn" title="Load and save different files">
-            <img src="images/filemenu.png" alt="File">
-          </button>
-          <div id="save-content">
-            <form class="fileform">
-              <input class="filebtn" type="button" id="savebtn" value="Save Course Layout"
-                title='Download the current course layout'>
-              <input class="filebtn" type="button" id="courseworksave" value="Download Coursework"
-                title='Download coursework'>
-              <input class="filebtn" type="button" id="saveboth" value="Save All"
-                title="Save coursework and course layout into one file">
-              <input class="filebtn" type="button" id="openloader" value="Upload File"
-                title='Load json file'>
-            </form>
-            <!-- to add a template look at template div and js template functions -->
-            <button class="filebtn" id="opentemplates" title='Preset course layouts'>
-              Template Options
-            </button>
-            <button class="filebtn" id="clearbtn" title="Clear coursework or layout">
-              Clear Data
-            </button>
-          </div>
-        </div>
-        <!-- dropdown menu for edit mode options -->
-        <div class="edit-dropdown">
-          <button class="dropbtn" id="editdropbtn" title="Edit the course layout">
-            <img src="images/editmenu.png" alt="Edit">
-          </button>
-          <div id="edit-content">
-            <!-- all buttons placed here in js are class="editbuttons" -->
-          </div>
-        </div>
-        <!-- dropdown menu for view -->
-        <div class="view-dropdown">
-          <button class="dropbtn" id="viewdropbtn">
-            <img src="images/viewmenu.png" alt="View">
-          </button>
-          <div id="view-content">
-            <button id="openhelp" title="Open Help" class="viewbtn">Help</button>
-            <button id="degreq" title="View Degree Requirements" class="viewbtn">Degree Requirements</button>
-            <!--
-            <button id="search" title="Search for a course" class="viewbtn">Search</button>
-            <input id="searchtxt" type="text" class="viewbtn" value="" placeholder="Enter Course To Search For">
-            <button class="viewbtn" onclick="location.href='APItesting'">API testing</button>
-            <button class="viewbtn" onclick="location.href='planner.html'">Planner</button>
-            -->
-          </div>
-        </div>
-        <button class="dropbtn" id="openplanner" onclick="location.href='planner.html'">
-          <img src="images/plannermenu.png" alt="Planner">
+    <!-- Left degree area -->
+    <div id="degree-area">
+      <h1 id="degree-selected">No Degree Selected</h1>
+    </div>
+    <!-- right planning area -->
+    <div id="planning-area">
+      <!-- menu -->
+      <nav>
+        <button class="menu-option" id="menu-select-degree" type="button" name="button" title="Load a Degree">
+          <img src="images/plannerview/select_degree_img.png" alt="Degree">
         </button>
+        <button class="menu-option" id="menu-load-save" type="button" name="button" title="Save or Load Coursework">
+          <img src="images/editmenu.png" alt="File">
+        </button>
+        <button class="menu-option" id="open-mapview" type="button" name="button" title="Open Map View">
+          <img src="images/plannerview/mapview.png" alt="map">
+        </button>
+        <button class="menu-option" id="trashcan" type="button" name="button" title="Trash">
+          <img src="images/plannerview/trashcan.png" alt="trashcan">
+        </button>
+      </nav>
+      <!-- Spacer so elements don't interfere with menu -->
+      <div id="nav-spacer">
+        &nbsp;
       </div>
-      <!-- Form for loading templates -->
-      <div class="template-div">
-        <button class="closex" type="button" id="canceltemplate" name="canceltemplate">X</button>
-        <h1>Load Template</h1>
-        <form class="template-form">
-          <!-- look at js for how to add a template, easier to do there -->
-        </form>
-      </div>
-      <!-- Form for loading files -->
-      <div class="fileloader-div">
-        <input class="closex" type="button" id="cancelload" value="X">
-        <h1>Open File</h1>
-        <form class="fileloader-form">
-          <p>
-            Here you can load course layout files, course work files, or any other files
-            created with this software so that you can personalize your experience.
-          </p>
-          <input type="file" id="select-files">
-          <label for="result">
-            This field shows what the file looks like, and allows you to make edits.
-            You don't have to look at it or do anything with it.
-          </label>
-          <textarea name="result" id="result" rows="10" cols="40"></textarea>
-          <label class="switch" for="clear">
-            Append file to currently used data rather than replace data completely (ie double major and want to add two course degree requirement files)
-            <input type="checkbox" name="clear" id="clearandreplace">
-          </label>
-          <input type="button" id="import" value="Import" title="Load the file into the software, including changes made in edit area">
-        </form>
-      </div>
-      <!-- Form for adding a class -->
-      <div class="add-course-div">
-        <button class="closex" type="button" id="cancelcourse" name="cancelcourse">X</button><br>
-        <h1>Add Course</h1>
-        <form class="add-course-form">
-          <!-- form filled out through javascript -->
-        </form>
-        <hr>
-        <!-- Need these outside the form so appended nodes go on properly -->
-        <button type="button" id="submitcourse" name="submitcourse">Submit Course Form</button><br>
-        <br>
-
-      </div>
-      <!-- Form for adding a note -->
-      <div class="add-note-div">
-        <button class="closex" type="button" id="cancelnote" name="cancelnote">X</button>
-        <h1>Add Note</h1>
-        <form class="add-note-form" onsubmit="return submitNote();">
-          <!-- form filled out through javascript bc created easy function for it -->
-        </form>
-        <button type="button" id="submitnote" name="submitnote">Submit Note</button>
-      </div>
-      <!-- Buttons for editing a node -->
-      <div class="edit-nodes-div">
-        <form class="edit-node-form">
-          <!-- js fill bc easier -->
-        </form>
-      </div>
-      <!-- Form for clearing some data -->
-      <div class="clear-data-div">
-        <form class="clear-data-form">
-          <button class="closex" type="button" id="closeclearform"
-          title="Close this form">X</button>
-          <h1>Clear Data</h1>
-          <button type="button" id="clearlayout"
-          title="Clear the courses shown">Clear Course Layout</button>
-          <button type="button" id="clearcoursework"
-          title="Clear course progress">Clear Coursework</button>
-        </form>
-      </div>
-      <!-- Help Menu -->
-      <div class="help-menu-div">
-        <button type="button" class="helpbutton, closex" id="closehelp">X</button>
-        <div class="help-left-buttons">
-          <!-- Lots of buttons that toggle which help item you are looking at -->
-          <button type="button" class="helpbutton" id="overview">Overview</button>
-          <button type="button" class="helpbutton" id="defaultview">Default View</button>
-          <button type="button" class="helpbutton" id="filedropdown">File Dropdown</button>
-          <button type="button" class="helpbutton" id="editdropdown">Edit Dropdown</button>
-          <button type="button" class="helpbutton" id="viewdropdown">View Dropdown</button>
-          <button type="button" class="helpbutton" id="shortcuts">Shortcuts</button>
-          <button type="button" class="helpbutton" id="advanceduses">Advanced Uses</button>
-          <button type="button" class="helpbutton" id="credits">Credits</button>
+      <!-- Semester area -->
+      <div id="semesters-holder">
+        <!-- Transfer semester -->
+        <div class="semester" id="transfer-courses">
+          <p class="semester-title">Transfer Courses</p>
+          <p class="semester-credits">Credits: 0</p>
+          <div class="empty-course-holder"></div>
         </div>
-        <!-- The actual content in the help menu -->
-        <div class="help-right-content">
-          <div class="helpdivs" id="overviewdiv">
-            <h1>Overview</h1>
-            <p>This is a degree planning software meant to help students
-            navigate the Computer Science Bachelor of Science Degree. <br>
-            Currently, there isn't a great way for students to navigate through
-            and understand the degree. <br>
-            This software aims to remedy that by providing
-            an interactive visual representation of the degree. <br><br>
-            It is still in its early stages of development.</p>
-          </div>
-          <div class="helpdivs" id="defaultviewdiv">
-            <h1>Default View</h1>
-            <h2>Video Tutorial</h2>
-            <video id="defaultviewvideo" src="videos/defaultview.mkv" controls>
-              Video explaining the default view
-            </video>
-            <h2>Video transcript</h2>
-            <p>The starting screen should look something like the image below</p>
-            <img src="images/defaultview.jpg" alt="An image of the opening view">
-            <p>If it doesn't you can go to file, click on templates, and pick the one for your degree</p>
-            <img src="images/templates.jpg" alt="Just the template options">
-            <p>From here, you'll see many notes and courses. <br>
-              White courses show that the course is able to be taken, and grey means the course is
-              currently unavailable to you. </p>
-            <img src="images/unavailableavailable.jpg" alt="Depiction of what is available and not available">
-            <p>
-              You can hover over a course and mark it as in progress or complete. <br>
-              In progress will changed the dotted lines to dashed lines, to show paths you are now able to go down.</p>
-            <img src="images/inprogress.jpg" alt="A course marked as in progress">
-            <p>
-              If you mark it as complete, the course turns black to signify completion, and any paths where both
-              sides are complete will now become solid lines. </p>
-            <img src="images/complete.jpg" alt="A course marked as complete">
-            <p>
-              The menus, and opening a course information page, are covered in the other help sections.
-            </p>
-          </div>
-          <div class="helpdivs" id="filedropdowndiv">
-            <h1>File Dropdown</h1>
+        <!-- Holder for remove and add course buttons -->
+        <div class="button-holder">
+          <button class="add-semester" type="button" name="button" title="Add a semester">
+            Add a Semester
+          </button>
+          <button class="remove-semester" type="button" name="button" title="Remove a semester">
+            Remove a Semester
+          </button>
+        </div>
+        <!-- Semesters go here -->
 
-          </div>
-          <div class="helpdivs" id="editdropdowndiv">
-            <h1>Edit Dropdown</h1>
-          </div>
-          <div class="helpdivs" id="viewdropdowndiv">
-            <h1>View Dropdown</h1>
-          </div>
-          <div class="helpdivs" id="shortcutsdiv">
-            <h1>Shortcuts</h1>
-
-          </div>
-          <div class="helpdivs" id="advancedusesdiv">
-            <h1>Advanced Uses</h1>
-            <label for="advancedcheck">
-              Advanced Uses
-              <input type="checkbox" name="advancedcheck" id="advancedcheck" value="Advanced Uses">
-            </label>
-          </div>
-          <div class="helpdivs" id="creditsdiv">
-            <h1>Credits</h1>
-
-          </div>
+        <!-- Holder for the add and remove course buttons -->
+        <div class="button-holder">
+          <button class="add-semester" type="button" name="button" title="Add a semester">
+            Add a Semester
+          </button>
+          <button class="remove-semester" type="button" name="button" title="Remove a semester">
+            Remove a Semester
+          </button>
         </div>
       </div>
-      <!-- Degree Requirements -->
-      <div class="degree-requirements">
-        <button class="closex" id="closereqs" type="button" name="button">X</button>
-        <h1>Degree Requirements</h1>
-        <form class="dr">
-
-        </form>
-      </div>
-      <img id="yaygif" src="animations/yayonce.gif" alt="confetti">
-    </main>
+    </div>
+    <!-- Form that appears to select a degree -->
+    <form id="select-degree-form">
+      <button class="close-btn" type="button" name="button">X</button>
+      <h1>Select Degree</h1>
+    </form>
+    <!-- Form that appears to add a semester -->
+    <form id="add-semester-form">
+      <button class="close-btn" type="button" name="button">X</button>
+      <h1>Add a Semester</h1>
+      <label for="season-selector">Choose semester's season</label>
+      <select id="season-selector" name="season-selector">
+        <option value="spring">Spring</option>
+        <option value="maymester">Maymester</option>
+        <option value="sessionsACD">Sessions A, C, & D</option>
+        <option value="sessionB">Session B</option>
+        <option value="augmester">Augmester</option>
+        <option value="fall">Fall</option>
+      </select>
+      <label for="semester-year">Semester's year</label>
+      <input type="number" name="semester-year" id="semester-year" placeholder="enter year XXXX">
+      <button type="button" name="button" id="submit-semester">Add Semester</button>
+    </form>
   </body>
 </html>
