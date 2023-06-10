@@ -58,11 +58,6 @@ function populateDegreeArea() {
   degreeSelected.innerHTML = degreeName;
   degreeArea.appendChild(degreeSelected);
 
-  /* error doing it this way :/
-  degreeJSON.requirements.forEach((requirement, key) => {
-    console.log('ur momma');
-  });
-  */
   // populate each requirement
   Object.keys(degreeJSON.requirements).forEach(key => createRequirement(key));
 }
@@ -162,22 +157,28 @@ function checkRequirements() {
   });
 }
 
+// function for figuring out if you've met the number of whatever needed to complete the requirement
 function checkNumberRequirement(requirement, element, completed) {
+  // requirement completed in progress or planned
   let totalCompleted = 0;
   let totalInProgress = 0;
   let totalPlanned = 0;
+
   completed.forEach(completedElt => {
+    // what you add to the total depending on the type of requirement
     let numberAdd;
     if(requirement.type == 'Course') {
       numberAdd = 1;
     } else {
       let jsonCourse = degreeJSON.courses[completedElt.getAttribute('coursecode')];
+      // default if not actually in our degree json is 3 credits cause that's most common so most likely to be write
       if(jsonCourse == undefined) {
         numberAdd = 3;
       } else {
         numberAdd = jsonCourse.credits;
       }
     }
+    // if the course is in our plan add it correctly
     if(requirement.courses.includes(completedElt.getAttribute('coursecode'))) {
       if(completedElt.parentElement.getAttribute('order') < currentSemester) {
         totalCompleted += numberAdd;
@@ -188,6 +189,7 @@ function checkNumberRequirement(requirement, element, completed) {
       }
     }
   });
+  // now actually handle the requirement
   if(totalCompleted >= requirement.number) {
     requirementCompleted(element);
   } else if(totalInProgress + totalCompleted >= requirement.number) {
@@ -199,16 +201,19 @@ function checkNumberRequirement(requirement, element, completed) {
   }
 }
 
+// this is the annoying function for figuring out if you've completed a sequence requirement
 function checkSequenceRequirement(requirement, element, completed) {
   let sequenceCompletion = [];
   let sequenceInProgress = [];
   let sequencePlanned = []
   let sequenceLength = requirement.sequences.length;
+  // keep track of every sequence and if we've completed that sequence
   for(let i = 0; i < sequenceLength; i++) {
     sequenceCompletion.push(0);
     sequenceInProgress.push(0);
     sequencePlanned.push(0);
   }
+  // figure out which sequences are completed and which aren't
   completed.forEach(completedElt => {
     let courseCode = completedElt.getAttribute('coursecode');
     if(requirement.courses.includes(courseCode)) {
@@ -226,6 +231,8 @@ function checkSequenceRequirement(requirement, element, completed) {
       }
     }
   });
+  // now do normal stuff
+  // check if you've completed enough sequences to say this is complete
   let completion = 0;
   let inProgress = 0;
   let planned = 0;
@@ -238,6 +245,7 @@ function checkSequenceRequirement(requirement, element, completed) {
       planned += 1;
     }
   }
+  // update the requirement
   if(completion >= requirement.number) {
     requirementCompleted(element);
   } else if(completion + inProgress >= requirement.number) {
@@ -249,6 +257,9 @@ function checkSequenceRequirement(requirement, element, completed) {
   }
 }
 
+// these functions are actually pretty straight forward
+// right now they just color the requirement
+// maybe in the future they'll involve more so they're here
 function requirementCompleted(requirement) {
   requirement.style.backgroundColor = Colors.complete;
 }

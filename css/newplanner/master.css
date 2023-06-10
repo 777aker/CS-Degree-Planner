@@ -67,6 +67,7 @@ input {
   font-size: 14pt;
 }
 
+/* palceholder text impossible to see otherwise */
 input::placeholder {
   color: #ecf0f1;
 
@@ -83,12 +84,14 @@ input:hover {
   transition-duration: .4s;
 }
 
+/* same thing it's impossible to see placeholder */
 input:hover::placeholder {
   color: #2c3e50;
 
   transition-duration: .4s;
 }
 
+/* labels were a bit too small to read easily */
 label {
   font-size: 14pt;
 }
@@ -126,6 +129,8 @@ form {
   gap: 10px;
 }
 
+/* select dropdown dingus style, currently only select a semester */
+/* basically same as a button */
 select {
   background-color: #7f8c8d;
   color: #ecf0f1;
@@ -140,6 +145,7 @@ select {
   font-size: 14pt;
 }
 
+/* when you hover over a select dropdown box dingus do this */
 select:hover {
   background-color: #dce0e0;
   color: #2c3e50;

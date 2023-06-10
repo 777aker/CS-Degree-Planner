@@ -1,3 +1,4 @@
+// enum for sorting the semesters
 const SeasonValues = {
   spring: .1,
   maymester: .2,
@@ -15,19 +16,20 @@ function planningAreaSetup() {
   });
   // trash can events
   setupTrash();
-  // setup the semester stuff
-  setupSemesters();
   // add/remove button setup
   setupButtons();
+  // setup the semester stuff
+  setupSemesters();
 }
 
 // setup the semesters with their titles and info
 function setupSemesters() {
-  let semesters = document.querySelectorAll('.semester');
   const date = new Date();
   const currentYear = date.getFullYear();
   const currentMonth = date.getMonth();
+
   currentSemester = currentYear;
+  // figure out which season we're in
   if(currentMonth < 4) {
     currentSemester += SeasonValues.spring;
   } else if(currentMonth == 4) {
@@ -41,29 +43,16 @@ function setupSemesters() {
   } else {
     currentSemester += SeasonValues.fall;
   }
-
-  semesters[0].setAttribute('order', 0);
-
-  for(let i = 1; i < semesters.length; i++) {
-    let title = semesters[i].querySelector('.semester-title');
-    if(currentMonth > 4) {
-      let yearValue = int(currentYear + i / 2);
-      if(i % 2 == 1) {
-        title.innerHTML = 'Fall ' + yearValue;
-        semesters[i].setAttribute('order', yearValue + SeasonValues.fall);
-      } else {
-        title.innerHTML = 'Spring ' + yearValue;
-        semesters[i].setAttribute('order', yearValue + SeasonValues.spring);
-      }
+  // transfer semester = 0 so it's before everything ever
+  let transferSemester = document.querySelector('#transfer-courses');
+  transferSemester.setAttribute('order', 0);
+  // populate 8 semesters ie: 4 year plan
+  for(let i = 0; i < 8; i++) {
+    let yearValue = int(currentYear + (i + (currentMonth > 4)) / 2);
+    if(i % 2 == 0) {
+      addSemester('fall', yearValue);
     } else {
-      let yearValue = int(currentYear + (i - 1) / 2);
-      if(i % 2 == 1) {
-        title.innerHTML = 'Spring ' + yearValue;
-        semesters[i].setAttribute('order', yearValue + SeasonValues.spring);
-      } else {
-        title.innerHTML = 'Fall ' + int(yearValue + (i - 1) / 2);
-        semesters[i].setAttribute('order', yearValue + SeasonValues.fall);
-      }
+      addSemester('spring', yearValue);
     }
   }
 }
@@ -73,6 +62,7 @@ const addSemesterForm = document.querySelector('#add-semester-form');
 function setupButtons() {
   const seasonSelector = document.querySelector('#season-selector');
   const semesterYear = document.querySelector('#semester-year');
+  // add semester button
   document.querySelectorAll('.add-semester').forEach(button => {
     button.addEventListener('click', function() {
       addSemesterForm.style.display = 'flex';
@@ -80,9 +70,11 @@ function setupButtons() {
       semesterYear.value = '';
     });
   });
+  // remove semester button
   document.querySelectorAll('.remove-semester').forEach(button => {
     button.addEventListener('click', toggleDeleteSemester);
   });
+  // buttons on semesters to delete them
   document.querySelectorAll('.delete-semester').forEach(button => {
     button.addEventListener('click', function() {
       deleteSemester(button.parentElement);
@@ -103,6 +95,7 @@ function toggleDeleteSemester() {
 }
 
 // turn off delete semester mode
+// hides all the delete buttons
 function deleteSemesterOff() {
   document.querySelectorAll('.delete-semester').forEach(button => {
     button.style.display = 'none';
@@ -114,6 +107,7 @@ function deleteSemesterOff() {
 }
 
 // turn on delete semester mode
+// shows all the delete buttons
 function deleteSemesterOn() {
   document.querySelectorAll('.delete-semester').forEach(button => {
     button.style.display = 'block';
@@ -124,7 +118,7 @@ function deleteSemesterOn() {
   });
 }
 
-// add a semester
+// form you submit to add a semester
 document.querySelector('#submit-semester').addEventListener('click', function(){
   addSemesterForm.style.display = 'none';
   addSemester(
@@ -132,17 +126,19 @@ document.querySelector('#submit-semester').addEventListener('click', function(){
     document.querySelector('#semester-year').value
   );
 });
+// add a semester
 function addSemester(season, year) {
+  // get the year if we don't have it
   if(year == '') {
     let date = new Date();
     year = date.getFullYear();
   }
-
+  // figure out where this semester is
   let order = int(year) + SeasonValues[season];
   let newSemester = createDiv();
   newSemester.class('semester');
   newSemester.attribute('order', order);
-
+  // make a delete semester button
   let deleteSemesterBtn = createButton('X');
   deleteSemesterBtn.mouseClicked(function() {
     deleteSemester(newSemester.elt);
@@ -150,10 +146,15 @@ function addSemester(season, year) {
   });
   deleteSemesterBtn.parent(newSemester);
   deleteSemesterBtn.class('delete-semester');
-
+  // title the semester
   let title = createP(capatilize(season) + ' ' + year);
   title.parent(newSemester);
   title.class('semester-title');
+  // add the little credits thing to the semester
+  let credits = createP('Credits: ' + '0');
+  credits.parent(newSemester);
+  credits.class('semester-credits');
+  // add empty course to the semester
   addCourse(newSemester);
 
   // once finished making element insert it
@@ -165,7 +166,7 @@ function addSemester(season, year) {
       return;
     }
   }
-
+  // put the little dingus at the end of the semesters if it's the last
   let buttonHolders = document.querySelectorAll('.button-holder');
   buttonHolders[buttonHolders.length-1].parentElement.insertBefore(
     newSemester.elt,
@@ -179,7 +180,8 @@ function deleteSemester(semester) {
     resetDegreeCourse(course.getAttribute('coursecode'));
   });
   semester.remove();
-  checkRequirements();
+
+  cleanUpDragEnd();
 }
 
 // capatilize first letter of a string
@@ -437,6 +439,45 @@ function checkPrerequisites(code, completed) {
 }
 
 // there's somewhere you can call this that's clever
+// in main 
 function updateSemesterCredits() {
+  document.querySelectorAll('.semester').forEach(semester => {
+    let credits = 0;
+    semester.querySelectorAll('.course').forEach(course => {
+      let jsonCourse = degreeJSON.courses[course.getAttribute('coursecode')];
+      if(jsonCourse == undefined) {
+        credits += 3;
+      } else {
+        credits += int(jsonCourse.credits);
+      }
+    });
+    semester.querySelector('.semester-credits').innerHTML = 'Credits: ' + int(credits);
+  });
+}
 
+// update course colors with valid or not
+function updateCourseColors() {
+  let someOrders = {};
+  document.querySelectorAll('.semester').forEach(semester => {
+    semester.querySelectorAll('.course').forEach(course => {
+      someOrders[course.getAttribute('coursecode')] = float(semester.getAttribute('order'));
+    });
+  });
+  document.querySelectorAll('.course').forEach(courseElt => {
+    if(courseElt.parentElement.id == 'transfer-courses') {
+      return;
+    }
+    let completed = [];
+    let courseCode = courseElt.getAttribute('coursecode');
+    for(let code in someOrders) {
+      if(someOrders[courseCode] > someOrders[code]) {
+        completed.push(code);
+      }
+    }
+    if(checkPrerequisites(courseCode, completed)) {
+      courseElt.style.backgroundColor = '';
+    } else {
+      courseElt.style.backgroundColor = '#c0392b';
+    }
+  });
 }

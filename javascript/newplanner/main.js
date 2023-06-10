@@ -33,9 +33,13 @@ const Colors = {
 }
 
 // whenever we stop dragging elements do some common clean up
+// or when we delete a semester
+// or when we delete a course
+// basically just update all the stuff we need to
 function cleanUpDragEnd() {
   resetSemesters();
 
   checkRequirements();
   updateSemesterCredits();
+  updateCourseColors();
 }

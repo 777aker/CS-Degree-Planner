@@ -33,13 +33,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 
   min-width: 110px;
 }
 
-.semester > p {
+/* style for the title of each semester */
+.semester-title {
   font-size: 16pt;
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+/* style for the number of credits completed each semester */
+.semester-credits {
+  font-size: 12pt;
+  margin-top: 0px;
 }
 
 /* style for empty courses */
