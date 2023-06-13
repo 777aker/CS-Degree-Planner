@@ -161,20 +161,19 @@ function addDegreeCourseEvents(course) {
   course.addEventListener('touchmove', degreeTouchMove);
 }
 
+const testingMobile = document.querySelector('#more-course-info');
+
 // touch events
 function degreeTouchStart(e) {
-  console.log('start');
-  console.log(this);
+  testingMobile.innerHTML = 'start: ' + this;
 }
 
 function degreeTouchEnd(e) {
-  console.log('end');
-  console.log(this);
+  testingMobile.innerHTML = 'end: ' + this;
 }
 
 function degreeTouchMove(e) {
-  console.log('moved');
-  console.log(this);
+
 }
 
 // when you start dragging an element
