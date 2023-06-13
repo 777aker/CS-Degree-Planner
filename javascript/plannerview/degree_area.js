@@ -111,6 +111,19 @@ function createRequirementDescription(requirement, parent) {
       } else {
         text = 'Complete ' + requirement.number + ' ' + requirement.type + 's';
       }
+      if(requirement.type == 'Sequence') {
+        text += '<br>';
+        requirement.sequences.forEach(sequence => {
+          text += '[ ';
+          sequence.forEach(course => {
+            text += course;
+            text += ' and ';
+          });
+          text = text.slice(0, -4);
+          text += '] <br>';
+        });
+        text = text.slice(0, -5);
+      }
       break;
     case 'Credits':
       text = 'Complete ' + requirement.number + ' ' + requirement.type;
@@ -249,10 +262,7 @@ function checkNumberRequirement(requirement, element, completed) {
           counts = completedElt.getAttribute('coursecode').slice(0,4) == requirement.additional_count[1];
           break;
         case 'requirement':
-          console.log(degreeJSON.requirements);
-          console.log(requirement.additional_count);
-          console.log(degreeJSON.requirements[requirement.additional_count[1]]);
-          counts = degreeJSON.requirements[requirement.additional_count[1]].courses.contains(completedElt.getAttribute('coursecode'));
+          counts = degreeJSON.requirements[requirement.additional_count[1]].courses.includes(completedElt.getAttribute('coursecode'));
           break;
         default:
           console.log('additional not accounted for');
