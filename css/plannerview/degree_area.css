@@ -24,6 +24,13 @@
   background-color: #2A4260;
 }
 
+/* style for the requirements completed display */
+.requirement-completion-display {
+  font-size: 14pt;
+  padding: 2px;
+  margin: 0px;
+}
+
 /* courses in the degree requirements */
 .degree-course {
   padding: 10px;

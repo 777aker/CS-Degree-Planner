@@ -81,6 +81,35 @@ function setupButtons() {
       toggleDeleteSemester();
     });
   });
+  // button to load file
+  document.querySelector('#menu-load').addEventListener('click', uploadCoursework);
+  // button to save file
+  document.querySelector('#menu-save').addEventListener('click', downloadCoursework);
+  // button for showing the degree selection form
+  connectFormButton('#menu-select-degree', '#select-degree-form');
+}
+
+// downlaods coursework obviously
+function downloadCoursework() {
+  let courseWorkJSON = {};
+
+  document.querySelectorAll('.course').forEach(courseElt => {
+    courseWorkJSON[courseElt.getAttribute('coursecode')] = courseElt.parentElement.getAttribute('order');
+  });
+  
+  saveJSON(courseWorkJSON, 'course_work');
+}
+
+// uploads coursework
+function uploadCoursework() {
+
+}
+
+// button forms often do
+function connectFormButton(btnID, formID) {
+  document.querySelector(btnID).addEventListener('click', function() {
+    document.querySelector(formID).style.display = 'flex';
+  });
 }
 
 // toggle delete semester mode
@@ -127,7 +156,7 @@ document.querySelector('#submit-semester').addEventListener('click', function(){
   );
 });
 // add a semester
-function addSemester(season, year) {
+function addSemester(season, year, orderVal=undefined) {
   // get the year if we don't have it
   if(year == '') {
     let date = new Date();
@@ -135,6 +164,9 @@ function addSemester(season, year) {
   }
   // figure out where this semester is
   let order = int(year) + SeasonValues[season];
+  if(orderVal != undefined) {
+    order = orderVal;
+  }
   let newSemester = createDiv();
   newSemester.class('semester');
   newSemester.attribute('order', order);
@@ -197,6 +229,10 @@ function addCourseEvents(course) {
   course.addEventListener('dragover', courseDragOver);
   course.addEventListener('dragstart', courseDragStart);
   course.addEventListener('dragend', courseDragEnd);
+
+  course.addEventListener('mouseover', function() {
+    courseHover(course.getAttribute('coursecode'));
+  });
 }
 
 // add an empty to the semester
@@ -439,7 +475,7 @@ function checkPrerequisites(code, completed) {
 }
 
 // there's somewhere you can call this that's clever
-// in main 
+// in main
 function updateSemesterCredits() {
   document.querySelectorAll('.semester').forEach(semester => {
     let credits = 0;
@@ -480,4 +516,38 @@ function updateCourseColors() {
       courseElt.style.backgroundColor = '#c0392b';
     }
   });
+}
+
+const courseCodeInfo = document.querySelector('#course-code-info');
+const courseTitleInfo = document.querySelector('#course-title-info');
+const coursePreqreqsInfo = document.querySelector('#course-prereqs-info');
+// when you hover over a degree course do stuff
+function courseHover(courseCode) {
+  if(courseCode == undefined || courseCode == '')
+    return;
+
+  let courseJSON = degreeJSON.courses[courseCode];
+
+  if(courseJSON == undefined) {
+    courseCodeInfo.innerHTML = courseCode;
+    courseTitleInfo.innerHTML = 'No information on course. Default credits for planner 3';
+    coursePreqreqsInfo.innerHTML = "No prerequisite information";
+  } else {
+    courseCodeInfo.innerHTML = courseCode + ' : ' + courseJSON.credits + ' credits';
+    courseTitleInfo.innerHTML = courseJSON.name;
+    let prerequisites = '';
+    courseJSON.prerequisites.forEach(prereqGroup => {
+      prerequisites += '[';
+      prereqGroup.forEach(prereq => {
+        prerequisites += prereq + ' or ';
+      });
+      prerequisites = prerequisites.slice(0, -4);
+      prerequisites += '] and ';
+    });
+    prerequisites = prerequisites.slice(0, -4);
+    if(prerequisites == '') {
+      prerequisites = 'None';
+    }
+    coursePreqreqsInfo.innerHTML = 'Prerequisites: ' + prerequisites;
+  }
 }

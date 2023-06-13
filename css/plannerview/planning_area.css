@@ -16,14 +16,12 @@
   align-content: flex-start;
 
   margin: 10px;
-
-  scroll-padding: 100px;
 }
 
 /* style for each semester */
 .semester {
   margin: 5px;
-  padding: 10px;
+  padding: 15px;
   border-radius: 2px;
 
   box-shadow: 0px 0px 50px 2px #2D547A;
@@ -35,7 +33,7 @@
   align-items: center;
   gap: 5px;
 
-  min-width: 110px;
+  min-width: 120px;
 }
 
 /* style for the title of each semester */
@@ -69,6 +67,9 @@
   align-items: stretch;
 
   min-width: 110px;
+
+  padding: 15px;
+  padding-top: 5px;
 }
 
 /* courses in the planner view */

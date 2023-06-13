@@ -1,9 +1,3 @@
-// button for showing the degree selection form
-const degreeButton = document.querySelector('#menu-select-degree');
-degreeButton.addEventListener('click', function() {
-  document.querySelector('#select-degree-form').style.display = 'flex';
-});
-
 // form for selecting a degree
 const degreeSelectorForm = document.querySelector('#select-degree-form');
 function degreeSelectorSetup() {
@@ -33,7 +27,6 @@ function degreeSelectorSetup() {
   // make all empty courses draggable
   document.querySelectorAll('.empty-course-holder').forEach(empty => {
     empty.setAttribute('draggable', 'true');
-
   });
 }
 
@@ -57,6 +50,7 @@ function populateDegreeArea() {
   // add degree name
   degreeSelected.innerHTML = degreeName + ' Requirements';
   degreeArea.appendChild(degreeSelected);
+  degreeArea.appendChild(requirementsCompleted);
 
   // populate each requirement
   Object.keys(degreeJSON.requirements).forEach(key => createRequirement(key));
@@ -170,38 +164,8 @@ function addDegreeCourseEvents(course) {
   course.addEventListener('dragend', degreeCourseDragEnd);
 
   course.addEventListener('mouseover', function() {
-    degreeCourseHover(course);
+    courseHover(course.id);
   });
-}
-
-const courseCodeInfo = document.querySelector('#course-code-info');
-const courseTitleInfo = document.querySelector('#course-title-info');
-const coursePreqreqsInfo = document.querySelector('#course-prereqs-info');
-// when you hover over a degree course do stuff
-function degreeCourseHover(course) {
-  let courseJSON = degreeJSON.courses[course.id];
-
-  if(courseJSON == undefined) {
-    courseCodeInfo.innerHTML = course.id;
-    courseTitleInfo.innerHTML = 'No information on course. Default credits for planner 3';
-  } else {
-    courseCodeInfo.innerHTML = course.id + ' : ' + courseJSON.credits;
-    courseTitleInfo.innerHTML = courseJSON.name;
-    let prerequisites = '';
-    courseJSON.prerequisites.forEach(prereqGroup => {
-      prerequisites += '[';
-      prereqGroup.forEach(prereq => {
-        prerequisites += prereq + ' or ';
-      });
-      prerequisites = prerequisites.slice(0, -4);
-      prerequisites += '] and ';
-    });
-    prerequisites = prerequisites.slice(0, -4);
-    if(prerequisites == '') {
-      prerequisites = 'None';
-    }
-    coursePreqreqsInfo.innerHTML = 'Prerequisites: ' + prerequisites;
-  }
 }
 
 const testingMobile = document.querySelector('#more-course-info');
@@ -227,6 +191,10 @@ function degreeCourseDragEnd(e) {
 
 // check if degree requirements fulfilled
 function checkRequirements() {
+  totalRequirementsComplete = 0;
+  totalRequirementsInProgress = 0;
+  totalRequirementsPlanned = 0;
+
   let completedElements = document.querySelectorAll('.course');
   // oof, now comes the complicated part
   document.querySelectorAll('.degree-requirement').forEach(requirementElt => {
@@ -243,6 +211,41 @@ function checkRequirements() {
         console.log('Not accounted for: ' + requirement.type);
     }
   });
+
+  updateRequirementsCompletion();
+}
+
+// update requirement completion
+const requirementsCompleted = document.querySelector('#requirements-completed');
+let totalRequirementsComplete;
+let totalRequirementsInProgress;
+let totalRequirementsPlanned;
+function updateRequirementsCompletion() {
+  requirementsCompleted.innerHTML = '';
+
+  let totalRequirements = Object.keys(degreeJSON.requirements).length;
+
+  let completed = createElement(
+    'h2',
+    totalRequirementsComplete + ' / ' + totalRequirements + ' Completed'
+  );
+  completed.class('requirement-completion-display');
+  completed.parent(requirementsCompleted);
+
+  let inProgress = createElement(
+    'h2',
+    totalRequirementsInProgress + ' In Progress'
+  );
+  inProgress.class('requirement-completion-display');
+  inProgress.parent(requirementsCompleted);
+
+  let planned = createElement(
+    'h2',
+    int(totalRequirementsInProgress + totalRequirementsPlanned)
+    + ' / ' + int(totalRequirements - totalRequirementsComplete) + ' left Planned'
+  );
+  planned.class('requirement-completion-display');
+  planned.parent(requirementsCompleted);
 }
 
 // function for figuring out if you've met the number of whatever needed to complete the requirement
@@ -381,16 +384,22 @@ function addCourseCompletion(requirement, completedElt, counts=false) {
 function requirementCompleted(element) {
   element.nextSibling.querySelector('.requirement-completion').innerHTML = '';
   element.style.backgroundColor = Colors.complete;
+
+  totalRequirementsComplete += 1;
 }
 
 function requirementInProgress(element) {
   element.nextSibling.querySelector('.requirement-completion').innerHTML = '';
   element.style.backgroundColor = Colors.inProgress;
+
+  totalRequirementsInProgress += 1;
 }
 
 function requirementPlanned(element) {
   element.nextSibling.querySelector('.requirement-completion').innerHTML = '';
   element.style.backgroundColor = Colors.planned;
+
+  totalRequirementsPlanned += 1;
 }
 
 // changed how incomplete works this is why we do this
