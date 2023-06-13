@@ -156,25 +156,42 @@ function addDegreeCourseEvents(course) {
   course.addEventListener('dragstart', degreeCourseDragStart);
   course.addEventListener('dragend', degreeCourseDragEnd);
 
-  course.addEventListener('touchstart', degreeTouchStart);
-  course.addEventListener('touchend', degreeTouchEnd);
-  course.addEventListener('touchmove', degreeTouchMove);
+  course.addEventListener('mouseover', function() {
+    degreeCourseHover(course);
+  });
+}
+
+const courseCodeInfo = document.querySelector('#course-code-info');
+const courseTitleInfo = document.querySelector('#course-title-info');
+const coursePreqreqsInfo = document.querySelector('#course-prereqs-info');
+// when you hover over a degree course do stuff
+function degreeCourseHover(course) {
+  let courseJSON = degreeJSON.courses[course.id];
+
+  if(courseJSON == undefined) {
+    courseCodeInfo.innerHTML = course.id;
+    courseTitleInfo.innerHTML = 'No information on course. Default credits for planner 3';
+  } else {
+    courseCodeInfo.innerHTML = course.id + ' : ' + courseJSON.credits;
+    courseTitleInfo.innerHTML = courseJSON.name;
+    let prerequisites = '';
+    courseJSON.prerequisites.forEach(prereqGroup => {
+      prerequisites += '[';
+      prereqGroup.forEach(prereq => {
+        prerequisites += prereq + ' or ';
+      });
+      prerequisites = prerequisites.slice(0, -4);
+      prerequisites += '] and ';
+    });
+    prerequisites = prerequisites.slice(0, -4);
+    if(prerequisites == '') {
+      prerequisites = 'None';
+    }
+    coursePreqreqsInfo.innerHTML = 'Prerequisites: ' + prerequisites;
+  }
 }
 
 const testingMobile = document.querySelector('#more-course-info');
-
-// touch events
-function degreeTouchStart(e) {
-  testingMobile.innerHTML = 'start: ' + this;
-}
-
-function degreeTouchEnd(e) {
-  testingMobile.innerHTML = 'end: ' + this;
-}
-
-function degreeTouchMove(e) {
-
-}
 
 // when you start dragging an element
 function degreeCourseDragStart(e) {
