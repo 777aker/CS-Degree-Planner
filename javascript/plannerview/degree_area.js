@@ -148,8 +148,33 @@ function createCourse(courseCode, courseHolder) {
   courseP.attribute('id', courseCode);
 
   // connect dragging events
-  courseP.elt.addEventListener('dragstart', degreeCourseDragStart);
-  courseP.elt.addEventListener('dragend', degreeCourseDragEnd);
+  addDegreeCourseEvents(courseP.elt);
+}
+
+// add events to degree course
+function addDegreeCourseEvents(course) {
+  course.addEventListener('dragstart', degreeCourseDragStart);
+  course.addEventListener('dragend', degreeCourseDragEnd);
+
+  course.addEventListener('touchstart', degreeTouchStart);
+  course.addEventListener('touchend', degreeTouchEnd);
+  course.addEventListener('touchmove', degreeTouchMove);
+}
+
+// touch events
+function degreeTouchStart(e) {
+  console.log('start');
+  console.log(this);
+}
+
+function degreeTouchEnd(e) {
+  console.log('end');
+  console.log(this);
+}
+
+function degreeTouchMove(e) {
+  console.log('moved');
+  console.log(this);
 }
 
 // when you start dragging an element

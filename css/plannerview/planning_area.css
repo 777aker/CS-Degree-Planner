@@ -103,3 +103,12 @@
 
   display: none;
 }
+
+/* div for more course info */
+#more-course-info {
+  position: fixed;
+  bottom: 0%;
+  transform: translate(15px, 0px);
+
+  overflow-y: scroll;
+}
