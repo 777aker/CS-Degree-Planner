@@ -239,30 +239,30 @@ function checkNumberRequirement(requirement, element, completed) {
   let totalInProgress = 0;
   let totalPlanned = 0;
 
+  //console.log(Object.keys(requirement));
+
   completed.forEach(completedElt => {
-    // what you add to the total depending on the type of requirement
-    let numberAdd;
-    if(requirement.type == 'Course') {
-      numberAdd = 1;
-    } else {
-      let jsonCourse = degreeJSON.courses[completedElt.getAttribute('coursecode')];
-      // default if not actually in our degree json is 3 credits cause that's most common so most likely to be write
-      if(jsonCourse == undefined) {
-        numberAdd = 3;
-      } else {
-        numberAdd = int(jsonCourse.credits);
+    let counts = false;
+    if(requirement.additional_count !== undefined) {
+      switch(requirement.additional_count[0]) {
+        case 'coursecode':
+          counts = completedElt.getAttribute('coursecode').slice(0,4) == requirement.additional_count[1];
+          break;
+        case 'requirement':
+          console.log(degreeJSON.requirements);
+          console.log(requirement.additional_count);
+          console.log(degreeJSON.requirements[requirement.additional_count[1]]);
+          counts = degreeJSON.requirements[requirement.additional_count[1]].courses.contains(completedElt.getAttribute('coursecode'));
+          break;
+        default:
+          console.log('additional not accounted for');
+          console.log(requirement);
       }
     }
-    // if the course is in our plan add it correctly
-    if(requirement.courses.includes(completedElt.getAttribute('coursecode'))) {
-      if(completedElt.parentElement.getAttribute('order') < currentSemester) {
-        totalCompleted += numberAdd;
-      } else if(completedElt.parentElement.getAttribute('order') == currentSemester) {
-        totalInProgress += numberAdd;
-      } else {
-        totalPlanned += numberAdd;
-      }
-    }
+    let someList = addCourseCompletion(requirement, completedElt, counts);
+    totalCompleted += someList[0];
+    totalInProgress += someList[1];
+    totalPlanned += someList[2];
   });
   // now actually handle the requirement
   if(totalCompleted >= requirement.number) {
@@ -272,7 +272,7 @@ function checkNumberRequirement(requirement, element, completed) {
   } else if(totalInProgress + totalCompleted + totalPlanned >= requirement.number) {
     requirementPlanned(element);
   } else {
-    requirementIncomplete(element, totalInProgress + totalCompleted + totalPlanned, requirement)
+    requirementIncomplete(element, totalInProgress + totalCompleted + totalPlanned, requirement);
   }
 }
 
@@ -330,6 +330,39 @@ function checkSequenceRequirement(requirement, element, completed) {
   } else {
     requirementIncomplete(element, completion + inProgress + planned, requirement);
   }
+}
+
+// easy gg
+function addCourseCompletion(requirement, completedElt, counts=false) {
+  let totalCompleted = 0;
+  let totalInProgress = 0;
+  let totalPlanned = 0;
+
+  // what you add to the total depending on the type of requirement
+  let numberAdd;
+  if(requirement.type == 'Course') {
+    numberAdd = 1;
+  } else {
+    let jsonCourse = degreeJSON.courses[completedElt.getAttribute('coursecode')];
+    // default if not actually in our degree json is 3 credits cause that's most common so most likely to be write
+    if(jsonCourse == undefined) {
+      numberAdd = 3;
+    } else {
+      numberAdd = int(jsonCourse.credits);
+    }
+  }
+  // if the course is in our plan add it correctly
+  if(requirement.courses.includes(completedElt.getAttribute('coursecode')) || counts) {
+    if(completedElt.parentElement.getAttribute('order') < currentSemester) {
+      totalCompleted += numberAdd;
+    } else if(completedElt.parentElement.getAttribute('order') == currentSemester) {
+      totalInProgress += numberAdd;
+    } else {
+      totalPlanned += numberAdd;
+    }
+  }
+
+  return [totalCompleted, totalInProgress, totalPlanned];
 }
 
 // these functions are actually pretty straight forward
