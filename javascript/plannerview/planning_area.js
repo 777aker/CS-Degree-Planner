@@ -82,7 +82,7 @@ function setupButtons() {
     });
   });
   // button to load file
-  document.querySelector('#menu-load').addEventListener('click', uploadCoursework);
+  connectFormButton('#menu-load', '#load-coursework-form');
   // button to save file
   document.querySelector('#menu-save').addEventListener('click', downloadCoursework);
   // button for showing the degree selection form
@@ -91,18 +91,40 @@ function setupButtons() {
 
 // downlaods coursework obviously
 function downloadCoursework() {
-  let courseWorkJSON = {};
+  let courseworkJSON = {};
 
   document.querySelectorAll('.course').forEach(courseElt => {
-    courseWorkJSON[courseElt.getAttribute('coursecode')] = courseElt.parentElement.getAttribute('order');
+    courseworkJSON[courseElt.getAttribute('coursecode')] = courseElt.parentElement.getAttribute('order');
   });
-  
-  saveJSON(courseWorkJSON, 'course_work');
+
+  saveJSON(courseworkJSON, 'course_work');
 }
 
 // uploads coursework
-function uploadCoursework() {
+const fileSelected = document.querySelector('#select-file');
+document.querySelector('#import-file').addEventListener('click', function(){
+  document.querySelector('#load-coursework-form').style.display = 'none';
+  uploadCoursework(fileSelected.files);
+});
+function uploadCoursework(files) {
+  if(files.length <= 0) {
+    console.log('ERROR: no file selected');
+    return false;
+  }
 
+  let courseworkJSON;
+
+  let fileReader = new FileReader();
+  fileReader.onload = function(e) {
+    courseworkJSON = JSON.parse(e.target.result);
+    insertCourseworkJSON(courseworkJSON);
+  };
+  fileReader.readAsText(files.item(0));
+}
+
+// insert a coursework json
+function insertCourseworkJSON(json) {
+  console.log(json);
 }
 
 // button forms often do

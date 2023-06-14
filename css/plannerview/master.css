@@ -180,3 +180,10 @@ canvas {
 
   z-index: 3;
 }
+
+/* checkbox defaults */
+input[type=checkbox] {
+  transform: scale(3);
+  padding: 20px;
+  margin: 20px;
+}

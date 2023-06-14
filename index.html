@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="css/plannerview/planning_area.css">
     <!-- Styles for the menu -->
     <link rel="stylesheet" href="css/plannerview/navigation.css">
+    <!-- Styles for some specific forms -->
+    <link rel="stylesheet" href="css/plannerview/specific_forms.css">
   </head>
   <body>
     <!-- Left degree area -->
@@ -108,6 +110,15 @@
       <label for="semester-year">Semester's year</label>
       <input type="number" name="semester-year" id="semester-year" placeholder="enter year XXXX">
       <button type="button" name="button" id="submit-semester">Add Semester</button>
+    </form>
+    <!-- Load coursework form -->
+    <form id="load-coursework-form">
+      <button class="close-btn" type="button" name="button">X</button>
+      <h1>Upload Coursework</h1>
+      <label for="append-file">Delete Current Coursework</label>
+      <input type="checkbox" name="append-file" checked>
+      <input type="file" id="select-file">
+      <button id="import-file" type="button" name="button">Upload File</button>
     </form>
   </body>
 </html>

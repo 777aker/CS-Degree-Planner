@@ -1,0 +1,4 @@
+/* label on checkbox is in weird spot */
+#load-coursework-form > label {
+  text-align: center;
+}
