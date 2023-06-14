@@ -176,6 +176,9 @@ function degreeCourseDragStart(e) {
 
   dragSrcElement = this;
 
+  // TODO: thought this would look nice but it doesn't
+  //new DragCircle();
+
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.id);
 

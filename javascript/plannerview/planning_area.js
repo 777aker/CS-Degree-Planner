@@ -8,6 +8,91 @@ const SeasonValues = {
   fall: .6
 }
 
+class Semester {
+  constructor(season, year) {
+    this.season = season;
+    if(year == '') {
+      let date = new Date();
+      year = date.getFullYear();
+    }
+
+    this.order = int(year) + SeasonValues[season];
+
+    this.p5Element = createDiv();
+    this.p5Element.class('semester');
+    this.p5Element.attribute('order', order);
+
+    let deleteSemesterBtn = createButton('X');
+    deleteSemesterBtn.mouseClicked(function() {
+      deleteSemester(p5Element.elt);
+      toggleDeleteSemester();
+    });
+    deleteSemesterBtn.parent(this.p5Element);
+    deleteSemesterBtn.class('delete-semester');
+
+    let title = createP(capatilize(this.season) + ' ' + year);
+    title.parent(this.p5Element);
+    title.class('semester-title');
+
+    let credits = createP('Credits: ' + '0');
+    credits.parent(this.p5Element);
+    credits.class('semester-credits');
+
+    addCourse(this.p5Element);
+
+    // TODO: finish this and recomment
+  }
+  
+}
+
+// add a semester
+function addSemester(season, year) {
+  // get the year if we don't have it
+  if(year == '') {
+    let date = new Date();
+    year = date.getFullYear();
+  }
+  // figure out where this semester is
+  let order = int(year) + SeasonValues[season];
+  let newSemester = createDiv();
+  newSemester.class('semester');
+  newSemester.attribute('order', order);
+  // make a delete semester button
+  let deleteSemesterBtn = createButton('X');
+  deleteSemesterBtn.mouseClicked(function() {
+    deleteSemester(newSemester.elt);
+    toggleDeleteSemester();
+  });
+  deleteSemesterBtn.parent(newSemester);
+  deleteSemesterBtn.class('delete-semester');
+  // title the semester
+  let title = createP(capatilize(season) + ' ' + year);
+  title.parent(newSemester);
+  title.class('semester-title');
+  // add the little credits thing to the semester
+  let credits = createP('Credits: ' + '0');
+  credits.parent(newSemester);
+  credits.class('semester-credits');
+  // add empty course to the semester
+  addCourse(newSemester);
+
+  // once finished making element insert it
+  // length -1 because our new semester is part of these classes now
+  let semesterList = document.querySelectorAll('.semester');
+  for(let i = 0; i < semesterList.length-1; i++) {
+    if(float(semesterList[i].getAttribute('order')) > float(order)) {
+      semesterList[i].parentElement.insertBefore(newSemester.elt, semesterList[i]);
+      return;
+    }
+  }
+  // put the little dingus at the end of the semesters if it's the last
+  let buttonHolders = document.querySelectorAll('.button-holder');
+  buttonHolders[buttonHolders.length-1].parentElement.insertBefore(
+    newSemester.elt,
+    buttonHolders[buttonHolders.length-1]
+  );
+}
+
 // setup the planning area
 function planningAreaSetup() {
   // connect dragging capability to emptry course holders
@@ -124,7 +209,34 @@ function uploadCoursework(files) {
 
 // insert a coursework json
 function insertCourseworkJSON(json) {
-  console.log(json);
+  if(document.querySelector('#delete-semesters').checked) {
+    deleteAllSemesters();
+  }
+
+  let allOrders = new Set(Object.values(json));
+  allOrders.delete('0');
+  allOrders.forEach(order => {
+    console.log(document.querySelector('[order="' + order + '"]'));
+    if(document.querySelector('[order="' + order + '"]') != null) {
+      return;
+    }
+    let year = Math.floor(order);
+    let decimal = (order % 1).toFixed(1);
+    let season;
+    for(let key in SeasonValues) {
+      if(SeasonValues[key] == decimal) {
+        season = key;
+      }
+    }
+    addSemester(season, year);
+  });
+
+  for(let key in json) {
+
+    addOrderCourse(key, json[key]);
+  }
+
+  cleanUpDragEnd();
 }
 
 // button forms often do
@@ -177,56 +289,6 @@ document.querySelector('#submit-semester').addEventListener('click', function(){
     document.querySelector('#semester-year').value
   );
 });
-// add a semester
-function addSemester(season, year, orderVal=undefined) {
-  // get the year if we don't have it
-  if(year == '') {
-    let date = new Date();
-    year = date.getFullYear();
-  }
-  // figure out where this semester is
-  let order = int(year) + SeasonValues[season];
-  if(orderVal != undefined) {
-    order = orderVal;
-  }
-  let newSemester = createDiv();
-  newSemester.class('semester');
-  newSemester.attribute('order', order);
-  // make a delete semester button
-  let deleteSemesterBtn = createButton('X');
-  deleteSemesterBtn.mouseClicked(function() {
-    deleteSemester(newSemester.elt);
-    toggleDeleteSemester();
-  });
-  deleteSemesterBtn.parent(newSemester);
-  deleteSemesterBtn.class('delete-semester');
-  // title the semester
-  let title = createP(capatilize(season) + ' ' + year);
-  title.parent(newSemester);
-  title.class('semester-title');
-  // add the little credits thing to the semester
-  let credits = createP('Credits: ' + '0');
-  credits.parent(newSemester);
-  credits.class('semester-credits');
-  // add empty course to the semester
-  addCourse(newSemester);
-
-  // once finished making element insert it
-  // length -1 because our new semester is part of these classes now
-  let semesterList = document.querySelectorAll('.semester');
-  for(let i = 0; i < semesterList.length-1; i++) {
-    if(float(semesterList[i].getAttribute('order')) > float(order)) {
-      semesterList[i].parentElement.insertBefore(newSemester.elt, semesterList[i]);
-      return;
-    }
-  }
-  // put the little dingus at the end of the semesters if it's the last
-  let buttonHolders = document.querySelectorAll('.button-holder');
-  buttonHolders[buttonHolders.length-1].parentElement.insertBefore(
-    newSemester.elt,
-    buttonHolders[buttonHolders.length-1]
-  );
-}
 
 // everything you gotta do to delete a semester
 function deleteSemester(semester) {
@@ -236,6 +298,14 @@ function deleteSemester(semester) {
   semester.remove();
 
   cleanUpDragEnd();
+}
+
+// delete all the semesters
+function deleteAllSemesters() {
+  document.querySelectorAll('.semester').forEach(semester => {
+    if(semester.getAttribute('order') != 0)
+      deleteSemester(semester);
+  });
 }
 
 // capatilize first letter of a string
@@ -264,6 +334,14 @@ function addCourse(parent) {
   newCourse.parent(parent);
   newCourse.attribute('draggable', 'true');
   addCourseEvents(newCourse.elt);
+}
+
+// add a course to an ordered semester
+function addOrderCourse(code, order) {
+  let semester = document.querySelector('[order="' + order + '"]');
+  let empty = semester.querySelector('.empty-course-holder');
+  updateCourse(empty, code);
+  addCourse(semester);
 }
 
 // what to do when element dropped on you

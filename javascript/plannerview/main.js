@@ -2,6 +2,8 @@
 function setup() {
   textFont('Gill Sans MT');
   frameRate(30);
+  createCanvas(windowWidth, windowHeight);
+
   // All close buttons close your parent object
   document.querySelectorAll('.close-btn').forEach(closeBTN => {
     closeBTN.addEventListener('click', function() {
@@ -59,4 +61,33 @@ function closeAll() {
   document.querySelectorAll('.course-holder').forEach(courseHolder => {
     courseHolder.style.display = 'none';
   });
+}
+
+let dragCircles = [];
+function draw() {
+  clear();
+
+  dragCircles.forEach(dragCircle => {
+    dragCircle.draw();
+  });
+}
+
+class DragCircle {
+  constructor() {
+    this.x = mouseX;
+    this.y = mouseY;
+    this.radius = 20;
+    dragCircles.push(this);
+  }
+
+  draw() {
+    noStroke();
+    fill('rgba(211, 84, 0, .4)');
+    circle(this.x, this.y, this.radius);
+    this.radius += 20;
+    if(this.radius >= 175) {
+      dragCircles.splice(dragCircles.indexOf(this), 1);
+      delete this;
+    }
+  }
 }
