@@ -1,0 +1,18 @@
+/* navigation bar stuff */
+nav {
+
+}
+
+/* The little menu icons */
+.menu-option > img {
+  width: 100px;
+  height: 100px;
+}
+
+.menu-option:hover > img {
+  padding: 10px 10px;
+}
+
+.menu-option * {
+  background-color: rgba(0, 0, 0, 0);
+}

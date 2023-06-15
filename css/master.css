@@ -189,3 +189,47 @@ input[type=checkbox] {
   padding: 20px;
   margin: 20px;
 }
+
+/* general navigation bar stuff */
+nav {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin: 10px;
+
+  position: fixed;
+}
+
+/* each menu button */
+.menu-option {
+  transition-duration: .4s;
+  background-color: rgba(0, 0, 0, 0);
+
+  width: 100px;
+  height: 100px;
+}
+
+/* when hovering over a menu button */
+.menu-option:hover {
+  box-shadow: 0px 0px 50px 2px #2D547A;
+
+  transition-duration: .4s;
+}
+
+/* show menu elements while hovering */
+.menu-option:hover > .menu-elements {
+  display: flex;
+
+  transition-duration: .4s;
+}
+
+/* div holding all the menu elements */
+.menu-elements {
+  display: none;
+
+  transition-duration: .4s;
+
+  flex-direction: column;
+}
