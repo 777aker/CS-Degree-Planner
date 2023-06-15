@@ -6,7 +6,7 @@ function degreeSelectorSetup() {
   degreeName = 'CS BS Degree';
   degreeJSON = loadJSON(
     'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-electives.json',
-    processJSON
+    populateDegreeArea
   );
   // create a button for the cs degree
   // if you want to
@@ -21,19 +21,13 @@ function degreeSelectorSetup() {
     // load degree
     degreeJSON = loadJSON(
       'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-electives.json',
-      processJSON
+      populateDegreeArea
     );
   });
   // make all empty courses draggable
   document.querySelectorAll('.empty-course-holder').forEach(empty => {
     empty.setAttribute('draggable', 'true');
   });
-}
-
-// do stuff once degree is loaded
-function processJSON() {
-  // populate degree area with buttons and such
-  populateDegreeArea();
 }
 
 // populate degree area with buttons and such
