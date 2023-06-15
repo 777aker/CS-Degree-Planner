@@ -21,39 +21,8 @@ body {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
 }
 
-/* button defaults */
-button {
-  background-color: #7f8c8d;
-  color: #ecf0f1;
-
-  border: none;
-  border-radius: 2px;
-
-  padding: 10px 10px;
-
-  transition-duration: .4s;
-
-  font-size: 14pt;
-}
-
-/* button hover defaults */
-button:hover {
-  background-color: #dce0e0;
-  color: #2c3e50;
-
-  padding: 15px 15px;
-
-  transition-duration: .4s;
-}
-
-/* close button defaults */
-.close-btn {
-  align-self: flex-end;
-  background-color: #c0392b;
-}
-
-/* defaults for an input field */
-input {
+/* button and input defaults */
+button, input, select {
   background-color: #7f8c8d;
   color: #ecf0f1;
 
@@ -67,19 +36,48 @@ input {
   font-size: 14pt;
 }
 
-/* palceholder text impossible to see otherwise */
-input::placeholder {
-  color: #ecf0f1;
-
-  transition-duration: .4s;
-}
-
-/* input hover defaults */
-input:hover {
+/* button and input hover defaults */
+button:hover, input:hover, select:hover {
   background-color: #dce0e0;
   color: #2c3e50;
 
   padding: 15px;
+
+  transition-duration: .4s;
+}
+
+/* close button defaults */
+.close-btn {
+  align-self: flex-end;
+  background-color: #c0392b;
+}
+
+/* form defaults using style guide */
+form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  box-shadow: 0px 0px 50px 2px #2D547A;
+  border-radius: 2px;
+
+  display: none;
+
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+
+  background-color: #2A4260;
+
+  z-index: 5;
+
+  gap: 10px;
+}
+
+/* palceholder text impossible to see otherwise */
+input::placeholder {
+  color: #ecf0f1;
 
   transition-duration: .4s;
 }
@@ -107,52 +105,13 @@ img {
   max-width: 100%;
 }
 
-/* form defaults using style guide */
-form {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+/* checkbox defaults */
+input[type=checkbox] {
+  width: 50px;
+  height: 50px;
 
-  box-shadow: 0px 0px 50px 2px #2D547A;
-  border-radius: 2px;
-
-  display: none;
-
-  flex-direction: column;
-  padding: 15px;
-
-  background-color: #2A4260;
-
-  z-index: 5;
-
-  gap: 10px;
-}
-
-/* select dropdown dingus style, currently only select a semester */
-/* basically same as a button */
-select {
-  background-color: #7f8c8d;
-  color: #ecf0f1;
-
-  border: none;
-  border-radius: 2px;
-
-  padding: 10px;
-
-  transition-duration: .4s;
-
-  font-size: 14pt;
-}
-
-/* when you hover over a select dropdown box dingus do this */
-select:hover {
-  background-color: #dce0e0;
-  color: #2c3e50;
-
-  padding: 15px;
-
-  transition-duration: .4s;
+  padding: 20px;
+  margin: 20px;
 }
 
 /* scroll bar styling */
@@ -183,14 +142,8 @@ canvas {
   pointer-events: none;
 }
 
-/* checkbox defaults */
-input[type=checkbox] {
-  transform: scale(3);
-  padding: 20px;
-  margin: 20px;
-}
-
 /* general navigation bar stuff */
+/* all the stuff below is also general expected navigation bar behavior */
 nav {
   display: flex;
   flex-direction: row;
@@ -202,25 +155,23 @@ nav {
   position: fixed;
 }
 
-/* each menu button */
-.menu-option {
-  transition-duration: .4s;
-  background-color: rgba(0, 0, 0, 0);
-
+/* make nav buttons have correct size */
+nav > button {
   width: 100px;
   height: 100px;
 }
 
-/* when hovering over a menu button */
-.menu-option:hover {
-  box-shadow: 0px 0px 50px 2px #2D547A;
-
+/* each menu div */
+.menu-option {
   transition-duration: .4s;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 /* show menu elements while hovering */
 .menu-option:hover > .menu-elements {
   display: flex;
+
+  box-shadow: 0px 0px 50px 2px #2D547A;
 
   transition-duration: .4s;
 }
@@ -228,8 +179,32 @@ nav {
 /* div holding all the menu elements */
 .menu-elements {
   display: none;
+  position: absolute;
 
   transition-duration: .4s;
 
   flex-direction: column;
 }
+
+/* turn off background on all the buttons */
+.menu-option * {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+/* weird jumpiness of img inside button resolve */
+.menu-option:hover > button {
+  padding: 0px;
+}
+
+/* some unique forcing for nav stuff */
+.menu-drop-btn {
+  width: 100px;
+  height: 100px;
+}
+
+/* turn off the dropdown hover since not a button */
+.menu-drop-btn:hover {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+/* end of general navigation bar behavior */

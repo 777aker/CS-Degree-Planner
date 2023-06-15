@@ -25,14 +25,6 @@ let degreeJSON;
 let degreeName;
 // semester we are currently in
 let currentSemester;
-// some colors
-const Colors = {
-  incomplete: '',
-  available: '#1abc9c',
-  planned: '#9b59b6',
-  inProgress: '#2ecc71',
-  complete: '#3498db'
-}
 
 // whenever we stop dragging elements do some common clean up
 // or when we delete a semester
@@ -63,6 +55,7 @@ function closeAll() {
   });
 }
 
+/* doesn't look good as is, maybe revisit later
 let dragCircles = [];
 function draw() {
   clear();
@@ -91,3 +84,4 @@ class DragCircle {
     }
   }
 }
+*/

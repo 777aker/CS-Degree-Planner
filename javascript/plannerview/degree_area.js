@@ -32,11 +32,6 @@ function degreeSelectorSetup() {
 
 // do stuff once degree is loaded
 function processJSON() {
-  // change keys to be meaningful
-  degreeJSON.courses.forEach((course, key) => {
-    degreeJSON.courses[course.code] = course;
-    delete degreeJSON.courses[key];
-  });
   // populate degree area with buttons and such
   populateDegreeArea();
 }

@@ -1,1595 +1,5 @@
 {
   "fileType": "courselayout",
-  "courses": [
-    {
-      "code": "CSCI 1000",
-      "credits": "1",
-      "name": "Computer Science as a Field of Work and Study",
-      "prerequisites": [],
-      "x": -85.02670613697077,
-      "y": -1668.689911885521,
-      "height": 45,
-      "width": 313.552734375,
-      "subnodes": [
-        "-1394879839"
-      ]
-    },
-    {
-      "code": "CSCI 1300",
-      "credits": "4",
-      "name": "Computer Science 1: Starting Computing",
-      "prerequisites": [
-        [
-          "APPM 1235",
-          "APPM 1350",
-          "MATH 1150",
-          "MATH 1300"
-        ]
-      ],
-      "x": 408.30662719635393,
-      "y": -1902.0232452188545,
-      "height": 45,
-      "width": 269.4609375,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 1235",
-      "credits": "4",
-      "name": "Pre-Calculus for Engineers",
-      "prerequisites": [],
-      "x": -482.7705754946269,
-      "y": -867.3565785521894,
-      "height": 45,
-      "width": 182.2958984375,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 1350",
-      "credits": "4",
-      "name": "Calculus 1 for Engineers",
-      "prerequisites": [
-        [
-          "APPM 1235",
-          "MATH 1300"
-        ]
-      ],
-      "x": 322.09299910619177,
-      "y": -995.9872234748507,
-      "height": 45,
-      "width": 167.5234375,
-      "subnodes": []
-    },
-    {
-      "code": "MATH 1150",
-      "credits": "4",
-      "name": "Precalculus Mathematics",
-      "prerequisites": [],
-      "x": -486.2476262758769,
-      "y": -979.3565785521894,
-      "height": 45,
-      "width": 155.341796875,
-      "subnodes": [
-        "-1272468592"
-      ]
-    },
-    {
-      "code": "MATH 1300",
-      "credits": "5",
-      "name": "Calculus 1",
-      "prerequisites": [
-        [
-          "MATH 1150",
-          "APPM 1235"
-        ]
-      ],
-      "x": 512.7510716408053,
-      "y": -1186.4676896632984,
-      "height": 45,
-      "width": 101.884765625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 2270",
-      "credits": "4",
-      "name": "Computer Science 2: Data Structures",
-      "prerequisites": [
-        [
-          "CSCI 1300"
-        ],
-        [
-          "MATH 1300",
-          "APPM 1350"
-        ]
-      ],
-      "x": 1379.663770053498,
-      "y": -1919.4035870991843,
-      "height": 45,
-      "width": 246.8818359375,
-      "subnodes": [
-        "297405059"
-      ]
-    },
-    {
-      "code": "CSCI 2400",
-      "credits": "4",
-      "name": "Computer Systems",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 2092.0682029013237,
-      "y": -2594.44736881199,
-      "height": 45,
-      "width": 134.0341796875,
-      "subnodes": []
-    },
-    {
-      "code": "MATH 2001",
-      "credits": "3",
-      "name": "Introduction to Discrete Mathematics",
-      "prerequisites": [
-        [
-          "APPM 1350",
-          "MATH 1300"
-        ]
-      ],
-      "x": 934.6637700534958,
-      "y": -771.9035870991763,
-      "height": 45,
-      "width": 242.2060546875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 2824",
-      "credits": "3",
-      "name": "Discrete Structures",
-      "prerequisites": [
-        [
-          "APPM 1350",
-          "MATH 1300"
-        ],
-        [
-          "CSCI 1300"
-        ]
-      ],
-      "x": 948.0016606784903,
-      "y": -1052.6535870991836,
-      "height": 45,
-      "width": 134.0341796875,
-      "subnodes": []
-    },
-    {
-      "code": "ECEN 2703",
-      "credits": "3",
-      "name": "Discrete Mathematics for Computer Engineers",
-      "prerequisites": [
-        [
-          "CSCI 1300"
-        ],
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ]
-      ],
-      "x": 1507.163770053498,
-      "y": -1056.9035870991727,
-      "height": 45,
-      "width": 302.109375,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 3170",
-      "credits": "3",
-      "name": "Discrete Applied Mathematics",
-      "prerequisites": [
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ]
-      ],
-      "x": 1502.1637700534961,
-      "y": -756.9035870991745,
-      "height": 45,
-      "width": 200.185546875,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 1360",
-      "credits": "4",
-      "name": "Calculus 2 for Engineers",
-      "prerequisites": [
-        [
-          "APPM 1350",
-          "MATH 1300"
-        ]
-      ],
-      "x": 504.81456370429646,
-      "y": -95.0391182347177,
-      "height": 45,
-      "width": 167.5234375,
-      "subnodes": []
-    },
-    {
-      "code": "MATH 2300",
-      "credits": "5",
-      "name": "Calculus 2",
-      "prerequisites": [
-        [
-          "APPM 1350",
-          "MATH 1300"
-        ]
-      ],
-      "x": 330.52884941858304,
-      "y": -415.03911823472583,
-      "height": 45,
-      "width": 101.884765625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3104",
-      "credits": "4",
-      "name": "Algorithms",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ],
-        [
-          "MATH 2001",
-          "CSCI 2824",
-          "ECEN 2703",
-          "APPM 3170"
-        ]
-      ],
-      "x": 2344.288589678337,
-      "y": -1133.3559003415041,
-      "height": 45,
-      "width": 95.9306640625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3155",
-      "credits": "4",
-      "name": "Principles of Programming Languages",
-      "prerequisites": [
-        [
-          "MATH 2001",
-          "CSCI 2824",
-          "ECEN 2703",
-          "APPM 3170"
-        ],
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 2066.9253080253243,
-      "y": -1658.2127243867228,
-      "height": 45,
-      "width": 252.3505859375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3308",
-      "credits": "3",
-      "name": "Software Development Methods and Tools",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 2479.4862808760245,
-      "y": -1418.002364987971,
-      "height": 45,
-      "width": 278.033203125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3002",
-      "credits": "4",
-      "name": "Fundamentals of Human Computer Interaction",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 3405.2586413586523,
-      "y": -2358.7682799422787,
-      "height": 45,
-      "width": 302.9228515625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 2820",
-      "credits": "3",
-      "name": "Linear Algebra with Computer Science Applications",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ]
-      ],
-      "x": 1704.8611258306978,
-      "y": 33.56919417780031,
-      "height": 45,
-      "width": 333.28125,
-      "subnodes": []
-    },
-    {
-      "code": "MATH 2130",
-      "credits": "3",
-      "name": "Introduction to Linear Algebra for Non-Mathematics Majors",
-      "prerequisites": [
-        [
-          "MATH 2300",
-          "APPM 1360"
-        ]
-      ],
-      "x": 1018.7472527472593,
-      "y": 29.50854700854924,
-      "height": 45,
-      "width": 378.3916015625,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 3310",
-      "credits": "3",
-      "name": "Matrix Methods and Applications",
-      "prerequisites": [
-        [
-          "APPM 2340",
-          "APPM 2350",
-          "APPM 2360",
-          "MATH 2400"
-        ]
-      ],
-      "x": 1117.0805860805933,
-      "y": 466.17521367521016,
-      "height": 45,
-      "width": 217.3232421875,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 3570",
-      "credits": "3",
-      "name": "Applied Probability",
-      "prerequisites": [
-        [
-          "APPM 2350",
-          "APPM 2340",
-          "MATH 2400"
-        ]
-      ],
-      "x": 829.0400025095707,
-      "y": 1013.4287790373912,
-      "height": 45,
-      "width": 130.9580078125,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 2350",
-      "credits": "4",
-      "name": "Calculus 3 for Engineers",
-      "prerequisites": [
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ]
-      ],
-      "x": 466.07335276679635,
-      "y": 530.2465960509871,
-      "height": 45,
-      "width": 167.5234375,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 2340",
-      "credits": "4",
-      "name": "Calculus 3 for Statistics and Data Science",
-      "prerequisites": [
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ]
-      ],
-      "x": 519.7628058917963,
-      "y": 581.2465960509871,
-      "height": 45,
-      "width": 274.90234375,
-      "subnodes": []
-    },
-    {
-      "code": "MATH 2400",
-      "credits": "5",
-      "name": "Calculus 3",
-      "prerequisites": [
-        [
-          "MATH 2300",
-          "APPM 1360"
-        ]
-      ],
-      "x": 433.25401682929635,
-      "y": 632.2465960509871,
-      "height": 45,
-      "width": 101.884765625,
-      "subnodes": []
-    },
-    {
-      "code": "APPM 4570",
-      "credits": "3",
-      "name": "Statistical Methods",
-      "prerequisites": [
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ]
-      ],
-      "x": 86.54000250957102,
-      "y": 1875.928779037394,
-      "height": 45,
-      "width": 132.49609375,
-      "subnodes": []
-    },
-    {
-      "code": "CHEN 3010",
-      "credits": "3",
-      "name": "Applied Data Analysis",
-      "prerequisites": [
-        [
-          "CHEN 1310"
-        ],
-        [
-          "APPM 2360",
-          "MATH 2130"
-        ],
-        [
-          "MATH 3430"
-        ]
-      ],
-      "x": 1696.924617894188,
-      "y": 1227.659548268159,
-      "height": 45,
-      "width": 151.185546875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3022",
-      "credits": "3",
-      "name": "Introduction to Data Science with Probability and Statistics",
-      "prerequisites": [
-        [
-          "CSCI 2270",
-          "CSCI 2275"
-        ],
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ],
-        [
-          "CSCI 2824",
-          "ECEN 2703",
-          "APPM 3170",
-          "MATH 2001"
-        ]
-      ],
-      "x": 2414.0400025095737,
-      "y": 1585.9287790373921,
-      "height": 45,
-      "width": 376.07421875,
-      "subnodes": []
-    },
-    {
-      "code": "CVEN 3227",
-      "credits": "3",
-      "name": "Probability, Statistics and Decision",
-      "prerequisites": [],
-      "x": 1674.0400025095719,
-      "y": 1983.4287790373926,
-      "height": 45,
-      "width": 227.953125,
-      "subnodes": [
-        "1441725896"
-      ]
-    },
-    {
-      "code": "ECEN 3810",
-      "credits": "3",
-      "name": "Introduction to Probability Theory",
-      "prerequisites": [
-        [
-          "APPM 2350",
-          "MATH 2400"
-        ]
-      ],
-      "x": 836.5400025095707,
-      "y": 1398.4287790373912,
-      "height": 45,
-      "width": 220.4404296875,
-      "subnodes": []
-    },
-    {
-      "code": "ECON 3818",
-      "credits": "4",
-      "name": "Introduction to Statistics with Computer Applications",
-      "prerequisites": [
-        [
-          "ECON 2020"
-        ],
-        [
-          "MATH 1300",
-          "APPM 1350",
-          "ECON 1088",
-          "MATH 1081",
-          "MATH 1310",
-          "MATH 1330",
-          "APPM 1340",
-          "APPM 1345",
-          "FNCE 2010"
-        ]
-      ],
-      "x": -160.56638867666288,
-      "y": 975.3106986150926,
-      "height": 45,
-      "width": 337.150390625,
-      "subnodes": [
-        "-1467263382"
-      ]
-    },
-    {
-      "code": "MATH 3510",
-      "credits": "3",
-      "name": "Introduction to Probability and Statistics",
-      "prerequisites": [
-        [
-          "MATH 2300",
-          "APPM 1360"
-        ],
-        [
-          "MATH 2001",
-          "MATH 2002"
-        ]
-      ],
-      "x": 1991.4336113233433,
-      "y": 1427.3106986151008,
-      "height": 45,
-      "width": 260.1298828125,
-      "subnodes": []
-    },
-    {
-      "code": "MATH 4510",
-      "credits": "3",
-      "name": "Introduction to Probability Theory",
-      "prerequisites": [
-        [
-          "MATH 2400",
-          "APPM 2350"
-        ],
-        [
-          "MATH 2130",
-          "MATH 3130",
-          "MATH 2135",
-          "MATH 3135"
-        ]
-      ],
-      "x": 1113.847694817264,
-      "y": 1229.1980098066208,
-      "height": 45,
-      "width": 220.4404296875,
-      "subnodes": []
-    },
-    {
-      "code": "STAT 3100",
-      "credits": "3",
-      "name": "Applied Probability",
-      "prerequisites": [
-        [
-          "APPM 2350",
-          "APPM 2340",
-          "MATH 2400"
-        ]
-      ],
-      "x": 511.54000250957165,
-      "y": 1488.4287790373908,
-      "height": 45,
-      "width": 130.9580078125,
-      "subnodes": []
-    },
-    {
-      "code": "STAT 4000",
-      "credits": "3",
-      "name": "Statistical Methods and Application 1",
-      "prerequisites": [
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ]
-      ],
-      "x": 551.5400025095717,
-      "y": 1903.428779037394,
-      "height": 45,
-      "width": 243.798828125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3202",
-      "credits": "3",
-      "name": "Introduction to Artificial Intelligence",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "APPM 3170",
-          "CSCI 2824",
-          "ECEN 2703",
-          "MATH 2001"
-        ],
-        [
-          "APPM 3570",
-          "CHEN 3010",
-          "CSCI 3022",
-          "CVEN 3227",
-          "ECEN 3810",
-          "ECON 3818",
-          "MATH 3510",
-          "MATH 4510",
-          "STAT 3100",
-          "STAT 4000"
-        ]
-      ],
-      "x": 3633.9253080253184,
-      "y": -1232.8793910533898,
-      "height": 45,
-      "width": 231.3369140625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3287",
-      "credits": "3",
-      "name": "Design and Analysis of Database Systems",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 3147.4808635808786,
-      "y": -2192.1016132756154,
-      "height": 45,
-      "width": 278.798828125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3302",
-      "credits": "3",
-      "name": "Introduction to Robotics",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "APPM 3170",
-          "CSCI 2824",
-          "ECEN 2703",
-          "MATH 2001"
-        ],
-        [
-          "APPM 2360",
-          "APPM 3310",
-          "CSCI 2820",
-          "MATH 2130",
-          "MATH 2135",
-          "MATH 3130",
-          "MATH 3135"
-        ]
-      ],
-      "x": 3327.7182686878396,
-      "y": -1326.4308058221989,
-      "height": 45,
-      "width": 162.08203125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3403",
-      "credits": "4",
-      "name": "Introduction to CyberSecurity for a Converged World",
-      "prerequisites": [
-        [
-          "CSCI 2400",
-          "ECEN 3350"
-        ]
-      ],
-      "x": 2719.040002509573,
-      "y": -2396.571220962614,
-      "height": 45,
-      "width": 340.0146484375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3434",
-      "credits": "3",
-      "name": "Theory of Computation",
-      "prerequisites": [
-        [
-          "CSCI 3104"
-        ]
-      ],
-      "x": 3488.873335842906,
-      "y": 382.9287790373897,
-      "height": 45,
-      "width": 157.40625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3656",
-      "credits": "3",
-      "name": "Numerical Computation",
-      "prerequisites": [
-        [
-          "ASEN 1320",
-          "CSCI 1300"
-        ],
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ],
-        [
-          "APPM 2360",
-          "APPM 3310",
-          "CSCI 2820",
-          "MATH 2130",
-          "MATH 2135",
-          "MATH 3130",
-          "MATH 3135"
-        ]
-      ],
-      "x": 3223.9253080253175,
-      "y": -593.4349466089429,
-      "height": 45,
-      "width": 161.2822265625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3753",
-      "credits": "4",
-      "name": "Design and Analysis of Operating Systems",
-      "prerequisites": [
-        [
-          "CSCI 2400"
-        ]
-      ],
-      "x": 2842.8684648684853,
-      "y": -2953.1682206682267,
-      "height": 45,
-      "width": 280.3505859375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4022",
-      "credits": "3",
-      "name": "Advanced Data Science",
-      "prerequisites": [
-        [
-          "APPM 3310",
-          "CSCI 2820",
-          "MATH 2130",
-          "MATH 2135",
-          "MATH 3130",
-          "MATH 3135"
-        ],
-        [
-          "CSCI 3022",
-          "APPM 3570",
-          "CHEN 3010",
-          "CVEN 3227",
-          "MATH 3510",
-          "MATH 4510",
-          "ECEN 3810",
-          "ECON 3818",
-          "STAT 3100",
-          "STAT 4000",
-          "STAT 4520"
-        ],
-        [
-          "CSCI 3104"
-        ]
-      ],
-      "x": 4060.508292361273,
-      "y": 406.32102211510687,
-      "height": 45,
-      "width": 164.4267578125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4273",
-      "credits": "3",
-      "name": "Network Systems",
-      "prerequisites": [
-        [
-          "CSCI 3753"
-        ]
-      ],
-      "x": 3251.9253080253184,
-      "y": -2978.7682799422796,
-      "height": 45,
-      "width": 123.91015625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4448",
-      "credits": "3",
-      "name": "Object-Oriented Analysis and Design",
-      "prerequisites": [
-        [
-          "CSCI 3308"
-        ]
-      ],
-      "x": 3120.0161929857622,
-      "y": -1436.6902685816601,
-      "height": 45,
-      "width": 244.5576171875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3010",
-      "credits": "3",
-      "name": "Programming Project Workshop",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "CSCI 3308"
-        ]
-      ],
-      "x": 4245.797842336562,
-      "y": -718.6911468304929,
-      "height": 45,
-      "width": 213.1533203125,
-      "subnodes": [
-        "-2022840893"
-      ]
-    },
-    {
-      "code": "CSCI 3090",
-      "credits": "3",
-      "name": "Introduction to Quantum Computing",
-      "prerequisites": [
-        [
-          "APPM 2360",
-          "APPM 3310",
-          "CSCI 2820",
-          "MATH 2130",
-          "MATH 2135",
-          "MATH 3130",
-          "MATH 3135"
-        ]
-      ],
-      "x": 6204.925308025324,
-      "y": -381.5460577200548,
-      "height": 45,
-      "width": 236.7919921875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3112",
-      "credits": "1",
-      "name": "Professional Development in Computer Science",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 4307.415130827214,
-      "y": -2421.3912027558313,
-      "height": 45,
-      "width": 312.2607421875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3150",
-      "credits": "3",
-      "name": "Universal Design for Digital Media",
-      "prerequisites": [
-        [
-          "CSCI 1300"
-        ]
-      ],
-      "x": 3319.0400025095714,
-      "y": -4196.571220962607,
-      "height": 45,
-      "width": 225.861328125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3352",
-      "credits": "3",
-      "name": "Biological Networks",
-      "prerequisites": [
-        [
-          "ASTR 2600",
-          "CSCI 2270",
-          "INFO 2201",
-          "PHYS 2600"
-        ],
-        [
-          "APPM 1345",
-          "APPM 1350",
-          "MATH 1300"
-        ],
-        [
-          "APPM 3570",
-          "APPM 4570",
-          "CHEN 3010",
-          "CSCI 3022",
-          "CVEN 3227",
-          "EBIO 4410",
-          "ECEN 3810",
-          "ECON 3818",
-          "IPHY 2800",
-          "MATH 3510",
-          "MATH 4510",
-          "MATH 4520",
-          "MCDB 3450",
-          "MCEN 3047",
-          "STAT 2600",
-          "STAT 3100",
-          "STAT 4000",
-          "STAT 4520"
-        ]
-      ],
-      "x": 6345.22641376512,
-      "y": 457.3983192589723,
-      "height": 45,
-      "width": 137.158203125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3702",
-      "credits": "3",
-      "name": "Cognitive Science",
-      "prerequisites": [
-        [
-          "CSCI 1300",
-          "LING 2000",
-          "PHIL 2440",
-          "PSYC 2145",
-          "CSCI 2275"
-        ]
-      ],
-      "x": 3966.540002509573,
-      "y": -3661.571220962608,
-      "height": 45,
-      "width": 127.0615234375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 3832",
-      "credits": "3",
-      "name": "Natural Language Processing",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "CSCI 2824",
-          "MATH 2001",
-          "ECEN 2703",
-          "APPM 3170"
-        ]
-      ],
-      "x": 4734.147530247545,
-      "y": -2798.7682799422814,
-      "height": 45,
-      "width": 199.4541015625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4113",
-      "credits": "3",
-      "name": "Linux System Administration",
-      "prerequisites": [
-        [
-          "CSCI 3753"
-        ]
-      ],
-      "x": 3496.3697524697636,
-      "y": -3434.323835497838,
-      "height": 45,
-      "width": 191.626953125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4114",
-      "credits": "3",
-      "name": "Practical Algorithmic Complexity",
-      "prerequisites": [
-        [
-          "CSCI 3104"
-        ]
-      ],
-      "x": 5059.036419136433,
-      "y": 281.2317200577195,
-      "height": 45,
-      "width": 214.9443359375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4122",
-      "credits": "3",
-      "name": "Information Visualization",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "CSCI 2824",
-          "ECEN 2703",
-          "APPM 3170"
-        ]
-      ],
-      "x": 4974.750628662713,
-      "y": -1728.7862244008368,
-      "height": 45,
-      "width": 167.27734375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4200",
-      "credits": "3",
-      "name": "Introduction to Wireless Systems",
-      "prerequisites": [
-        [
-          "CSCI 2400",
-          "ECEN 3350"
-        ],
-        [
-          "APPM 3570",
-          "CHEN 3010",
-          "CSCI 3022",
-          "CVEN 3227",
-          "ECEN 3810",
-          "ECON 3818",
-          "MATH 3510",
-          "MATH 4510",
-          "MCEN 3047",
-          "STAT 3100",
-          "STAT 4000",
-          "STAT 4520"
-        ],
-        [
-          "PHYS 1120"
-        ]
-      ],
-      "x": 5133.211060044204,
-      "y": -660.8997497643679,
-      "height": 45,
-      "width": 218.84765625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4229",
-      "credits": "3",
-      "name": "Computer Graphics",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 4802.32961013876,
-      "y": -2198.7174075108355,
-      "height": 45,
-      "width": 136.37890625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4239",
-      "credits": "3",
-      "name": "Advanced Computer Graphics",
-      "prerequisites": [
-        [
-          "CSCI 4229"
-        ]
-      ],
-      "x": 4933.238701047844,
-      "y": -2056.8992256926413,
-      "height": 45,
-      "width": 202.537109375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4240",
-      "credits": "3",
-      "name": "Introduction to Blockchain",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "CSCI 2824",
-          "ECEN 2703",
-          "APPM 3170",
-          "MATH 2001"
-        ]
-      ],
-      "x": 4578.816623125771,
-      "y": -1442.0348678282814,
-      "height": 45,
-      "width": 175.31640625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4253",
-      "credits": "3",
-      "name": "Datacenter Scale Computing - Methods, Systems and Techniques",
-      "prerequisites": [
-        [
-          "CSCI 3753"
-        ]
-      ],
-      "x": 3709.703085803097,
-      "y": -3338.7682799422814,
-      "height": 45,
-      "width": 423.54296875,
-      "subnodes": [
-        "301103144"
-      ]
-    },
-    {
-      "code": "CSCI 4302",
-      "credits": "3",
-      "name": "Advanced Robotics",
-      "prerequisites": [
-        [
-          "CSCI 3302"
-        ]
-      ],
-      "x": 4934.632973442117,
-      "y": -3248.25398204739,
-      "height": 45,
-      "width": 135.626953125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4314",
-      "credits": "3",
-      "name": "Dynamic Models in Biology",
-      "prerequisites": [
-        [
-          "CSCI 3104"
-        ]
-      ],
-      "x": 5177.632973442129,
-      "y": -3048.253982047386,
-      "height": 45,
-      "width": 183.068359375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4413",
-      "credits": "3",
-      "name": "Computer Security and Ethical Hacking",
-      "prerequisites": [
-        [
-          "CSCI 4273"
-        ]
-      ],
-      "x": 3651.9253080253193,
-      "y": -3138.768279942276,
-      "height": 45,
-      "width": 258.5576171875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4446",
-      "credits": "3",
-      "name": "Chaotic Dynamics",
-      "prerequisites": [
-        [
-          "ASEN 1320",
-          "CSCI 1300",
-          "ECEN 1310"
-        ],
-        [
-          "APPM 2350",
-          "MATH 2400"
-        ]
-      ],
-      "x": 4858.206669176243,
-      "y": 837.5954457040577,
-      "height": 45,
-      "width": 127.8134765625,
-      "subnodes": [
-        "331478834"
-      ]
-    },
-    {
-      "code": "CSCI 4502",
-      "credits": "3",
-      "name": "Data Mining",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 5702.632973442109,
-      "y": -3164.253982047386,
-      "height": 45,
-      "width": 95.9306640625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4555",
-      "credits": "3",
-      "name": "Compiler Construction",
-      "prerequisites": [
-        [
-          "CSCI 3155"
-        ],
-        [
-          "CSCI 2400",
-          "ECEN 3350"
-        ]
-      ],
-      "x": 5066.868464868502,
-      "y": -3589.168220668238,
-      "height": 45,
-      "width": 153.49609375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4576",
-      "credits": "4",
-      "name": "High-Performance Scientific Computing",
-      "prerequisites": [
-        [
-          "APPM 4650",
-          "CSCI 3656",
-          "MATH 4650",
-          "MCEN 3030"
-        ]
-      ],
-      "x": 5875.632973442107,
-      "y": -3081.253982047388,
-      "height": 45,
-      "width": 260.1025390625,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4593",
-      "credits": "3",
-      "name": "Computer Organization",
-      "prerequisites": [
-        [
-          "ECEN 3350",
-          "CSCI 2400"
-        ]
-      ],
-      "x": 5296.8684648685075,
-      "y": -3439.168220668225,
-      "height": 45,
-      "width": 159.7373046875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4616",
-      "credits": "3",
-      "name": "Introduction to Virtual Reality",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ]
-      ],
-      "x": 5463.632973442104,
-      "y": -3658.2539820474076,
-      "height": 45,
-      "width": 193.732421875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4622",
-      "credits": "3",
-      "name": "Machine Learning",
-      "prerequisites": [
-        [
-          "CSCI 2270"
-        ],
-        [
-          "APPM 3310",
-          "CSCI 2820",
-          "MATH 2130",
-          "MATH 2135",
-          "MATH 3130",
-          "MATH 3135"
-        ],
-        [
-          "CSCI 2824",
-          "ECEN 2703",
-          "APPM 3170",
-          "MATH 2001"
-        ],
-        [
-          "APPM 3570",
-          "CHEN 3010",
-          "CSCI 3022",
-          "CVEN 3227",
-          "ECEN 3810",
-          "ECON 3818",
-          "MATH 3510",
-          "MATH 4510",
-          "MCEN 3047",
-          "STAT 3100",
-          "STAT 4000",
-          "STAT 4520"
-        ]
-      ],
-      "x": 7015.619758509487,
-      "y": -665.9525381481474,
-      "height": 45,
-      "width": 126.2958984375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4753",
-      "credits": "3",
-      "name": "Computer Performance Modeling",
-      "prerequisites": [
-        [
-          "APPM 1360",
-          "MATH 2300"
-        ],
-        [
-          "CSCI 3753"
-        ]
-      ],
-      "x": 3695.03641913643,
-      "y": -2906.7682799422805,
-      "height": 45,
-      "width": 221.2060546875,
-      "subnodes": [
-        "676028375"
-      ]
-    },
-    {
-      "code": "CSCI 4802",
-      "credits": "1",
-      "name": "Data Science Team Companion Course",
-      "prerequisites": [
-        [
-          "APPM 3310",
-          "CSCI 2820",
-          "MATH 2130",
-          "MATH 2135",
-          "MATH 3130",
-          "MATH 3135"
-        ],
-        [
-          "APPM 3570",
-          "CHEN 3010",
-          "CSCI 3022",
-          "CVEN 3227",
-          "ECEN 3810",
-          "ECON 3818",
-          "MATH 3510",
-          "MATH 4510",
-          "MCEN 3047",
-          "STAT 3100",
-          "STAT 4000",
-          "STAT 4520"
-        ]
-      ],
-      "x": 6688.925308025324,
-      "y": -1357.546057720054,
-      "height": 45,
-      "width": 260.90234375,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4809",
-      "credits": "3",
-      "name": "Computer Animation",
-      "prerequisites": [],
-      "x": 6186.632973442107,
-      "y": -2962.25398204739,
-      "height": 45,
-      "width": 142.61328125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4830",
-      "credits": "1",
-      "name": "Special Topics in Computer Science",
-      "prerequisites": [
-        [
-          "CSCI 2400",
-          "ECEN 3350"
-        ]
-      ],
-      "x": 6495.632973442103,
-      "y": -2689.2539820473908,
-      "height": 45,
-      "width": 238.330078125,
-      "subnodes": [
-        "-360782877"
-      ]
-    },
-    {
-      "code": "CSCI 4831",
-      "credits": "1",
-      "name": "Special Topics in Algorithms",
-      "prerequisites": [
-        [
-          "CSCI 3104"
-        ],
-        [
-          "APPM 3310",
-          "CSCI 2820",
-          "MATH 2130",
-          "MATH 2135",
-          "MATH 3130",
-          "MATH 3135"
-        ]
-      ],
-      "x": 5043.036419136432,
-      "y": 125.23172005772079,
-      "height": 45,
-      "width": 189.2958984375,
-      "subnodes": [
-        "-1746504083"
-      ]
-    },
-    {
-      "code": "CSCI 4849",
-      "credits": "3",
-      "name": "Input, Interaction, and Accessibility",
-      "prerequisites": [
-        [
-          "CSCI 3002"
-        ]
-      ],
-      "x": 6711.632973442096,
-      "y": -2174.253982047406,
-      "height": 45,
-      "width": 230.5576171875,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4889",
-      "credits": "3",
-      "name": "Interactive Machine Learning for Customizable and Expressive Interfaces",
-      "prerequisites": [
-        [
-          "APPM 3570",
-          "APPM 4570",
-          "CHEN 3010",
-          "CSCI 3022",
-          "CVEN 3227",
-          "ECEN 3810",
-          "ECON 3818",
-          "MATH 3510",
-          "MATH 4510",
-          "MCEN 3047",
-          "STAT 3100",
-          "STAT 4000",
-          "STAT 4520"
-        ],
-        [
-          "CSCI 3002",
-          "CSCI 3202",
-          "CSCI 4448"
-        ]
-      ],
-      "x": 4641.7658877354625,
-      "y": -1203.8117582031484,
-      "height": 45,
-      "width": 468.673828125,
-      "subnodes": []
-    },
-    {
-      "code": "CSCI 4900",
-      "credits": "1",
-      "name": "Independent Study",
-      "prerequisites": [
-        [
-          "ASEN 1320",
-          "CSCI 1300",
-          "CSCI 2275"
-        ]
-      ],
-      "x": 3761.5400025095723,
-      "y": -4006.571220962608,
-      "height": 45,
-      "width": 132.5439453125,
-      "subnodes": [
-        "277863126"
-      ]
-    }
-  ],
-  "coursemap": {
-    "CSCI 1000": 0,
-    "CSCI 1300": 1,
-    "APPM 1235": 2,
-    "APPM 1350": 3,
-    "MATH 1150": 4,
-    "MATH 1300": 5,
-    "CSCI 2270": 6,
-    "CSCI 2400": 7,
-    "MATH 2001": 8,
-    "CSCI 2824": 9,
-    "ECEN 2703": 10,
-    "APPM 3170": 11,
-    "APPM 1360": 12,
-    "MATH 2300": 13,
-    "CSCI 3104": 14,
-    "CSCI 3155": 15,
-    "CSCI 3308": 16,
-    "CSCI 3002": 17,
-    "CSCI 2820": 18,
-    "MATH 2130": 19,
-    "APPM 3310": 20,
-    "APPM 3570": 21,
-    "APPM 2350": 22,
-    "APPM 2340": 23,
-    "MATH 2400": 24,
-    "APPM 4570": 25,
-    "CHEN 3010": 26,
-    "CSCI 3022": 27,
-    "CVEN 3227": 28,
-    "ECEN 3810": 29,
-    "ECON 3818": 30,
-    "MATH 3510": 31,
-    "MATH 4510": 32,
-    "STAT 3100": 33,
-    "STAT 4000": 34,
-    "CSCI 3202": 35,
-    "CSCI 3287": 36,
-    "CSCI 3302": 37,
-    "CSCI 3403": 38,
-    "CSCI 3434": 39,
-    "CSCI 3656": 40,
-    "CSCI 3753": 41,
-    "CSCI 4022": 42,
-    "CSCI 4273": 43,
-    "CSCI 4448": 44,
-    "CSCI 3010": 45,
-    "CSCI 3090": 46,
-    "CSCI 3112": 47,
-    "CSCI 3150": 48,
-    "CSCI 3352": 49,
-    "CSCI 3702": 50,
-    "CSCI 3832": 51,
-    "CSCI 4113": 52,
-    "CSCI 4114": 53,
-    "CSCI 4122": 54,
-    "CSCI 4200": 55,
-    "CSCI 4229": 56,
-    "CSCI 4239": 57,
-    "CSCI 4240": 58,
-    "CSCI 4253": 59,
-    "CSCI 4302": 60,
-    "CSCI 4314": 61,
-    "CSCI 4413": 62,
-    "CSCI 4446": 63,
-    "CSCI 4502": 64,
-    "CSCI 4555": 65,
-    "CSCI 4576": 66,
-    "CSCI 4593": 67,
-    "CSCI 4616": 68,
-    "CSCI 4622": 69,
-    "CSCI 4753": 70,
-    "CSCI 4802": 71,
-    "CSCI 4809": 72,
-    "CSCI 4830": 73,
-    "CSCI 4831": 74,
-    "CSCI 4849": 75,
-    "CSCI 4889": 76,
-    "CSCI 4900": 77
-  },
   "notes": [
     {
       "code": "-1394879839",
@@ -3814,6 +2224,1282 @@
         "CSCI 4378",
         "CSCI 4950",
         "CSCI 3100"
+      ]
+    }
+  },
+  "courses": {
+    "CSCI 1000": {
+      "credits": "1",
+      "name": "Computer Science as a Field of Work and Study",
+      "prerequisites": [],
+      "x": -85.02670613697077,
+      "y": -1668.689911885521,
+      "subnodes": [
+        "-1394879839"
+      ]
+    },
+    "CSCI 1300": {
+      "credits": "4",
+      "name": "Computer Science 1: Starting Computing",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "APPM 1350",
+          "MATH 1150",
+          "MATH 1300"
+        ]
+      ],
+      "x": 408.30662719635393,
+      "y": -1902.0232452188545,
+      "subnodes": []
+    },
+    "APPM 1235": {
+      "credits": "4",
+      "name": "Pre-Calculus for Engineers",
+      "prerequisites": [],
+      "x": -482.7705754946269,
+      "y": -867.3565785521894,
+      "subnodes": []
+    },
+    "APPM 1350": {
+      "credits": "4",
+      "name": "Calculus 1 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1235",
+          "MATH 1300"
+        ]
+      ],
+      "x": 322.09299910619177,
+      "y": -995.9872234748507,
+      "subnodes": []
+    },
+    "MATH 1150": {
+      "credits": "4",
+      "name": "Precalculus Mathematics",
+      "prerequisites": [],
+      "x": -486.2476262758769,
+      "y": -979.3565785521894,
+      "subnodes": [
+        "-1272468592"
+      ]
+    },
+    "MATH 1300": {
+      "credits": "5",
+      "name": "Calculus 1",
+      "prerequisites": [
+        [
+          "MATH 1150",
+          "APPM 1235"
+        ]
+      ],
+      "x": 512.7510716408053,
+      "y": -1186.4676896632984,
+      "subnodes": []
+    },
+    "CSCI 2270": {
+      "credits": "4",
+      "name": "Computer Science 2: Data Structures",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "MATH 1300",
+          "APPM 1350"
+        ]
+      ],
+      "x": 1379.663770053498,
+      "y": -1919.4035870991843,
+      "subnodes": [
+        "297405059"
+      ]
+    },
+    "CSCI 2400": {
+      "credits": "4",
+      "name": "Computer Systems",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 2092.0682029013237,
+      "y": -2594.44736881199,
+      "subnodes": []
+    },
+    "MATH 2001": {
+      "credits": "3",
+      "name": "Introduction to Discrete Mathematics",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": 934.6637700534958,
+      "y": -771.9035870991763,
+      "subnodes": []
+    },
+    "CSCI 2824": {
+      "credits": "3",
+      "name": "Discrete Structures",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ],
+        [
+          "CSCI 1300"
+        ]
+      ],
+      "x": 948.0016606784903,
+      "y": -1052.6535870991836,
+      "subnodes": []
+    },
+    "ECEN 2703": {
+      "credits": "3",
+      "name": "Discrete Mathematics for Computer Engineers",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": 1507.163770053498,
+      "y": -1056.9035870991727,
+      "subnodes": []
+    },
+    "APPM 3170": {
+      "credits": "3",
+      "name": "Discrete Applied Mathematics",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": 1502.1637700534961,
+      "y": -756.9035870991745,
+      "subnodes": []
+    },
+    "APPM 1360": {
+      "credits": "4",
+      "name": "Calculus 2 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": 504.81456370429646,
+      "y": -95.0391182347177,
+      "subnodes": []
+    },
+    "MATH 2300": {
+      "credits": "5",
+      "name": "Calculus 2",
+      "prerequisites": [
+        [
+          "APPM 1350",
+          "MATH 1300"
+        ]
+      ],
+      "x": 330.52884941858304,
+      "y": -415.03911823472583,
+      "subnodes": []
+    },
+    "CSCI 3104": {
+      "credits": "4",
+      "name": "Algorithms",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "MATH 2001",
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170"
+        ]
+      ],
+      "x": 2344.288589678337,
+      "y": -1133.3559003415041,
+      "subnodes": []
+    },
+    "CSCI 3155": {
+      "credits": "4",
+      "name": "Principles of Programming Languages",
+      "prerequisites": [
+        [
+          "MATH 2001",
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170"
+        ],
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 2066.9253080253243,
+      "y": -1658.2127243867228,
+      "subnodes": []
+    },
+    "CSCI 3308": {
+      "credits": "3",
+      "name": "Software Development Methods and Tools",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 2479.4862808760245,
+      "y": -1418.002364987971,
+      "subnodes": []
+    },
+    "CSCI 3002": {
+      "credits": "4",
+      "name": "Fundamentals of Human Computer Interaction",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 3405.2586413586523,
+      "y": -2358.7682799422787,
+      "subnodes": []
+    },
+    "CSCI 2820": {
+      "credits": "3",
+      "name": "Linear Algebra with Computer Science Applications",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": 1704.8611258306978,
+      "y": 33.56919417780031,
+      "subnodes": []
+    },
+    "MATH 2130": {
+      "credits": "3",
+      "name": "Introduction to Linear Algebra for Non-Mathematics Majors",
+      "prerequisites": [
+        [
+          "MATH 2300",
+          "APPM 1360"
+        ]
+      ],
+      "x": 1018.7472527472593,
+      "y": 29.50854700854924,
+      "subnodes": []
+    },
+    "APPM 3310": {
+      "credits": "3",
+      "name": "Matrix Methods and Applications",
+      "prerequisites": [
+        [
+          "APPM 2340",
+          "APPM 2350",
+          "APPM 2360",
+          "MATH 2400"
+        ]
+      ],
+      "x": 1117.0805860805933,
+      "y": 466.17521367521016,
+      "subnodes": []
+    },
+    "APPM 3570": {
+      "credits": "3",
+      "name": "Applied Probability",
+      "prerequisites": [
+        [
+          "APPM 2350",
+          "APPM 2340",
+          "MATH 2400"
+        ]
+      ],
+      "x": 829.0400025095707,
+      "y": 1013.4287790373912,
+      "subnodes": []
+    },
+    "APPM 2350": {
+      "credits": "4",
+      "name": "Calculus 3 for Engineers",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": 466.07335276679635,
+      "y": 530.2465960509871,
+      "subnodes": []
+    },
+    "APPM 2340": {
+      "credits": "4",
+      "name": "Calculus 3 for Statistics and Data Science",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": 519.7628058917963,
+      "y": 581.2465960509871,
+      "subnodes": []
+    },
+    "MATH 2400": {
+      "credits": "5",
+      "name": "Calculus 3",
+      "prerequisites": [
+        [
+          "MATH 2300",
+          "APPM 1360"
+        ]
+      ],
+      "x": 433.25401682929635,
+      "y": 632.2465960509871,
+      "subnodes": []
+    },
+    "APPM 4570": {
+      "credits": "3",
+      "name": "Statistical Methods",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": 86.54000250957102,
+      "y": 1875.928779037394,
+      "subnodes": []
+    },
+    "CHEN 3010": {
+      "credits": "3",
+      "name": "Applied Data Analysis",
+      "prerequisites": [
+        [
+          "CHEN 1310"
+        ],
+        [
+          "APPM 2360",
+          "MATH 2130"
+        ],
+        [
+          "MATH 3430"
+        ]
+      ],
+      "x": 1696.924617894188,
+      "y": 1227.659548268159,
+      "subnodes": []
+    },
+    "CSCI 3022": {
+      "credits": "3",
+      "name": "Introduction to Data Science with Probability and Statistics",
+      "prerequisites": [
+        [
+          "CSCI 2270",
+          "CSCI 2275"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170",
+          "MATH 2001"
+        ]
+      ],
+      "x": 2414.0400025095737,
+      "y": 1585.9287790373921,
+      "subnodes": []
+    },
+    "CVEN 3227": {
+      "credits": "3",
+      "name": "Probability, Statistics and Decision",
+      "prerequisites": [],
+      "x": 1674.0400025095719,
+      "y": 1983.4287790373926,
+      "subnodes": [
+        "1441725896"
+      ]
+    },
+    "ECEN 3810": {
+      "credits": "3",
+      "name": "Introduction to Probability Theory",
+      "prerequisites": [
+        [
+          "APPM 2350",
+          "MATH 2400"
+        ]
+      ],
+      "x": 836.5400025095707,
+      "y": 1398.4287790373912,
+      "subnodes": []
+    },
+    "ECON 3818": {
+      "credits": "4",
+      "name": "Introduction to Statistics with Computer Applications",
+      "prerequisites": [
+        [
+          "ECON 2020"
+        ],
+        [
+          "MATH 1300",
+          "APPM 1350",
+          "ECON 1088",
+          "MATH 1081",
+          "MATH 1310",
+          "MATH 1330",
+          "APPM 1340",
+          "APPM 1345",
+          "FNCE 2010"
+        ]
+      ],
+      "x": -160.56638867666288,
+      "y": 975.3106986150926,
+      "subnodes": [
+        "-1467263382"
+      ]
+    },
+    "MATH 3510": {
+      "credits": "3",
+      "name": "Introduction to Probability and Statistics",
+      "prerequisites": [
+        [
+          "MATH 2300",
+          "APPM 1360"
+        ],
+        [
+          "MATH 2001",
+          "MATH 2002"
+        ]
+      ],
+      "x": 1991.4336113233433,
+      "y": 1427.3106986151008,
+      "subnodes": []
+    },
+    "MATH 4510": {
+      "credits": "3",
+      "name": "Introduction to Probability Theory",
+      "prerequisites": [
+        [
+          "MATH 2400",
+          "APPM 2350"
+        ],
+        [
+          "MATH 2130",
+          "MATH 3130",
+          "MATH 2135",
+          "MATH 3135"
+        ]
+      ],
+      "x": 1113.847694817264,
+      "y": 1229.1980098066208,
+      "subnodes": []
+    },
+    "STAT 3100": {
+      "credits": "3",
+      "name": "Applied Probability",
+      "prerequisites": [
+        [
+          "APPM 2350",
+          "APPM 2340",
+          "MATH 2400"
+        ]
+      ],
+      "x": 511.54000250957165,
+      "y": 1488.4287790373908,
+      "subnodes": []
+    },
+    "STAT 4000": {
+      "credits": "3",
+      "name": "Statistical Methods and Application 1",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ]
+      ],
+      "x": 551.5400025095717,
+      "y": 1903.428779037394,
+      "subnodes": []
+    },
+    "CSCI 3202": {
+      "credits": "3",
+      "name": "Introduction to Artificial Intelligence",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 3170",
+          "CSCI 2824",
+          "ECEN 2703",
+          "MATH 2001"
+        ],
+        [
+          "APPM 3570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "ECEN 3810",
+          "ECON 3818",
+          "MATH 3510",
+          "MATH 4510",
+          "STAT 3100",
+          "STAT 4000"
+        ]
+      ],
+      "x": 3633.9253080253184,
+      "y": -1232.8793910533898,
+      "subnodes": []
+    },
+    "CSCI 3287": {
+      "credits": "3",
+      "name": "Design and Analysis of Database Systems",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 3147.4808635808786,
+      "y": -2192.1016132756154,
+      "subnodes": []
+    },
+    "CSCI 3302": {
+      "credits": "3",
+      "name": "Introduction to Robotics",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 3170",
+          "CSCI 2824",
+          "ECEN 2703",
+          "MATH 2001"
+        ],
+        [
+          "APPM 2360",
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ]
+      ],
+      "x": 3327.7182686878396,
+      "y": -1326.4308058221989,
+      "subnodes": []
+    },
+    "CSCI 3403": {
+      "credits": "4",
+      "name": "Introduction to CyberSecurity for a Converged World",
+      "prerequisites": [
+        [
+          "CSCI 2400",
+          "ECEN 3350"
+        ]
+      ],
+      "x": 2719.040002509573,
+      "y": -2396.571220962614,
+      "subnodes": []
+    },
+    "CSCI 3434": {
+      "credits": "3",
+      "name": "Theory of Computation",
+      "prerequisites": [
+        [
+          "CSCI 3104"
+        ]
+      ],
+      "x": 3488.873335842906,
+      "y": 382.9287790373897,
+      "subnodes": []
+    },
+    "CSCI 3656": {
+      "credits": "3",
+      "name": "Numerical Computation",
+      "prerequisites": [
+        [
+          "ASEN 1320",
+          "CSCI 1300"
+        ],
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "APPM 2360",
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ]
+      ],
+      "x": 3223.9253080253175,
+      "y": -593.4349466089429,
+      "subnodes": []
+    },
+    "CSCI 3753": {
+      "credits": "4",
+      "name": "Design and Analysis of Operating Systems",
+      "prerequisites": [
+        [
+          "CSCI 2400"
+        ]
+      ],
+      "x": 2842.8684648684853,
+      "y": -2953.1682206682267,
+      "subnodes": []
+    },
+    "CSCI 4022": {
+      "credits": "3",
+      "name": "Advanced Data Science",
+      "prerequisites": [
+        [
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ],
+        [
+          "CSCI 3022",
+          "APPM 3570",
+          "CHEN 3010",
+          "CVEN 3227",
+          "MATH 3510",
+          "MATH 4510",
+          "ECEN 3810",
+          "ECON 3818",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ],
+        [
+          "CSCI 3104"
+        ]
+      ],
+      "x": 4060.508292361273,
+      "y": 406.32102211510687,
+      "subnodes": []
+    },
+    "CSCI 4273": {
+      "credits": "3",
+      "name": "Network Systems",
+      "prerequisites": [
+        [
+          "CSCI 3753"
+        ]
+      ],
+      "x": 3251.9253080253184,
+      "y": -2978.7682799422796,
+      "subnodes": []
+    },
+    "CSCI 4448": {
+      "credits": "3",
+      "name": "Object-Oriented Analysis and Design",
+      "prerequisites": [
+        [
+          "CSCI 3308"
+        ]
+      ],
+      "x": 3120.0161929857622,
+      "y": -1436.6902685816601,
+      "subnodes": []
+    },
+    "CSCI 3010": {
+      "credits": "3",
+      "name": "Programming Project Workshop",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "CSCI 3308"
+        ]
+      ],
+      "x": 4245.797842336562,
+      "y": -718.6911468304929,
+      "subnodes": [
+        "-2022840893"
+      ]
+    },
+    "CSCI 3090": {
+      "credits": "3",
+      "name": "Introduction to Quantum Computing",
+      "prerequisites": [
+        [
+          "APPM 2360",
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ]
+      ],
+      "x": 6204.925308025324,
+      "y": -381.5460577200548,
+      "subnodes": []
+    },
+    "CSCI 3112": {
+      "credits": "1",
+      "name": "Professional Development in Computer Science",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 4307.415130827214,
+      "y": -2421.3912027558313,
+      "subnodes": []
+    },
+    "CSCI 3150": {
+      "credits": "3",
+      "name": "Universal Design for Digital Media",
+      "prerequisites": [
+        [
+          "CSCI 1300"
+        ]
+      ],
+      "x": 3319.0400025095714,
+      "y": -4196.571220962607,
+      "subnodes": []
+    },
+    "CSCI 3352": {
+      "credits": "3",
+      "name": "Biological Networks",
+      "prerequisites": [
+        [
+          "ASTR 2600",
+          "CSCI 2270",
+          "INFO 2201",
+          "PHYS 2600"
+        ],
+        [
+          "APPM 1345",
+          "APPM 1350",
+          "MATH 1300"
+        ],
+        [
+          "APPM 3570",
+          "APPM 4570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "EBIO 4410",
+          "ECEN 3810",
+          "ECON 3818",
+          "IPHY 2800",
+          "MATH 3510",
+          "MATH 4510",
+          "MATH 4520",
+          "MCDB 3450",
+          "MCEN 3047",
+          "STAT 2600",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ]
+      ],
+      "x": 6345.22641376512,
+      "y": 457.3983192589723,
+      "subnodes": []
+    },
+    "CSCI 3702": {
+      "credits": "3",
+      "name": "Cognitive Science",
+      "prerequisites": [
+        [
+          "CSCI 1300",
+          "LING 2000",
+          "PHIL 2440",
+          "PSYC 2145",
+          "CSCI 2275"
+        ]
+      ],
+      "x": 3966.540002509573,
+      "y": -3661.571220962608,
+      "subnodes": []
+    },
+    "CSCI 3832": {
+      "credits": "3",
+      "name": "Natural Language Processing",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "CSCI 2824",
+          "MATH 2001",
+          "ECEN 2703",
+          "APPM 3170"
+        ]
+      ],
+      "x": 4734.147530247545,
+      "y": -2798.7682799422814,
+      "subnodes": []
+    },
+    "CSCI 4113": {
+      "credits": "3",
+      "name": "Linux System Administration",
+      "prerequisites": [
+        [
+          "CSCI 3753"
+        ]
+      ],
+      "x": 3496.3697524697636,
+      "y": -3434.323835497838,
+      "subnodes": []
+    },
+    "CSCI 4114": {
+      "credits": "3",
+      "name": "Practical Algorithmic Complexity",
+      "prerequisites": [
+        [
+          "CSCI 3104"
+        ]
+      ],
+      "x": 5059.036419136433,
+      "y": 281.2317200577195,
+      "subnodes": []
+    },
+    "CSCI 4122": {
+      "credits": "3",
+      "name": "Information Visualization",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170"
+        ]
+      ],
+      "x": 4974.750628662713,
+      "y": -1728.7862244008368,
+      "subnodes": []
+    },
+    "CSCI 4200": {
+      "credits": "3",
+      "name": "Introduction to Wireless Systems",
+      "prerequisites": [
+        [
+          "CSCI 2400",
+          "ECEN 3350"
+        ],
+        [
+          "APPM 3570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "ECEN 3810",
+          "ECON 3818",
+          "MATH 3510",
+          "MATH 4510",
+          "MCEN 3047",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ],
+        [
+          "PHYS 1120"
+        ]
+      ],
+      "x": 5133.211060044204,
+      "y": -660.8997497643679,
+      "subnodes": []
+    },
+    "CSCI 4229": {
+      "credits": "3",
+      "name": "Computer Graphics",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 4802.32961013876,
+      "y": -2198.7174075108355,
+      "subnodes": []
+    },
+    "CSCI 4239": {
+      "credits": "3",
+      "name": "Advanced Computer Graphics",
+      "prerequisites": [
+        [
+          "CSCI 4229"
+        ]
+      ],
+      "x": 4933.238701047844,
+      "y": -2056.8992256926413,
+      "subnodes": []
+    },
+    "CSCI 4240": {
+      "credits": "3",
+      "name": "Introduction to Blockchain",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170",
+          "MATH 2001"
+        ]
+      ],
+      "x": 4578.816623125771,
+      "y": -1442.0348678282814,
+      "subnodes": []
+    },
+    "CSCI 4253": {
+      "credits": "3",
+      "name": "Datacenter Scale Computing - Methods, Systems and Techniques",
+      "prerequisites": [
+        [
+          "CSCI 3753"
+        ]
+      ],
+      "x": 3709.703085803097,
+      "y": -3338.7682799422814,
+      "subnodes": [
+        "301103144"
+      ]
+    },
+    "CSCI 4302": {
+      "credits": "3",
+      "name": "Advanced Robotics",
+      "prerequisites": [
+        [
+          "CSCI 3302"
+        ]
+      ],
+      "x": 4934.632973442117,
+      "y": -3248.25398204739,
+      "subnodes": []
+    },
+    "CSCI 4314": {
+      "credits": "3",
+      "name": "Dynamic Models in Biology",
+      "prerequisites": [
+        [
+          "CSCI 3104"
+        ]
+      ],
+      "x": 5177.632973442129,
+      "y": -3048.253982047386,
+      "subnodes": []
+    },
+    "CSCI 4413": {
+      "credits": "3",
+      "name": "Computer Security and Ethical Hacking",
+      "prerequisites": [
+        [
+          "CSCI 4273"
+        ]
+      ],
+      "x": 3651.9253080253193,
+      "y": -3138.768279942276,
+      "subnodes": []
+    },
+    "CSCI 4446": {
+      "credits": "3",
+      "name": "Chaotic Dynamics",
+      "prerequisites": [
+        [
+          "ASEN 1320",
+          "CSCI 1300",
+          "ECEN 1310"
+        ],
+        [
+          "APPM 2350",
+          "MATH 2400"
+        ]
+      ],
+      "x": 4858.206669176243,
+      "y": 837.5954457040577,
+      "subnodes": [
+        "331478834"
+      ]
+    },
+    "CSCI 4502": {
+      "credits": "3",
+      "name": "Data Mining",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 5702.632973442109,
+      "y": -3164.253982047386,
+      "subnodes": []
+    },
+    "CSCI 4555": {
+      "credits": "3",
+      "name": "Compiler Construction",
+      "prerequisites": [
+        [
+          "CSCI 3155"
+        ],
+        [
+          "CSCI 2400",
+          "ECEN 3350"
+        ]
+      ],
+      "x": 5066.868464868502,
+      "y": -3589.168220668238,
+      "subnodes": []
+    },
+    "CSCI 4576": {
+      "credits": "4",
+      "name": "High-Performance Scientific Computing",
+      "prerequisites": [
+        [
+          "APPM 4650",
+          "CSCI 3656",
+          "MATH 4650",
+          "MCEN 3030"
+        ]
+      ],
+      "x": 5875.632973442107,
+      "y": -3081.253982047388,
+      "subnodes": []
+    },
+    "CSCI 4593": {
+      "credits": "3",
+      "name": "Computer Organization",
+      "prerequisites": [
+        [
+          "ECEN 3350",
+          "CSCI 2400"
+        ]
+      ],
+      "x": 5296.8684648685075,
+      "y": -3439.168220668225,
+      "subnodes": []
+    },
+    "CSCI 4616": {
+      "credits": "3",
+      "name": "Introduction to Virtual Reality",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ]
+      ],
+      "x": 5463.632973442104,
+      "y": -3658.2539820474076,
+      "subnodes": []
+    },
+    "CSCI 4622": {
+      "credits": "3",
+      "name": "Machine Learning",
+      "prerequisites": [
+        [
+          "CSCI 2270"
+        ],
+        [
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ],
+        [
+          "CSCI 2824",
+          "ECEN 2703",
+          "APPM 3170",
+          "MATH 2001"
+        ],
+        [
+          "APPM 3570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "ECEN 3810",
+          "ECON 3818",
+          "MATH 3510",
+          "MATH 4510",
+          "MCEN 3047",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ]
+      ],
+      "x": 7015.619758509487,
+      "y": -665.9525381481474,
+      "subnodes": []
+    },
+    "CSCI 4753": {
+      "credits": "3",
+      "name": "Computer Performance Modeling",
+      "prerequisites": [
+        [
+          "APPM 1360",
+          "MATH 2300"
+        ],
+        [
+          "CSCI 3753"
+        ]
+      ],
+      "x": 3695.03641913643,
+      "y": -2906.7682799422805,
+      "subnodes": [
+        "676028375"
+      ]
+    },
+    "CSCI 4802": {
+      "credits": "1",
+      "name": "Data Science Team Companion Course",
+      "prerequisites": [
+        [
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ],
+        [
+          "APPM 3570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "ECEN 3810",
+          "ECON 3818",
+          "MATH 3510",
+          "MATH 4510",
+          "MCEN 3047",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ]
+      ],
+      "x": 6688.925308025324,
+      "y": -1357.546057720054,
+      "subnodes": []
+    },
+    "CSCI 4809": {
+      "credits": "3",
+      "name": "Computer Animation",
+      "prerequisites": [],
+      "x": 6186.632973442107,
+      "y": -2962.25398204739,
+      "subnodes": []
+    },
+    "CSCI 4830": {
+      "credits": "1",
+      "name": "Special Topics in Computer Science",
+      "prerequisites": [
+        [
+          "CSCI 2400",
+          "ECEN 3350"
+        ]
+      ],
+      "x": 6495.632973442103,
+      "y": -2689.2539820473908,
+      "subnodes": [
+        "-360782877"
+      ]
+    },
+    "CSCI 4831": {
+      "credits": "1",
+      "name": "Special Topics in Algorithms",
+      "prerequisites": [
+        [
+          "CSCI 3104"
+        ],
+        [
+          "APPM 3310",
+          "CSCI 2820",
+          "MATH 2130",
+          "MATH 2135",
+          "MATH 3130",
+          "MATH 3135"
+        ]
+      ],
+      "x": 5043.036419136432,
+      "y": 125.23172005772079,
+      "subnodes": [
+        "-1746504083"
+      ]
+    },
+    "CSCI 4849": {
+      "credits": "3",
+      "name": "Input, Interaction, and Accessibility",
+      "prerequisites": [
+        [
+          "CSCI 3002"
+        ]
+      ],
+      "x": 6711.632973442096,
+      "y": -2174.253982047406,
+      "subnodes": []
+    },
+    "CSCI 4889": {
+      "credits": "3",
+      "name": "Interactive Machine Learning for Customizable and Expressive Interfaces",
+      "prerequisites": [
+        [
+          "APPM 3570",
+          "APPM 4570",
+          "CHEN 3010",
+          "CSCI 3022",
+          "CVEN 3227",
+          "ECEN 3810",
+          "ECON 3818",
+          "MATH 3510",
+          "MATH 4510",
+          "MCEN 3047",
+          "STAT 3100",
+          "STAT 4000",
+          "STAT 4520"
+        ],
+        [
+          "CSCI 3002",
+          "CSCI 3202",
+          "CSCI 4448"
+        ]
+      ],
+      "x": 4641.7658877354625,
+      "y": -1203.8117582031484,
+      "subnodes": []
+    },
+    "CSCI 4900": {
+      "credits": "1",
+      "name": "Independent Study",
+      "prerequisites": [
+        [
+          "ASEN 1320",
+          "CSCI 1300",
+          "CSCI 2275"
+        ]
+      ],
+      "x": 3761.5400025095723,
+      "y": -4006.571220962608,
+      "subnodes": [
+        "277863126"
       ]
     }
   }

@@ -7,14 +7,16 @@
     <script src="p5/p5.js"></script>
     <!-- General styles and HTML element styles -->
     <link rel="stylesheet" href="css/master.css">
-    <!-- Navigation menu styles -->
-    <link rel="stylesheet" href="css/newmapview/navigation.css">
+    <!-- constants and such used by multiple pages -->
+    <script src="javascript/master.js"></script>
+
+
   </head>
   <body>
     <!-- Navigation / Menu at top of screen -->
     <nav>
       <div class="menu-option">
-        <button type="button" name="button">
+        <button class="menu-drop-btn" type="button" name="button">
           <img src="images/filemenu.png" alt="File">
         </button>
         <div class="menu-elements">
@@ -25,10 +27,56 @@
             Upload Coursework
           </button>
           <button class="menu-element" type="button" name="button">
-
+            Clear Coursework
           </button>
         </div>
       </div>
+      <div class="menu-option">
+        <button class="menu-drop-btn" type="button" name="button">
+          <img src="images/filemenu.png" alt="Edit">
+        </button>
+        <div class="menu-elements">
+          <button class="menu-element" type="button" name="button">
+            Download Map
+          </button>
+          <button class="menu-element" type="button" name="button">
+            Upload Map
+          </button>
+          <button class="menu-element" type="button" name="button">
+            Add Course
+          </button>
+          <button class="menu-element" type="button" name="button">
+            Add Note
+          </button>
+          <button class="menu-element" type="button" name="button">
+            Connect Nodes
+          </button>
+          <button class="menu-element" type="button" name="button">
+            Delete Node
+          </button>
+          <button class="menu-element" type="button" name="button">
+            Edit Position
+          </button>
+        </div>
+      </div>
+      <div class="menu-option">
+        <button class="menu-drop-btn" type="button" name="button">
+          <img src="images/filemenu.png" alt="View">
+        </button>
+        <div class="menu-elements">
+          <button class="menu-element" type="button" name="button">
+            Degree Requirements
+          </button>
+          <button class="menu-element" type="button" name="button">
+            Help
+          </button>
+        </div>
+      </div>
+      <button class="menu-option" type="button" name="button"
+        onclick="window.open('index.html', 'blank')"
+      >
+        <img src="images/filemenu.png" alt="Planner">
+      </button>
     </nav>
   </body>
 </html>
