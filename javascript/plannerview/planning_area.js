@@ -20,7 +20,7 @@ class Semester {
 
     this.p5Element = createDiv();
     this.p5Element.class('semester');
-    this.p5Element.attribute('order', order);
+    this.p5Element.attribute('order', this.order);
 
     let deleteSemesterBtn = createButton('X');
     deleteSemesterBtn.mouseClicked(function() {
@@ -40,57 +40,21 @@ class Semester {
 
     addCourse(this.p5Element);
 
-    // TODO: finish this and recomment
-  }
-  
-}
-
-// add a semester
-function addSemester(season, year) {
-  // get the year if we don't have it
-  if(year == '') {
-    let date = new Date();
-    year = date.getFullYear();
-  }
-  // figure out where this semester is
-  let order = int(year) + SeasonValues[season];
-  let newSemester = createDiv();
-  newSemester.class('semester');
-  newSemester.attribute('order', order);
-  // make a delete semester button
-  let deleteSemesterBtn = createButton('X');
-  deleteSemesterBtn.mouseClicked(function() {
-    deleteSemester(newSemester.elt);
-    toggleDeleteSemester();
-  });
-  deleteSemesterBtn.parent(newSemester);
-  deleteSemesterBtn.class('delete-semester');
-  // title the semester
-  let title = createP(capatilize(season) + ' ' + year);
-  title.parent(newSemester);
-  title.class('semester-title');
-  // add the little credits thing to the semester
-  let credits = createP('Credits: ' + '0');
-  credits.parent(newSemester);
-  credits.class('semester-credits');
-  // add empty course to the semester
-  addCourse(newSemester);
-
-  // once finished making element insert it
-  // length -1 because our new semester is part of these classes now
-  let semesterList = document.querySelectorAll('.semester');
-  for(let i = 0; i < semesterList.length-1; i++) {
-    if(float(semesterList[i].getAttribute('order')) > float(order)) {
-      semesterList[i].parentElement.insertBefore(newSemester.elt, semesterList[i]);
-      return;
+    let semesterList = document.querySelectorAll('.semester');
+    for(let i = 0; i < semesterList.length-1; i++) {
+      if(float(semesterList[i].getAttribute('order')) > float(this.order)) {
+        semesterList[i].parentElement.insertBefore(this.p5Element.elt, semesterList[i]);
+        return;
+      }
     }
+    // put the little dingus at the end of the semesters if it's the last
+    let buttonHolders = document.querySelectorAll('.button-holder');
+    buttonHolders[buttonHolders.length-1].parentElement.insertBefore(
+      this.p5Element.elt,
+      buttonHolders[buttonHolders.length-1]
+    );
   }
-  // put the little dingus at the end of the semesters if it's the last
-  let buttonHolders = document.querySelectorAll('.button-holder');
-  buttonHolders[buttonHolders.length-1].parentElement.insertBefore(
-    newSemester.elt,
-    buttonHolders[buttonHolders.length-1]
-  );
+
 }
 
 // setup the planning area
@@ -135,9 +99,9 @@ function setupSemesters() {
   for(let i = 0; i < 8; i++) {
     let yearValue = int(currentYear + (i + (currentMonth > 4)) / 2);
     if(i % 2 == 0) {
-      addSemester('fall', yearValue);
+      new Semester('fall', yearValue);
     } else {
-      addSemester('spring', yearValue);
+      new Semester('spring', yearValue);
     }
   }
 }
@@ -228,7 +192,7 @@ function insertCourseworkJSON(json) {
         season = key;
       }
     }
-    addSemester(season, year);
+    new Semester(season, year);
   });
 
   for(let key in json) {
@@ -284,7 +248,7 @@ function deleteSemesterOn() {
 // form you submit to add a semester
 document.querySelector('#submit-semester').addEventListener('click', function(){
   addSemesterForm.style.display = 'none';
-  addSemester(
+  new Semester(
     document.querySelector('#season-selector').value,
     document.querySelector('#semester-year').value
   );

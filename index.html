@@ -13,7 +13,7 @@
     <script defer src="javascript/plannerview/planning_area.js"></script>
 
     <!-- General styles and HTML element styles -->
-    <link rel="stylesheet" href="css/plannerview/master.css">
+    <link rel="stylesheet" href="css/master.css">
     <!-- Styles for the left degree area -->
     <link rel="stylesheet" href="css/plannerview/degree_area.css">
     <!-- Styles for the planning area -->
@@ -42,7 +42,9 @@
         <button class="menu-option" id="menu-save" type="button" name="button" title="Save or Load Coursework">
           <img src="images/editmenu.png" alt="File">
         </button>
-        <button class="menu-option" id="open-mapview" type="button" name="button" title="Open Map View">
+        <button class="menu-option" id="open-mapview" type="button" name="button" title="Open Map View"
+          onclick="window.open('map_view.html', 'blank')"
+        >
           <img src="images/plannerview/mapview.png" alt="map">
         </button>
         <button class="menu-option" id="trashcan" type="button" name="button" title="Trash">
