@@ -1,6 +1,6 @@
 // courses in the map
-class Course {
-  constructor(code) {
-    
+class Course extends MapNode {
+  constructor() {
+    super();
   }
 }
