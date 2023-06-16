@@ -161,6 +161,8 @@ nav {
 nav > button {
   width: 100px;
   height: 100px;
+
+  background-color: #2A4260;
 }
 
 /* each menu div */
@@ -190,6 +192,14 @@ nav > button {
 
 /* turn off background on all the buttons */
 .menu-option * {
+  background-color: #2A4260;
+}
+
+.menu-option > * img {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.menu-option > img {
   background-color: rgba(0, 0, 0, 0);
 }
 
@@ -202,6 +212,8 @@ nav > button {
 .menu-drop-btn {
   width: 100px;
   height: 100px;
+
+  background-color: rgba(0, 0, 0, 0);
 }
 
 /* turn off the dropdown hover since not a button */

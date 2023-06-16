@@ -1,5 +1,30 @@
+body {
+  overflow: hidden;
+}
+
+/* node basics / defaults */
 .map-node {
   transform: translate(-50%, -50%);
 
   background-color: #bdc3c7;
+}
+
+/* course code in the map node courses */
+.map-course-code {
+
+}
+
+/* course name in the map node courses */
+.map-course-name {
+
+}
+
+/* note title in the map node notes */
+.map-note-title {
+
+}
+
+/* note text in the map node notes */
+.map-note-text {
+
 }
