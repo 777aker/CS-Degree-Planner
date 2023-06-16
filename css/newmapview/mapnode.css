@@ -6,31 +6,37 @@ body {
 .map-node {
   transform: translate(-50%, -50%);
 
-  background-color: #bdc3c7;
+  background-color: #2A4260;
 
-  
+  box-shadow: 0px 0px 50px 5px #2D547A;
+  border: none;
+  border-radius: 5px;
+
+  padding: 10px;
+
+  text-wrap: nowrap;
+  white-space: nowrap;
+  user-select: none;
+
+  text-align: center;
 }
 
 /* course code in the map node courses */
 .map-course-code {
-  text-wrap: nowrap;
-  white-space: nowrap;
+  font-weight: bold;
 }
 
 /* course name in the map node courses */
 .map-course-name {
-  text-wrap: nowrap;
-  white-space: nowrap;
+
 }
 
 /* note title in the map node notes */
 .map-note-title {
- text-wrap: nowrap;
- white-space: nowrap;
+
 }
 
 /* note text in the map node notes */
 .map-note-text {
-  text-wrap: nowrap;
-  white-space: nowrap;
+
 }

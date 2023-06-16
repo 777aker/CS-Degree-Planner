@@ -37,12 +37,12 @@ function mouseWheel(e) {
 }
 
 function mouseDragged() {
-  document.body.style.cursor = 'all-scroll';
   mapNodesHolder.pan();
 }
 
 function mouseReleased() {
   document.body.style.cursor = '';
+  mapNodesHolder.mouseReleasedEvent(mapNodesHolder);
 }
 
 function windowResized(e) {

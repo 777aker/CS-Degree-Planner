@@ -5,7 +5,9 @@ class MapNodesHolder {
   reduceZoom = 10;
   scaleFactor = .1;
   maxZoom = 3;
-  minZoom = -1.2;
+  minZoom = -0.8;
+
+  draggingNode;
 
   // define our mapnodes list
   constructor() {
@@ -19,6 +21,11 @@ class MapNodesHolder {
 
   // how we handle panning
   pan() {
+    if(this.draggingNode) {
+      this.draggingNode.dragNode();
+      return;
+    }
+    document.body.style.cursor = 'all-scroll';
     // calculate some variables so each node doesn't repeat the same calculation
     let zoomFactor = sqrt((this.zoomFactor + .1 - this.minZoom) / this.reduceZoom);
 
@@ -64,18 +71,43 @@ class MapNodesHolder {
       node.draw();
     });
   }
+
+  mouseReleasedEvent(self) {
+    if(self.draggingNode) {
+      self.draggingNode.mouseReleased(self.draggingNode);
+    }
+    self.draggingNode = false;
+  }
 }
 
 // these are every little guy in the map (courses and notes)
 class MapNode {
   fontSize = 32;
+  dragging = false;
 
   // initialize some stuff
   constructor(json) {
     this.p5Elt = createDiv('');
     this.p5Elt.class('map-node');
     this.p5Elt.style('font-size', this.fontSize + 'pt');
+    this.attachListeners();
     mapNodesHolder.addNode(this);
+  }
+
+  attachListeners() {
+    let self = this;
+    this.p5Elt.mouseOver(function() {
+      self.mouseOver(self);
+    });
+    this.p5Elt.mousePressed(function() {
+      self.mousePressed(self);
+    });
+    this.p5Elt.mouseReleased(function() {
+      self.mouseReleased(self);
+    });
+    this.p5Elt.mouseOut(function() {
+      self.mouseOut(self);
+    });
   }
 
   // move the element cause we're panning
@@ -99,6 +131,38 @@ class MapNode {
   // just position the element
   draw() {
     this.p5Elt.position(this.x, this.y);
+  }
+
+  // mouse is over the element
+  mouseOver(self) {
+    if(!mapNodesHolder.draggingNode) {
+      document.body.style.cursor = 'grab';
+    }
+  }
+
+  // handle the element having mouse clicked above it
+  mousePressed(self) {
+    document.body.style.cursor = 'grabbing';
+    mapNodesHolder.draggingNode = self;
+    this.p5Elt.style('z-index', '-1');
+  }
+
+  dragNode() {
+    this.x = mouseX;
+    this.y = mouseY;
+  }
+
+  // handle the element having mouse released above it
+  mouseReleased(self) {
+    document.body.style.cursor = 'grab';
+    this.p5Elt.style('z-index', '');
+  }
+
+  // mouse leaves the element
+  mouseOut(self) {
+    if(!mapNodesHolder.draggingNode) {
+      document.body.style.cursor = '';
+    }
   }
 }
 
