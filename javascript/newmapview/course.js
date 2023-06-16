@@ -1,8 +1,7 @@
 // courses in the map
 class Course extends MapNode {
-  constructor() {
-    super();
-    console.log(this);
-    this.p5Elt.html(this.code);
+  constructor(json) {
+    super(json);
+    this.p5Elt.html(json.code + '<br>' + json.name);
   }
 }

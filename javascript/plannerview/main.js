@@ -16,6 +16,10 @@ function setup() {
   planningAreaSetup();
 }
 
+function windowResized(e) {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
 // global variables
 // source element dragged
 let dragSrcElement;

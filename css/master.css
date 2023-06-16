@@ -153,6 +153,8 @@ nav {
   margin: 10px;
 
   position: fixed;
+
+  z-index: 1;
 }
 
 /* make nav buttons have correct size */
