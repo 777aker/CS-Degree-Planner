@@ -7,24 +7,30 @@ body {
   transform: translate(-50%, -50%);
 
   background-color: #bdc3c7;
+
+  
 }
 
 /* course code in the map node courses */
 .map-course-code {
-
+  text-wrap: nowrap;
+  white-space: nowrap;
 }
 
 /* course name in the map node courses */
 .map-course-name {
-
+  text-wrap: nowrap;
+  white-space: nowrap;
 }
 
 /* note title in the map node notes */
 .map-note-title {
-
+ text-wrap: nowrap;
+ white-space: nowrap;
 }
 
 /* note text in the map node notes */
 .map-note-text {
-
+  text-wrap: nowrap;
+  white-space: nowrap;
 }

@@ -22,9 +22,6 @@ function setupDegree() {
     Degree.courses[code] = Object.assign(new Course(Degree.courses[code]), Degree.courses[code]);
   }
   for(let note in Degree.notes) {
-    delete Degree.notes[note].code;
-    delete Degree.notes[note].width;
-    delete Degree.notes[note].height;
     Degree.notes[note] = Object.assign(new Note(Degree.notes[note]), Degree.notes[note]);
   }
 }
