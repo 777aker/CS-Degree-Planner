@@ -19,6 +19,15 @@ body {
   user-select: none;
 
   text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* if the mapnode is a child of another one no box shadow */
+.child-map-node {
+  box-shadow: none;
 }
 
 /* course code in the map node courses */

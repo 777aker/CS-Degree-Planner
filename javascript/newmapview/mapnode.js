@@ -61,7 +61,7 @@ class MapNodesHolder {
     );
     // pass magix to each node
     this.mapNodes.forEach(node => {
-      node.zoom(e, this.scaleFactor, direction, translate);
+      node.zoom(this.scaleFactor, direction, translate);
     });
   }
 
@@ -73,10 +73,18 @@ class MapNodesHolder {
   }
 
   mouseReleasedEvent(self) {
+    self.releaseNode(self);
+  }
+
+  releaseNode(self=this) {
     if(self.draggingNode) {
       self.draggingNode.mouseReleased(self.draggingNode);
     }
     self.draggingNode = false;
+  }
+
+  grabNode(node) {
+    this.draggingNode = node;
   }
 }
 
@@ -84,6 +92,32 @@ class MapNodesHolder {
 class MapNode {
   fontSize = 32;
   dragging = false;
+  child = false;
+
+  hiddenX;
+  hiddenY;
+
+  set x(newx) {
+    if(this.child) {
+      return;
+    }
+    this.hiddenX = newx;
+  }
+
+  get x() {
+    return this.hiddenX;
+  }
+
+  set y(newy) {
+    if(this.child) {
+      return;
+    }
+    this.hiddenY = newy;
+  }
+
+  get y() {
+    return this.hiddenY;
+  }
 
   // initialize some stuff
   constructor(json) {
@@ -117,19 +151,23 @@ class MapNode {
   }
 
   // do the zooming stuff and math
-  zoom(e, scaleFactor, direction, translate) {
+  zoom(scaleFactor, direction, translate) {
+    this.fontSize += this.fontSize * scaleFactor * direction;
+
+    this.p5Elt.style('font-size', this.fontSize + 'pt');
+
     this.x -= translate.x;
     this.y -= translate.y;
 
     this.x += this.x * scaleFactor * direction;
     this.y += this.y * scaleFactor * direction;
-    this.fontSize += this.fontSize * scaleFactor * direction;
-
-    this.p5Elt.style('font-size', this.fontSize + 'pt');
   }
 
   // just position the element
   draw() {
+    if(this.child) {
+      return;
+    }
     this.p5Elt.position(this.x, this.y);
   }
 
@@ -137,14 +175,29 @@ class MapNode {
   mouseOver(self) {
     if(!mapNodesHolder.draggingNode) {
       document.body.style.cursor = 'grab';
+    } else {
+      mapNodesHolder.draggingNode.makeParent(self.p5Elt);
     }
+  }
+
+  // do stuff to become a child of something
+  makeParent(parent) {
+    this.child = true;
+    //this.x = 0;
+    //this.y = 0;
+    //this.p5Elt.position(0, 0);
+
+    this.p5Elt.style('position', 'static');
+    this.p5Elt.style('transform', 'translate(0%, 0%)');
+    this.p5Elt.class('child-map-node');
+    this.p5Elt.parent(parent);
   }
 
   // handle the element having mouse clicked above it
   mousePressed(self) {
     document.body.style.cursor = 'grabbing';
-    mapNodesHolder.draggingNode = self;
-    this.p5Elt.style('z-index', '-1');
+    mapNodesHolder.grabNode(self);
+    self.p5Elt.style('z-index', '-1');
   }
 
   dragNode() {
@@ -155,7 +208,7 @@ class MapNode {
   // handle the element having mouse released above it
   mouseReleased(self) {
     document.body.style.cursor = 'grab';
-    this.p5Elt.style('z-index', '');
+    self.p5Elt.style('z-index', '');
   }
 
   // mouse leaves the element
