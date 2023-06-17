@@ -7,7 +7,7 @@ class MapNodesHolder {
   maxZoom = 3;
   minZoom = -0.8;
 
-  draggingNode;
+  draggingNode = false;
 
   // define our mapnodes list
   constructor() {
@@ -175,8 +175,8 @@ class MapNode {
   mouseOver(self) {
     if(!mapNodesHolder.draggingNode) {
       document.body.style.cursor = 'grab';
-    } else {
-      mapNodesHolder.draggingNode.makeParent(self.p5Elt);
+    } else if(self != mapNodesHolder.draggingNode && !mapNodesHolder.draggingNode.contains(self)) {
+        mapNodesHolder.draggingNode.makeParent(self.p5Elt);
     }
   }
 
@@ -214,8 +214,20 @@ class MapNode {
   // mouse leaves the element
   mouseOut(self) {
     if(!mapNodesHolder.draggingNode) {
+      self.removeChild(mapNodesHolder.draggingNode);
       document.body.style.cursor = '';
     }
+  }
+
+  // basically html functions
+  contains(node) {
+    console.log(this);
+    return this.p5Elt.elt.contains(node.p5Elt.elt);
+  }
+
+  removeChild(node) {
+    console.log(this);
+    this.p5Elt.elt.removeChild(node.p5Elt.elt);
   }
 }
 
