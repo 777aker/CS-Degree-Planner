@@ -78,7 +78,7 @@ class MapNodesHolder {
 
   releaseNode(self=this) {
     if(self.draggingNode) {
-      self.draggingNode.mouseReleased(self.draggingNode);
+      self.draggingNode.globalMouseReleased(self.draggingNode);
     }
     self.draggingNode = false;
   }
@@ -136,9 +136,6 @@ class MapNode {
     this.p5Elt.mousePressed(function() {
       self.mousePressed(self);
     });
-    this.p5Elt.mouseReleased(function() {
-      self.mouseReleased(self);
-    });
     this.p5Elt.mouseOut(function() {
       self.mouseOut(self);
     });
@@ -165,18 +162,35 @@ class MapNode {
 
   // just position the element
   draw() {
-    if(this.child) {
-      return;
+    if(!this.child) {
+      this.p5Elt.position(this.x, this.y);
     }
-    this.p5Elt.position(this.x, this.y);
   }
 
   // mouse is over the element
   mouseOver(self) {
     if(!mapNodesHolder.draggingNode) {
       document.body.style.cursor = 'grab';
-    } else if(self != mapNodesHolder.draggingNode && !mapNodesHolder.draggingNode.contains(self)) {
-        mapNodesHolder.draggingNode.makeParent(self.p5Elt);
+    } else if(self.noRelations(self, mapNodesHolder.draggingNode)) {
+      /*
+      if(!this.subnodeHolder) {
+        self.subnodeHolder = createDiv();
+        self.subnodeHolder.class('subnode-holder');
+        self.subnodeHolder.parent(self.p5Elt);
+      }
+      mapNodesHolder.draggingNode.makeParent(self.subnodeHolder);
+      */
+    }
+  }
+
+  // mouse leaves the element
+  mouseOut(self) {
+    if(mapNodesHolder.draggingNode && self.noRelations(self, self)) {
+      self.removeChild(mapNodesHolder.draggingNode);
+    }
+    if(!mapNodesHolder.draggingNode) {
+      //self.removeChild(mapNodesHolder.draggingNode);
+      document.body.style.cursor = '';
     }
   }
 
@@ -206,28 +220,29 @@ class MapNode {
   }
 
   // handle the element having mouse released above it
-  mouseReleased(self) {
+  globalMouseReleased(self) {
     document.body.style.cursor = 'grab';
     self.p5Elt.style('z-index', '');
   }
 
-  // mouse leaves the element
-  mouseOut(self) {
-    if(!mapNodesHolder.draggingNode) {
-      self.removeChild(mapNodesHolder.draggingNode);
-      document.body.style.cursor = '';
-    }
-  }
-
   // basically html functions
   contains(node) {
-    console.log(this);
     return this.p5Elt.elt.contains(node.p5Elt.elt);
   }
 
+  // remove an element from your children
   removeChild(node) {
-    console.log(this);
     this.p5Elt.elt.removeChild(node.p5Elt.elt);
+    if(this.subnodesHolder) {
+      if(this.subnodesHolder.elt.childElementCount == 0) {
+        this.subnodesHolder.elt.remove();
+      }
+    }
+  }
+
+  // check if two elements are related at all
+  noRelations(node1, node2) {
+    return (node1 != node2 && !node1.contains(node2) && !node2.contains(node1));
   }
 }
 
@@ -243,18 +258,26 @@ class Course extends MapNode {
     nameElt.class('map-course-name');
     nameElt.parent(this.p5Elt);
   }
+
+  mouseOver(self) {
+    super.mouseOver(self);
+  }
 }
 
 // notes in the map
 class Note extends MapNode {
   constructor(json) {
     super(json);
-    let titleElt = createDiv(json.title);
-    titleElt.parent(this.p5Elt);
-    titleElt.class('map-note-title');
-    let textElt = createDiv(json.text);
-    textElt.parent(this.p5Elt);
-    textElt.class('map-note-text');
+    if(json.title != '') {
+      let titleElt = createDiv(json.title);
+      titleElt.parent(this.p5Elt);
+      titleElt.class('map-note-title');
+    }
+    if(json.text != '') {
+      let textElt = createDiv(json.text);
+      textElt.parent(this.p5Elt);
+      textElt.class('map-note-text');
+    }
   }
 
   // I think I'm going to need this later

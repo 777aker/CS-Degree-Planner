@@ -49,3 +49,12 @@ body {
 .map-note-text {
 
 }
+
+/* div that holds subnodes */
+.subnode-holder {
+  background-color: red;
+  border-color: blue;
+  border: thick;
+  border-style: dotted;
+  border-width: 5px;
+}
