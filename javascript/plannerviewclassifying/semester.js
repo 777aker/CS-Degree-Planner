@@ -25,6 +25,11 @@ class Semester {
     deleteSemesterBtn.parent(this.p5Element);
     deleteSemesterBtn.class('delete-semester');
 
+    let title;
+    if(year == 0) {
+      
+    }
+
     semesters.push(this);
   }
 
