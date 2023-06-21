@@ -29,6 +29,15 @@ let degreeJSON;
 let degreeName;
 // semester we are currently in
 let currentSemester;
+// enum for sorting the semesters
+const SeasonValues = {
+  spring: .1,
+  maymester: .2,
+  sessionsACD: .3,
+  sessionB: .4,
+  augmester: .5,
+  fall: .6
+}
 
 // whenever we stop dragging elements do some common clean up
 // or when we delete a semester
