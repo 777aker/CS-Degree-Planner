@@ -19,7 +19,7 @@ class Requirement {
     // add each course to the requirement
     for(let code in courses) {
       degreeJSON.requirements[requirement].courses[code] = Object.assign(
-        new Course(courses[code], degreeJSON.courses[courses[code]], courseHolder),
+        new DegreeCourse(courses[code], degreeJSON.courses[courses[code]], courseHolder),
         degreeJSON.courses[courses[code]]
       );
     }

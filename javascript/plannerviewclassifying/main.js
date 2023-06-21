@@ -9,6 +9,7 @@ let degreeName;
 let currentSemester;
 // enum for sorting the semesters
 const SeasonValues = {
+  transfer: 0,
   spring: .1,
   maymester: .2,
   sessionsACD: .3,

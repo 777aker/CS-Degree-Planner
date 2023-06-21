@@ -1,5 +1,5 @@
 // courses class
-class Course {
+class DegreeCourse {
   constructor(code, jsonCourse, parent) {
     let courseP;
 
