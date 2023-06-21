@@ -9,5 +9,10 @@ function planningAreaSetup() {
   // add/remove button setup
   //TODO: setupButtons();
   // setup semester stuff
-  //TODO: setupSemesters();
+  setupSemesters();
+}
+
+// make 8 semesters
+function setupSemesters() {
+  
 }

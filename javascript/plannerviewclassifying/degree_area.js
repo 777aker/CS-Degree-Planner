@@ -1,5 +1,3 @@
-// requirement list
-let requirements;
 // populate degree area with buttons and such
 const degreeSelected = document.querySelector('#degree-selected');
 const degreeArea = document.querySelector('#degree-area');
