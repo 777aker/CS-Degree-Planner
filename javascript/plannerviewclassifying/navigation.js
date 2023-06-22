@@ -1,8 +1,29 @@
+
 // setup everything for nav menu
 function navigationSetup() {
   degreeSelectorSetup();
   // button for showing the degree selection form
   connectFormButton('#menu-select-degree', '#select-degree-form');
+  // add semester form
+  const addSemesterForm = document.querySelector('#add-semester-form');
+  const seasonSelector = addSemesterForm.querySelector('#season-selector');
+  const semesterYear = addSemesterForm.querySelector('#semester-year');
+  // buttons for showing adding a semester
+  document.querySelectorAll('.add-semester').forEach(button => {
+    button.addEventListener('click', function() {
+      addSemesterForm.style.display = 'flex';
+      seasonSelector.value = 'spring';
+      semesterYear.value = '';
+    });
+  });
+  // actually add the semester when they submit
+  document.querySelector('#submit-semester').addEventListener('click', function() {
+    addSemesterForm.style.display = 'none';
+    new Semester(
+      seasonSelector.value,
+      semesterYear.value
+    );
+  });
 }
 
 // form for selecting a degree
