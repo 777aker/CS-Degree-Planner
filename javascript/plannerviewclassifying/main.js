@@ -1,6 +1,4 @@
 // global variables
-// source element dragged
-let dragSrcElement;
 // degree JSON object for degree information
 let degreeJSON;
 // name of the selected degree
@@ -34,7 +32,13 @@ function setup() {
   navigationSetup();
   // setup planning area
   planningAreaSetup();
-
+  // go ahead and load cs degree
+  // TODO: default behavior maybe remove
+  degreeName = 'CS BS Degree';
+  degreeJSON = loadJSON(
+    'https://777aker.github.io/CS-Degree-Planner/jsons/Computer-Science-BS-electives.json',
+    populateDegreeArea
+  );
 }
 
 // whenever we stop dragging elements do some common clean up

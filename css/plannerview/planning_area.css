@@ -7,6 +7,8 @@
   overflow-x: scroll;
 }
 
+/* ----- ----- ----- ----- ----- SEMESTER STYLING ----- ----- ----- ----- ----- */
+
 /* div holding the semesters */
 #semesters-holder {
   display: flex;
@@ -49,14 +51,6 @@
   margin-top: 0px;
 }
 
-/* style for empty courses */
-.empty-course-holder {
-  width: 100px;
-  height: 50px;
-  background-color: #f1c40f;
-  border-radius: 2px;
-}
-
 /* style for the holders containing the add and remove semester buttons */
 .button-holder {
   margin: 5px;
@@ -72,6 +66,25 @@
   padding-top: 5px;
 }
 
+/* delete course buttons */
+.delete-semester {
+  align-self: flex-end;
+  background-color: #c0392b;
+
+  display: none;
+}
+
+/* ----- ----- ----- ----- ----- COURSE STYLING ----- ----- ----- ----- ----- */
+
+/* style for empty courses */
+.empty-course-holder {
+  width: 100px;
+  height: 50px;
+  background-color: #f1c40f;
+  border-radius: 2px;
+}
+
+/* TODO: REMOVE WHEN FINISHED CLASSIFYING PLANNER VIEW */
 /* courses in the planner view */
 .course {
   padding: 5px;
@@ -92,17 +105,29 @@
   color: #2c3e50;
 }
 
+/* courses in the planner view */
+.planner-course {
+  padding: 5px;
+
+  transition-duration: .4s;
+}
+
+/* when hover over a course */
+.planner-course:hover {
+  cursor: grab;
+
+  border-radius: 2px;
+
+  transition-duration: .4s;
+
+  background-color: #f1c40f;
+
+  color: #2c3e50;
+}
+
 /* display when over an element */
 .over {
   border: 3px dotted #666;
-}
-
-/* delete course buttons */
-.delete-semester {
-  align-self: flex-end;
-  background-color: #c0392b;
-
-  display: none;
 }
 
 /* div for more course info */

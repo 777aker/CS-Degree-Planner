@@ -1,5 +1,5 @@
-// list holding the semesters
-let semesters = [];
+// order dict holding the semesters
+let semesters = {};
 // div holding the semesters
 const semestersHolder = document.querySelector('#semesters-holder');
 // semester class
@@ -14,6 +14,7 @@ class Semester {
 
     // give it an order variable used for sorting
     this.order = int(year) + SeasonValues[season];
+    semesters[this.order] = this;
     // create the actual element
     this.p5Element = createDiv();
     this.p5Element.class('semester');
@@ -47,25 +48,23 @@ class Semester {
       return;
     }
     // put in correct position
-    for(let i = 0; i < semesters.length; i++) {
-      if(float(semesters[i].order) > float(this.order)) {
-        this.pushSemester(semesters[i].p5Element.elt, i);
+    for(let i = 0; i < semestersHolder.children.length; i++) {
+      if(float(semestersHolder.children[i].getAttribute('order')) > float(this.order)) {
+        this.pushSemester(semestersHolder.children[i], i);
         return;
       }
     }
     // push semester to where it needs to go in some stuff
-    this.pushSemester(document.querySelectorAll('.button-holder')[1], semesters.length-1);
+    this.pushSemester(document.querySelectorAll('.button-holder')[1]);
   }
 
   deleteSemester() {
 
   }
 
-  pushSemester(before, i) {
+  pushSemester(before) {
     //TODO: this pushes to the end
     // needs to push into list where it belongs
-    semesters.splice(i, 0, this);
-
     semestersHolder.insertBefore(
       this.p5Element.elt,
       before
