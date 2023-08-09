@@ -1,0 +1,56 @@
+/* left div holding degree information */
+#degree-area {
+  width: 25%;
+
+  background-color: #2A4260;
+  box-shadow: 0px 0px 50px 5px #2D547A;
+  border: none;
+  border-radius: 5px;
+
+  position: relative;
+  z-index: 1;
+
+  text-align: center;
+  text-overflow: clip;
+  text-wrap: wrap;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+/* each degree requirement */
+.degree-requirement {
+  font-size: 18pt;
+  background-color: #2A4260;
+}
+
+/* style for the requirements completed display */
+.requirement-completion-display {
+  font-size: 14pt;
+  padding: 2px;
+  margin: 0px;
+}
+
+/* courses in the degree requirements */
+.degree-course {
+  padding: 10px;
+  margin: 0px;
+
+  transition-duration: .4s;
+}
+
+/* when hovering over a course in degree requirements area */
+.degree-course:hover {
+  transition-duration: .4s;
+
+  cursor: grab;
+
+  background-color: #f1c40f;
+  color: #2c3e50;
+}
+
+/* style for a disabled degree course cause it's in the planner */
+.disabled-degree-course:hover {
+  cursor: not-allowed;
+  opacity: 0.8;
+}

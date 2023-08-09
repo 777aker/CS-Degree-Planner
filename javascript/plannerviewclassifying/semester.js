@@ -1,4 +1,4 @@
-// order dict holding the semesters
+// dict holding the semesters for easy reference by order
 let semesters = {};
 // div holding the semesters
 const semestersHolder = document.querySelector('#semesters-holder');
@@ -58,12 +58,9 @@ class Semester {
     this.pushSemester(document.querySelectorAll('.button-holder')[1]);
   }
 
-  deleteSemester() {
-
-  }
-
+  // helper function
+  // put a semester in the schedule before certain element
   pushSemester(before) {
-    //TODO: this pushes to the end
     // needs to push into list where it belongs
     semestersHolder.insertBefore(
       this.p5Element.elt,
@@ -71,8 +68,45 @@ class Semester {
     );
   }
 
+  // remove a semester from the schedule
+  deleteSemester() {
+
+  }
+
+  // adds an empty course to the current semester
   addEmpty() {
     new PlannerCourse(this.p5Element.elt);
+  }
+
+  valid() {
+    this.p5Element.elt.querySelector('.empty-course-holder').classList.add('valid-empty-course');
+  }
+
+  invalid() {
+    this.p5Element.elt.querySelector('.empty-course-holder').classList.add('invalid-empty-course');
+  }
+
+  getCourses() {
+    let courses = this.p5Element.elt.querySelectorAll('.planner-course');
+    let codes = [];
+    courses.forEach(courseElt => {
+      codes.push(courseElt.getAttribute('coursecode'));
+    });
+    return codes;
+  }
+
+  checkCourses(completed) {
+    let courses = this.p5Element.elt.querySelectorAll('.planner-course');
+    courses.forEach(courseElt => {
+      console.log('-----')
+      console.log(completed);
+      console.log(courseElt.getAttribute('coursecode'));
+      if(Course.checkPrerequisites(degreeJSON.courses[courseElt.getAttribute('coursecode')].prerequisites, completed)) {
+        courseElt.classList.remove('prereqs-not-met');
+      } else {
+        courseElt.classList.add('prereqs-not-met');
+      }
+    });
   }
 }
 

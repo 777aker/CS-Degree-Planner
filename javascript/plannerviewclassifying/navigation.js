@@ -24,6 +24,8 @@ function navigationSetup() {
       semesterYear.value
     );
   });
+  // set up the trashcan
+  new Trash();
 }
 
 // form for selecting a degree
@@ -55,4 +57,46 @@ function connectFormButton(btnID, formID) {
   document.querySelector(btnID).addEventListener('click', function() {
     document.querySelector(formID).style.display = 'flex';
   });
+}
+
+class Trash {
+  constructor() {
+    const trashbin = document.querySelector('#trashcan');
+    trashbin.addEventListener('dragstart', this.dragstart);
+    trashbin.addEventListener('dragenter', this.dragenter);
+    trashbin.addEventListener('dragleave', this.dragleave);
+    trashbin.addEventListener('dragover', this.dragover);
+    trashbin.addEventListener('drop', this.drop);
+  }
+
+  dragstart(e) {
+    e.preventDefault();
+    return;
+  }
+
+  dragenter(e) {
+    this.classList.add('dragging-trash');
+    return;
+  }
+
+  dragleave(e) {
+    this.classList.remove('dragging-trash');
+    return;
+  }
+
+  dragover(e) {
+    e.preventDefault();
+    return;
+  }
+
+  drop(e) {
+    e.stopPropagation();
+
+    if(dragSrcElement.classList.contains('planner-course')) {
+      PlannerCourse.destructor(dragSrcElement);
+    }
+
+    this.classList.remove('dragging-trash');
+    degreeCourses[e.dataTransfer.getData('text/html')].enable();
+  }
 }

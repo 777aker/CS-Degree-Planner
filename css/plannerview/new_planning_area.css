@@ -1,0 +1,135 @@
+/* holds the entire right planning area */
+#planning-area {
+  width: 75%;
+
+  background-color: #2A4260;
+
+  overflow-x: scroll;
+}
+
+/* ----- ----- ----- ----- ----- SEMESTER STYLING ----- ----- ----- ----- ----- */
+
+/* div holding the semesters */
+#semesters-holder {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+
+  margin: 10px;
+}
+
+/* style for each semester */
+.semester {
+  margin: 5px;
+  padding: 15px;
+  border-radius: 2px;
+
+  box-shadow: 0px 0px 50px 2px #2D547A;
+
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  min-width: 120px;
+}
+
+/* style for the title of each semester */
+.semester-title {
+  font-size: 16pt;
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+/* style for the number of credits completed each semester */
+.semester-credits {
+  font-size: 12pt;
+  margin-top: 0px;
+}
+
+/* style for the holders containing the add and remove semester buttons */
+.button-holder {
+  margin: 5px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+
+  min-width: 110px;
+
+  padding: 15px;
+  padding-top: 5px;
+}
+
+/* delete course buttons */
+.delete-semester {
+  align-self: flex-end;
+  background-color: #c0392b;
+
+  display: none;
+}
+
+/* ----- ----- ----- ----- ----- COURSE STYLING ----- ----- ----- ----- ----- */
+
+/* style for empty courses */
+.empty-course-holder {
+  width: 100px;
+  height: 50px;
+  background-color: #f1c40f;
+  border-radius: 2px;
+}
+
+/* style for an empty course you can drop on */
+.valid-empty-course {
+  background-color: #2ecc71;
+}
+
+/* style for an empty course you can't drop on */
+.invalid-empty-course {
+  background-color: #e74c3c;
+}
+
+/* courses in the planner view */
+.planner-course {
+  padding: 5px;
+
+  transition-duration: .4s;
+}
+
+/* when hover over a course */
+.planner-course:hover {
+  cursor: grab;
+
+  border-radius: 2px;
+
+  transition-duration: .4s;
+
+  background-color: #f1c40f;
+
+  color: #2c3e50;
+}
+
+/* color red if prereqs not met */
+.prereqs-not-met {
+  background-color: #e74c3c;
+}
+
+/* display when over an element */
+.over {
+  border: 3px dotted #666;
+}
+
+/* div for more course info */
+#course-info {
+  position: fixed;
+  bottom: 0%;
+
+  overflow-y: scroll;
+
+  padding: 20px;
+}
