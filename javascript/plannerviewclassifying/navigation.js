@@ -16,6 +16,9 @@ function navigationSetup() {
       semesterYear.value = '';
     });
   });
+  document.querySelectorAll('.remove-semester').forEach(button => {
+    button.addEventListener('click', toggleDeleteSemester);
+  });
   // actually add the semester when they submit
   document.querySelector('#submit-semester').addEventListener('click', function() {
     addSemesterForm.style.display = 'none';
@@ -26,6 +29,20 @@ function navigationSetup() {
   });
   // set up the trashcan
   new Trash();
+}
+
+// toggle the delete semester buttons
+let deleteSemesterBtns = false;
+function toggleDeleteSemester() {
+  let display = deleteSemesterBtns ? 'none' : 'block';
+  let color = deleteSemesterBtns ? '' : '#e74c3c';
+  deleteSemesterBtns = !deleteSemesterBtns;
+  document.querySelectorAll('.delete-semester').forEach(btn => {
+    btn.style.display = display;
+  });
+  document.querySelectorAll('.remove-semester').forEach(btn => {
+    btn.style.background = color;
+  });
 }
 
 // form for selecting a degree

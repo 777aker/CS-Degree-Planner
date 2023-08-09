@@ -21,9 +21,9 @@ class Semester {
     this.p5Element.attribute('order', this.order);
     // delete the semester button
     let deleteSemesterBtn = createButton('X');
+    let self = this;
     deleteSemesterBtn.mouseClicked(function() {
-      deleteSemester(this);
-      toggleDeleteSemester();
+      self.deleteSemester();
     });
     deleteSemesterBtn.parent(this.p5Element);
     deleteSemesterBtn.class('delete-semester');
@@ -70,7 +70,16 @@ class Semester {
 
   // remove a semester from the schedule
   deleteSemester() {
+    toggleDeleteSemester();
+    delete semesters[this.order];
 
+    this.p5Element.elt.querySelectorAll('.planner-course').forEach(courseElt => {
+      degreeCourses[courseElt.getAttribute('coursecode')].enable();
+    });
+    this.p5Element.elt.remove();
+
+    PlannerCourse.checkAllCourses();
+    delete this;
   }
 
   // adds an empty course to the current semester
@@ -98,18 +107,20 @@ class Semester {
   checkCourses(completed) {
     let courses = this.p5Element.elt.querySelectorAll('.planner-course');
     courses.forEach(courseElt => {
-      if(Course.checkPrerequisites(degreeJSON.courses[courseElt.getAttribute('coursecode')].prerequisites, completed)) {
+      let prereqs;
+      try {
+        prereqs = degreeJSON.courses[courseElt.getAttribute('coursecode')].prerequisites;
+      } catch {
+        prereqs = [];
+      }
+
+      if(Course.checkPrerequisites(prereqs, completed)) {
         courseElt.classList.remove('prereqs-not-met');
       } else {
         courseElt.classList.add('prereqs-not-met');
       }
     });
   }
-}
-
-// delete a semester
-function deleteSemester(semesterObj) {
-  semesterObj.deleteSemester();
 }
 
 // capatilize first letter of a string
