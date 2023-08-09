@@ -98,9 +98,6 @@ class Semester {
   checkCourses(completed) {
     let courses = this.p5Element.elt.querySelectorAll('.planner-course');
     courses.forEach(courseElt => {
-      console.log('-----')
-      console.log(completed);
-      console.log(courseElt.getAttribute('coursecode'));
       if(Course.checkPrerequisites(degreeJSON.courses[courseElt.getAttribute('coursecode')].prerequisites, completed)) {
         courseElt.classList.remove('prereqs-not-met');
       } else {
