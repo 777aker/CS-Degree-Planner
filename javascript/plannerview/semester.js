@@ -14,7 +14,7 @@ class Semester {
 
     let deleteSemesterBtn = createButton('X');
     deleteSemesterBtn.mouseClicked(function() {
-      deleteSemester(p5Element.elt);
+      deleteSemester(this.elt.parentElement);
       toggleDeleteSemester();
     });
     deleteSemesterBtn.parent(this.p5Element);
